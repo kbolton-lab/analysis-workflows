@@ -1,7 +1,5 @@
 [![Build Status](https://travis-ci.org/genome/analysis-workflows.svg?branch=master)](https://travis-ci.org/genome/analysis-workflows)
 
-![Warning](https://i.imgur.com/rv5wL3F.jpg)  Several of these workflows are temporarily non-functional as we make breaking changes leading up to our 2.0 release. For stable pipelines, please use the [1.5 release](https://github.com/genome/analysis-workflows/releases/tag/v1.5.0). We expect these issues to be addressed in the the next two weeks.
-
 # analysis-workflows
 
 ## Overview
@@ -75,6 +73,9 @@ The following WUSM collaborators have provided significant contributions in term
 * [Institue of Clinical and Translational Sciences](https://icts.wustl.edu/)
 * [McDonnell Genome Institute](https://www.genome.wustl.edu/)
 
+### Partners
+* [Docker](https://www.docker.com/) 
+* [Docker Blog post mentioning Washington University School of Medicine](https://www.docker.com/blog/dockers-next-chapter-our-first-year/)
 
 [![DOI](https://zenodo.org/badge/64162512.svg)](https://zenodo.org/badge/latestdoi/64162512)
 
