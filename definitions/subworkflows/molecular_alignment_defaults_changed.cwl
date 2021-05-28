@@ -21,23 +21,23 @@ inputs:
     target_intervals:
        type: File?
     UMI_paired:
-       type: int?
-       default: 1
+       type: boolean?
+       default: true
     min_reads:
        type: int[]
        default: [1]
     max_read_error_rate:
        type: float?
-       default: 0.05
+       default: 0.025
     max_base_error_rate:
        type: float?
-       default: 0.1
+       default: 0.2
     min_base_quality:
        type: int
-       default: 1
+       default: 13
     max_no_call_fraction:
        type: float
-       default: 0.5
+       default: 0.2
 outputs:
     aligned_bam:
         type: File

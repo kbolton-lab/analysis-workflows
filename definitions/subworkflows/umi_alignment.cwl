@@ -15,6 +15,9 @@ inputs:
             - string
             - File
         secondaryFiles: [.amb, .ann, .bwt, .pac, .sa]
+    UMI_paired:
+       type: int?
+       default: 1
 outputs:
     aligned_bam:
         type: File
@@ -25,10 +28,11 @@ outputs:
         outputSource: mark_illumina_adapters/metrics
 steps:
     extract_umis:
-        run: ../tools/extract_umis.cwl
+        run: ../tools/extract_umis_test.cwl
         in:
             bam: bam
             read_structure: read_structure
+            UMI_paired: UMI_paired
         out:
             [umi_extracted_bam]
     mark_illumina_adapters:
