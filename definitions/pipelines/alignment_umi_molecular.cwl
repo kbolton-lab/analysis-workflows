@@ -28,6 +28,24 @@ inputs:
         secondaryFiles: [.fai, ^.dict, .amb, .ann, .bwt, .pac, .sa]
     target_intervals:
        type: File?
+    UMI_paired:
+       type: int?
+       default: 1
+    min_reads:
+       type: int[]
+       default: [1]
+    max_read_error_rate:
+       type: float?
+       default: 0.05
+    max_base_error_rate:
+       type: float?
+       default: 0.1
+    min_base_quality:
+       type: int
+       default: 1
+    max_no_call_fraction:
+       type: float
+       default: 0.5
 outputs:
     aligned_cram:
         type: File
@@ -56,6 +74,12 @@ steps:
             read_structure: read_structure
             reference: reference
             target_intervals: target_intervals
+            UMI_paired: UMI_paired
+            min_reads: min_reads
+            max_read_error_rate: max_read_error_rate
+            max_base_error_rate: max_base_error_rate
+            min_base_quality: min_base_quality
+            max_no_call_fraction: max_no_call_fraction
         out:
             [aligned_bam, adapter_histogram, duplex_seq_metrics]
     bam_to_cram:

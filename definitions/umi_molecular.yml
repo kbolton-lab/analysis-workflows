@@ -1,0 +1,21 @@
+rules:
+  sequencing_platform: solexa
+  'library->is_rna': 0
+  is_capture: 0
+models:
+  'Genome::Model::CwlPipeline':
+    processing_profile_id: 'fc811704e97045f4a8af25e7d5bdc4b7'
+    input_data:
+        read_structure_R1: 8M13S+T
+        read_structure_R2: +T
+        reference: '/gscmnt/gc2560/core/reference_sequences/GRC-human-build37_bwa0.7.15/all_sequences.fa'
+        UMI_paired: 0
+        min_reads: 1
+        max_read_error_rate: 0.05
+        max_base_error_rate: 0.1
+        min_base_quality: 1
+        max_no_call_fraction: 0.5
+    instrument_data_properties:
+        subject: sample
+        input_data:
+            library: library
