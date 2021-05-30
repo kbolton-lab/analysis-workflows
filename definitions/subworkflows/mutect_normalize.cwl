@@ -8,6 +8,7 @@ requirements:
     - class: MultipleInputFeatureRequirement
     - class: SubworkflowFeatureRequirement
     - class: StepInputExpressionRequirement
+    - class: InlineJavascriptRequirement
 inputs:
     reference:
         type:
@@ -19,7 +20,7 @@ inputs:
         secondaryFiles: [^.bai, .bai]
     normal_bam:
         type: File?
-        secondaryFiles: [^.bai]
+        secondaryFiles: [^.bai, .bai]
     interval_list:
         type: File
     scatter_count:
@@ -27,14 +28,15 @@ inputs:
     tumor_sample_name:
         type: string
 outputs:
-    unfiltered_vcf:
-        type: File
-        outputSource: filter/unfiltered_vcf
-        secondaryFiles: [.tbi]
     filtered_vcf:
         type: File
-        outputSource: gnomAD_filter/indexed_vcf
+        outputSource: filter/filtered_vcf
         secondaryFiles: [.tbi]
+    unfiltered_vcf:
+        type: File
+        outputSource: norm_index/indexed_vcf
+        secondaryFiles: [.tbi]
+        doc: "This is the unfiltered from fp_filter.cwl that is normalized with bcftools for use in nsamples.cwl"
 steps:
     split_interval_list:
         run: ../tools/split_interval_list.cwl
@@ -51,7 +53,7 @@ steps:
             normal_bam: normal_bam
             interval_list: split_interval_list/split_interval_lists
         out:
-            [vcf]
+            [vcf, tumor_sample_name]
     merge:
         run: ../tools/merge_vcf.cwl
         in:
@@ -73,12 +75,18 @@ steps:
             variant_caller: 
                 valueFrom: "mutect"
             sample_name: tumor_sample_name
+            # sample_name: 
+            #     source: mutect/tumor_sample_name
+            #     valueFrom: |
+            #         ${
+            #             return self[0]
+            #         }
         out:
             [unfiltered_vcf, filtered_vcf]
     bcftools_norm:
         run: ../tools/bcftools_norm.cwl
         in: 
-            filter/unfiltered_vcf
+            vcf: filter/unfiltered_vcf
         out:
             [normalized_vcf]
         doc: "required so that we can split multi-allelic in a better way than GATK does for counting Nsamples by pyvcf"
@@ -88,5 +96,5 @@ steps:
             vcf: bcftools_norm/normalized_vcf
         out:
             [indexed_vcf]
-            
+
     

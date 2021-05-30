@@ -110,9 +110,9 @@ inputs:
           targeted. This parameter allows variants to be called in these wingspan regions, extending
           this many base pairs from each side of the target regions.
         default: 100
-    # vardict_bed_targets:
-    #     type: File
-    #     doc: "VardictJava requires a bed file to run the variant calling, i.e. '-c 1 -S 2 -E 3 -g 4 /path/to/my.bed'"
+    vardict_bed_targets:
+        type: File?
+        doc: "VardictJava requires a bed file to run the variant calling, i.e. '-c 1 -S 2 -E 3 -g 4 /path/to/my.bed'"
     per_base_intervals:
         type: ../types/labelled_file.yml#labelled_file[]
         label: "per_base_intervals: additional intervals over which to summarize coverage/QC at a per-base resolution"
@@ -248,11 +248,6 @@ inputs:
     vep_plugins:
         type: string[]
         default: [Frameshift, Wildtype]
-    af_threshold: 
-        type: float?
-        default: 0.005
-        doc: "for CH this is how low we want to call"
-
 outputs:
     tumor_bam:
         type: File
@@ -260,51 +255,51 @@ outputs:
     # tumor_mark_duplicates_metrics:
     #     type: File[]
     #     outputSource: tumor_qc/mark_duplicates_metrics
-    tumor_insert_size_metrics:
-        type: File
-        outputSource: tumor_qc/insert_size_metrics
-    tumor_alignment_summary_metrics:
-        type: File
-        outputSource: tumor_qc/alignment_summary_metrics
-    tumor_hs_metrics:
-        type: File
-        outputSource: tumor_qc/hs_metrics
-    tumor_per_target_coverage_metrics:
-        type: File[]
-        outputSource: tumor_qc/per_target_coverage_metrics
-    tumor_per_target_hs_metrics:
-        type: File[]
-        outputSource: tumor_qc/per_target_hs_metrics
-    tumor_per_base_coverage_metrics:
-        type: File[]
-        outputSource: tumor_qc/per_base_coverage_metrics
-    tumor_per_base_hs_metrics:
-        type: File[]
-        outputSource: tumor_qc/per_base_hs_metrics
-    tumor_summary_hs_metrics:
-        type: File[]
-        outputSource: tumor_qc/summary_hs_metrics
-    tumor_flagstats:
-        type: File
-        outputSource: tumor_qc/flagstats
-    tumor_verify_bam_id_metrics:
-        type: File
-        outputSource: tumor_qc/verify_bam_id_metrics
-    tumor_verify_bam_id_depth:
-        type: File
-        outputSource: tumor_qc/verify_bam_id_depth
-    mutect_gnomad_filter:
-        type: File
-        outputSource:  mutect_gnomad_pon_filters/processed_gnomAD_vcf
-        secondaryFiles: [.tbi]
-    mutect_pon_filtered_vcf:
-        type: File
-        outputSource: mutect_gnomad_pon_filters/processed_filtered_vcf
-        secondaryFiles: [.tbi]
-    mutect_pon_total_counts:
-        type: File
-        outputSource: mutect_gnomad_pon_filters/pon_total_counts
-        secondaryFiles: [.tbi]
+    # tumor_insert_size_metrics:
+    #     type: File
+    #     outputSource: tumor_qc/insert_size_metrics
+    # tumor_alignment_summary_metrics:
+    #     type: File
+    #     outputSource: tumor_qc/alignment_summary_metrics
+    # tumor_hs_metrics:
+    #     type: File
+    #     outputSource: tumor_qc/hs_metrics
+    # tumor_per_target_coverage_metrics:
+    #     type: File[]
+    #     outputSource: tumor_qc/per_target_coverage_metrics
+    # tumor_per_target_hs_metrics:
+    #     type: File[]
+    #     outputSource: tumor_qc/per_target_hs_metrics
+    # tumor_per_base_coverage_metrics:
+    #     type: File[]
+    #     outputSource: tumor_qc/per_base_coverage_metrics
+    # tumor_per_base_hs_metrics:
+    #     type: File[]
+    #     outputSource: tumor_qc/per_base_hs_metrics
+    # tumor_summary_hs_metrics:
+    #     type: File[]
+    #     outputSource: tumor_qc/summary_hs_metrics
+    # tumor_flagstats:
+    #     type: File
+    #     outputSource: tumor_qc/flagstats
+    # tumor_verify_bam_id_metrics:
+    #     type: File
+    #     outputSource: tumor_qc/verify_bam_id_metrics
+    # tumor_verify_bam_id_depth:
+    #     type: File
+    #     outputSource: tumor_qc/verify_bam_id_depth
+    # mutect_gnomad_filter:
+    #     type: File
+    #     outputSource:  mutect_gnomad_pon_filters/processed_gnomAD_vcf
+    #     secondaryFiles: [.tbi]
+    # mutect_pon_filtered_vcf:
+    #     type: File
+    #     outputSource: mutect_gnomad_pon_filters/processed_filtered_vcf
+    #     secondaryFiles: [.tbi]
+    # mutect_pon_total_counts:
+    #     type: File
+    #     outputSource: mutect_gnomad_pon_filters/pon_total_counts
+    #     secondaryFiles: [.tbi]
     # varscan_gnomad_filter:
     #     type: File
     #     outputSource:  varscan_gnomad_pon_filters/processed_gnomAD_vcf
@@ -375,142 +370,143 @@ steps:
             bam: apply_bqsr/bqsr_bam
         out:
             [indexed_bam] 
-    tumor_qc:
-        run: ../subworkflows/qc_exome.cwl
-        in:
-            bam: index_bam/indexed_bam
-            reference: reference
-            bait_intervals: bait_intervals
-            target_intervals: target_intervals
-            per_base_intervals: per_base_intervals
-            per_target_intervals: per_target_intervals
-            summary_intervals: summary_intervals
-            omni_vcf: omni_vcf
-            picard_metric_accumulation_level: picard_metric_accumulation_level
-            minimum_mapping_quality: qc_minimum_mapping_quality
-            minimum_base_quality: qc_minimum_base_quality
-        out: [insert_size_metrics, insert_size_histogram, alignment_summary_metrics, hs_metrics, per_target_coverage_metrics, per_target_hs_metrics, per_base_coverage_metrics, per_base_hs_metrics, summary_hs_metrics, flagstats, verify_bam_id_metrics, verify_bam_id_depth]
-    pad_target_intervals:
-        run: ../tools/interval_list_expand.cwl
-        in:
-            interval_list: target_intervals
-            roi_padding: target_interval_padding
-        out:
-            [expanded_interval_list]
-    ## scatter each caller
-    mutect:
-        run: ../subworkflows/mutect_normalize.cwl
-        in:
-            reference: reference
-            tumor_bam: index_bam/indexed_bam
-            normal_bam: normal_bam
-            # interval_list: pad_target_intervals/expanded_interval_list
-            interval_list: target_intervals
-            scatter_count: scatter_count
-            tumor_sample_name: tumor_sample_name
-        out:
-            [unfiltered_vcf, filtered_vcf]
-    mutect_extract_tumor:
-        run: ../tools/bcftools_extract_tumor.cwl
-        in:
-            vcf: mutect/unfiltered_vcf
-            output_type:
-                default: "z"
-            tumor_sample_name: 
-                valueFrom: $(tumor_sample_name).mutect
-        out:
-            [tumor_only_vcf]
-    mutect_extract_tumor_index:
-        run: ../tools/index_vcf.cwl
-        in:
-            vcf: mutect_extract_tumor/tumor_only_vcf
-        out:
-            [indexed_vcf]
-    # mutect_on_target:
-    #     scatter: [vcf]
-    #     run: ../tools/bedtools_intersect
+    # tumor_qc:
+    #     run: ../subworkflows/qc_exome.cwl
     #     in:
-    #         file_a = mutect/unfiltered_vcf
-    #         file_b = bed_targets
-    #         output_name: "mutect.ontarget.vcf"
-    #     out:
-    #         intersect_result
-    # bgzip and index
-    # combine_mutect_and_filter:
-    #     run: ../subworkflows/nsamples_and_PoN_and_filter.cwl
-    #     in:
+    #         bam: index_bam/indexed_bam
     #         reference: reference
-    #         caller_vcfs: mutect_on_target/on_target_vcf
-    #         nsamples: nsamples
-    #         caller_prefix: "mutect2"
-    #         normal_bams: pon_normal_bams
-    #         pon_final_name: "mutect2.pon.total.counts"
-    #     out:
-    #         [final_concatenated_vcf, final_concatenated_filtered_vcf, merged_nsamples, merged_nsamples_underN, merged_nsamples_overN, pon_total_counts]
-    mutect_gnomad_pon_filters:
-        run: ../subworkflows/gnomad_and_PoN_filter.cwl
-        in:
-            reference: reference
-            caller_vcf: mutect_extract_tumor_index/indexed_vcf
-            gnomad_AF_only: gatk_gnomad_af_only
-            gnomad_AF: filter_gnomADe_maximum_population_allele_frequency
-            caller_prefix: 
-                valueFrom: "mutect"
-            normal_bams: pon_normal_bams
-            pon_final_name: 
-                valueFrom: "mutect.pon.total.counts"
-        out:
-            [processed_gnomAD_vcf, processed_filtered_vcf, pon_total_counts]
-    # mutect_annotate_variants:
-    #     run: ../tools/vep.cwl
+    #         bait_intervals: bait_intervals
+    #         target_intervals: target_intervals
+    #         per_base_intervals: per_base_intervals
+    #         per_target_intervals: per_target_intervals
+    #         summary_intervals: summary_intervals
+    #         omni_vcf: omni_vcf
+    #         picard_metric_accumulation_level: picard_metric_accumulation_level
+    #         minimum_mapping_quality: qc_minimum_mapping_quality
+    #         minimum_base_quality: qc_minimum_base_quality
+    #     out: [insert_size_metrics, insert_size_histogram, alignment_summary_metrics, hs_metrics, per_target_coverage_metrics, per_target_hs_metrics, per_base_coverage_metrics, per_base_hs_metrics, summary_hs_metrics, flagstats, verify_bam_id_metrics, verify_bam_id_depth]
+    # pad_target_intervals:
+    #     run: ../tools/interval_list_expand.cwl
     #     in:
-    #         vcf: mutect_gnomad_pon_filters/processed_filtered_vcf
-    #         cache_dir: vep_cache_dir
-    #         ensembl_assembly: vep_ensembl_assembly
-    #         ensembl_version: vep_ensembl_version
-    #         ensembl_species: vep_ensembl_species
-    #         synonyms_file: synonyms_file
-    #         coding_only: annotate_coding_only
-    #         reference: reference
-    #         pick: vep_pick
-    #         custom_annotations: vep_custom_annotations
-    #         plugins: vep_plugins
+    #         interval_list: target_intervals
+    #         roi_padding: target_interval_padding
     #     out:
-    #         [annotated_vcf, vep_summary]
-    # vardict:
-    #     run: ../subworkflows/vardict.cwl
+    #         [expanded_interval_list]
+    # ## scatter each caller
+    # mutect:
+    #     run: ../subworkflows/mutect_normalize.cwl
     #     in:
     #         reference: reference
     #         tumor_bam: index_bam/indexed_bam
     #         normal_bam: normal_bam
-    #         vardict_bed: target_intervals # splits to bed
+    #         # interval_list: pad_target_intervals/expanded_interval_list
+    #         interval_list: target_intervals
     #         scatter_count: scatter_count
     #         tumor_sample_name: tumor_sample_name
-    #         af_threshold: af_threshold
-    #         normal_sample_name: normal_sample_name
     #     out:
     #         [unfiltered_vcf, filtered_vcf]
-    # pindel:
-    #     run: ../subworkflows/pindel.cwl
-    #     scatter: [tumor_bam]
+    # mutect_extract_tumor:
+    #     run: ../tools/bcftools_extract_tumor.cwl
+    #     in:
+    #         vcf: mutect/unfiltered_vcf
+    #         output_type:
+    #             default: "z"
+    #         tumor_sample_name: 
+    #             valueFrom: $(tumor_sample_name).mutect
+    #     out:
+    #         [tumor_only_vcf]
+    # mutect_extract_tumor_index:
+    #     run: ../tools/index_vcf.cwl
+    #     in:
+    #         vcf: mutect_extract_tumor/tumor_only_vcf
+    #     out:
+    #         [indexed_vcf]
+    # # mutect_on_target:
+    # #     scatter: [vcf]
+    # #     run: ../tools/bedtools_intersect
+    # #     in:
+    # #         file_a = mutect/unfiltered_vcf
+    # #         file_b = bed_targets
+    # #         output_name: "mutect.ontarget.vcf"
+    # #     out:
+    # #         intersect_result
+    # # bgzip and index
+    # # combine_mutect_and_filter:
+    # #     run: ../subworkflows/nsamples_and_PoN_and_filter.cwl
+    # #     in:
+    # #         reference: reference
+    # #         caller_vcfs: mutect_on_target/on_target_vcf
+    # #         nsamples: nsamples
+    # #         caller_prefix: "mutect2"
+    # #         normal_bams: pon_normal_bams
+    # #         pon_final_name: "mutect2.pon.total.counts"
+    # #     out:
+    # #         [final_concatenated_vcf, final_concatenated_filtered_vcf, merged_nsamples, merged_nsamples_underN, merged_nsamples_overN, pon_total_counts]
+    # mutect_gnomad_pon_filters:
+    #     run: ../subworkflows/gnomad_and_PoN_filter.cwl
     #     in:
     #         reference: reference
-    #         tumor_bam: index_bam/indexed_bam
-    #         normal_bam: normal_bam
-    #         interval_list: roi_intervals
-    #         scatter_count: scatter_count
-    #         insert_size: pindel_insert_size
-    #         tumor_sample_name: 
-    #             valueFrom: "$(inputs.tumor_bam.nameroot)"
-    #         normal_sample_name: 
-    #             valueFrom: "$(inputs.normal_bam.nameroot)"
+    #         caller_vcf: mutect_extract_tumor_index/indexed_vcf
+    #         gnomad_AF_only: gatk_gnomad_af_only
+    #         gnomad_AF: filter_gnomADe_maximum_population_allele_frequency
+    #         caller_prefix: 
+    #             valueFrom: "mutect"
+    #         normal_bams: pon_normal_bams
+    #         pon_final_name: 
+    #             valueFrom: "mutect.pon.total.counts"
     #     out:
-    #         [unfiltered_vcf, filtered_vcf]
-    # pindel_on_target:
-    #     scatter: [vcf]
-    #     in:
-    #         vcf = pindel/unfiltered_vcf
-    #         targets = bed_targets
-    #     out:
-    #         [on_target_vcf]
-    # combine_pindel_and_filter:
+    #         [processed_gnomAD_vcf, processed_filtered_vcf, pon_total_counts]
+    # # mutect_annotate_variants:
+    # #     run: ../tools/vep.cwl
+    # #     in:
+    # #         vcf: mutect_gnomad_pon_filters/processed_filtered_vcf
+    # #         cache_dir: vep_cache_dir
+    # #         ensembl_assembly: vep_ensembl_assembly
+    # #         ensembl_version: vep_ensembl_version
+    # #         ensembl_species: vep_ensembl_species
+    # #         synonyms_file: synonyms_file
+    # #         coding_only: annotate_coding_only
+    # #         reference: reference
+    # #         pick: vep_pick
+    # #         custom_annotations: vep_custom_annotations
+    # #         plugins: vep_plugins
+    # #     out:
+    # #         [annotated_vcf, vep_summary]
+    # ## scatter each caller
+    # # vardict:
+    # #     run: ../subworkflows/vardict.cwl
+    # #     in:
+    # #         reference: reference
+    # #         tumor_bam: index_bam/indexed_bam
+    # #         normal_bam: normal_bam
+    # #         # interval_list: pad_target_intervals/expanded_interval_list
+    # #         interval_list: target_intervals
+    # #         scatter_count: scatter_count
+    # #         tumor_sample_name: tumor_sample_name
+    # #         normal_sample_name: 
+    # #     out:
+    # #         [unfiltered_vcf, filtered_vcf]
+    # # pindel:
+    # #     run: ../subworkflows/pindel.cwl
+    # #     scatter: [tumor_bam]
+    # #     in:
+    # #         reference: reference
+    # #         tumor_bam: index_bam/indexed_bam
+    # #         normal_bam: normal_bam
+    # #         interval_list: roi_intervals
+    # #         scatter_count: scatter_count
+    # #         insert_size: pindel_insert_size
+    # #         tumor_sample_name: 
+    # #             valueFrom: "$(inputs.tumor_bam.nameroot)"
+    # #         normal_sample_name: 
+    # #             valueFrom: "$(inputs.normal_bam.nameroot)"
+    # #     out:
+    # #         [unfiltered_vcf, filtered_vcf]
+    # # pindel_on_target:
+    # #     scatter: [vcf]
+    # #     in:
+    # #         vcf = pindel/unfiltered_vcf
+    # #         targets = bed_targets
+    # #     out:
+    # #         [on_target_vcf]
+    # # combine_pindel_and_filter:

@@ -55,7 +55,6 @@ inputs:
             type: array
             items: File
         secondaryFiles: [.bai]
-        type: int
     mapq:
         type: int?
         default: 0
@@ -97,7 +96,6 @@ steps:
             output_vcf_name: 
                 source: "#caller_prefix"
                 valueFrom: "$(self).merged.vcf.gz"
-            merge_method: merge_method
             output_type: "z"
         out:
             [merged_sv_vcf]

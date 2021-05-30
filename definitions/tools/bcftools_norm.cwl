@@ -43,7 +43,7 @@ inputs:
         doc: "input bgzipped tabix indexed vcf to normalize"
 
 outputs:
-    norm_vcf:
+    normalized_vcf:
         type: File
         outputBinding:
             glob: $(inputs.output_vcf_name)

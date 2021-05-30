@@ -24,6 +24,8 @@ requirements:
 
             NORMAL=`samtools view -H $normal_bam | perl -nE 'say $1 if /^\@RG.+\tSM:([ -~]+)/' | head -n 1`
             TUMOR=`samtools view -H $tumor_bam | perl -nE 'say $1 if /^\@RG.+\tSM:([ -~]+)/' | head -n 1`
+            echo -n $TUMOR > sampleName.txt
+            # echo "{'tumor_sample_name': $TUMOR}"
 
             /gatk/gatk Mutect2 --java-options "-Xmx20g" -O $1 -R $2 -I $3 -tumor "$TUMOR" -I $4 -normal "$NORMAL" -L $5 #Running Mutect2.
             /gatk/gatk FilterMutectCalls -R $2 -V mutect.vcf.gz -O mutect.filtered.vcf.gz #Running FilterMutectCalls on the output vcf.
@@ -61,3 +63,11 @@ outputs:
         outputBinding:
             glob: "mutect.filtered.vcf.gz"
         secondaryFiles: [.tbi]
+    # tumor_sample_name: string
+    tumor_sample_name:
+        type: string
+        outputBinding:
+            glob: sampleName.txt
+            loadContents: true
+            outputEval: $(self[0].contents)
+

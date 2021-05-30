@@ -19,7 +19,7 @@ inputs:
     normal_bams:
         type: File[]
         secondaryFiles: [.bai]
-    merged_vcf:
+    vcf:
         type: File
         doc: "Must be in vcf format, not .gz.  Usually after filtered from Nsamples"
     mapq:
@@ -52,7 +52,7 @@ steps:
             sample_name: 
                 valueFrom: $(inputs.bam.nameroot)
             reference: reference
-            vcf: merged_vcf
+            vcf: vcf
             baseq: baseq
             mapq: mapq
         out:

@@ -41,8 +41,7 @@ outputs:
         secondaryFiles: [.tbi]
     filtered_vcf:
         type: File
-        outputSource: index/indexed_vcf
-        secondaryFiles: [.tbi]
+        outputSource: isec_complement_gnomAD/complement_vcf
 steps:
     filter_gnomAD_exclude:
         run: ../tools/bcftools_filter.cwl
@@ -57,6 +56,7 @@ steps:
             output_vcf_name: 
                 valueFrom: "gnomad.AF.exclude.vcf.gz"
         out: [exclude_vcf]
+        doc: "this filter's the gnomAD_af_only file based on gnomAD POPAF threshold"
     normalize_gnomAD_exclude:
         run: ../tools/bcftools_norm.cwl
         in:
@@ -65,12 +65,12 @@ steps:
                 default: "z"
             output_vcf_name: 
                 valueFrom: "gnomad.AF.exclude.norm.vcf.gz"
-        out: [norm_vcf]
+        out: [normalized_vcf]
         doc: "for isec to work on multiallelics, the file must be normalized"
     index_exclude_norm:
         run: ../tools/index_vcf.cwl
         in:
-            vcf: normalize_gnomAD_exclude/norm_vcf
+            vcf: normalize_gnomAD_exclude/normalized_vcf
         out:
             [indexed_vcf]
     isec_complement_gnomAD:
@@ -80,12 +80,9 @@ steps:
             exclude_vcf: index_exclude_norm/indexed_vcf
             output_vcf_name: 
                 source: "#output_prefix"
-                valueFrom: "$(self).merged.gnomAD.AF.vcf.gz"
+                valueFrom: "$(self).gnomAD_AF_filter.vcf"
+            output_type: 
+                default: "v"
+        doc: "both input files should be bgzipped and indexed"
         out:
             [complement_vcf]
-    index:
-        run: ../tools/index_vcf.cwl
-        in:
-            vcf: isec_complement_gnomAD/complement_vcf
-        out:
-            [indexed_vcf]
