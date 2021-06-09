@@ -1,6 +1,5 @@
 #!/usr/bin/env cwl-runner
 
-### Need to do ###
 cwlVersion: v1.0
 class: CommandLineTool
 label: "Used for complementing first vcf from second vcf"

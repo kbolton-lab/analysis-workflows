@@ -13,7 +13,7 @@ requirements:
     - class: InlineJavascriptRequirement
     - class: ResourceRequirement
       coresMin: 8
-      ramMin: 32000
+      ramMin: 2000
     - class: DockerRequirement
       dockerPull: "kboltonlab/msk_getbasecounts:1.0"
     - class: InitialWorkDirRequirement
@@ -36,17 +36,15 @@ requirements:
 
 inputs:
     reference:
-        type:
-            - string
-            - File
+        type: File
         inputBinding:
             position: 1
         doc: "vcf file to filter"
-    bam:
+    cram:
         type: File
         inputBinding:
             position: 3
-        doc: "Normal bam"
+        doc: "Normal cram"
     sample_name:
         type: string
         inputBinding:

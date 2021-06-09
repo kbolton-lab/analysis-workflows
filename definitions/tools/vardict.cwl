@@ -36,7 +36,9 @@ requirements:
 
 inputs:
     reference:
-        type: File
+        type:
+            - string
+            - File
         inputBinding:
             position: 1
     af_threshold:

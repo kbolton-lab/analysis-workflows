@@ -6,9 +6,9 @@ label: "pindel v0.2.5b8"
 arguments: ["/usr/bin/perl", "pindel_helper.pl"]
 requirements:
     - class: ResourceRequirement
-      ramMin: 16000
+      ramMin: 32000
       tmpdirMin: 100000
-      coresMin: 4
+      coresMin: 8
     - class: DockerRequirement
       dockerPull: "mgibio/cle:v1.4.2"
     - class: InitialWorkDirRequirement
@@ -41,12 +41,12 @@ inputs:
         type: File
         secondaryFiles: ["^.bai"]
         inputBinding:
-            position: 1
+            position: 2
     normal_bam:
         type: File
         secondaryFiles: ["^.bai"]
         inputBinding:
-            position: 2
+            position: 1
     insert_size:
         type: int
         default: 400
@@ -54,12 +54,14 @@ inputs:
             position: 3
     tumor_sample_name:
         type: string
-        inputBinding:
-            position: 4
-    normal_sample_name:
-        type: string
+        default: 'TUMOR'
         inputBinding:
             position: 5
+    normal_sample_name:
+        type: string
+        default: 'NORMAL'
+        inputBinding:
+            position: 4
     reference:
         type:
             - string

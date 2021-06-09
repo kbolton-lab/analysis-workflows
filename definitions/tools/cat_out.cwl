@@ -6,7 +6,7 @@ requirements:
     - class: DockerRequirement
       dockerPull: "ubuntu:xenial"
     - class: ResourceRequirement
-      ramMin: 4000
+      ramMin: 16000
 stdout: "per_chromosome_pindel.out"
 inputs:
     pindel_outs:

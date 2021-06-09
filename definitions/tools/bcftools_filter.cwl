@@ -56,9 +56,9 @@ inputs:
         doc: "output file format"
 
 outputs:
-    exclude_vcf:
+    filtered_vcf:
         type: File
         outputBinding:
             glob: $(inputs.output_vcf_name)
-        secondaryFiles: [.tbi]
+        #secondaryFiles: [.tbi]
 

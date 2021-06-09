@@ -30,6 +30,7 @@ requirements:
             export name="$5"
             export p_value="$4"
 
+
             printf "##INFO=<ID=PON_RefDepth,Number=1,Type=Integer,Description=\"Total Ref_Depth for Normals\">\n##INFO=<ID=PON_AltCounts,Number=1,Type=Integer,Description=\"Total Alt_Counts for Normals\">\n" > pileup.header;
             printf "##INFO=<ID=PON_FISHER,Number=1,Type=Float,Description=\"P-value from Fisher's exact test with totals from PoN\">" > fisher.header;
             printf "##INFO=<ID=SAMPLE,Number=1,Type=String,Description=\"Sample name \(with whitespace translated to underscores)\">" > sample.header;
@@ -40,8 +41,10 @@ requirements:
             tabix $sample.name.gz -s1 -b2 -e2;
             bcftools annotate -a $sample.name.gz -h sample.header -c CHROM,POS,-,REF,ALT,SAMPLE $vcf_in -Ov -o $name.sample.vcf;
             
-            ## the filter_nsamples.py python script has to be in the current directory
-            if [[ $caller =~ "[Vv]arscan"  ]]
+            ## Varscan has AD and RD instead of comma sep AD field
+            ## you can't double quote for string match in bash like you can in zsh so need to make it a variable
+            pat="[Vv]arscan"
+            if [[ $caller =~ $pat ]]
             then
                 echo '
                 #!/usr/bin/env Rscript
@@ -114,8 +117,8 @@ requirements:
             LC_ALL=C.UTF-8 Rscript --vanilla ./fisherTestInput.R $name.fisher.input $name.fisher.output
             bgzip -f $name.fisher.output
             tabix -f -s1 -b2 -e2 $name.fisher.output.gz
-            bcftools annotate -a $name.fisher.output.gz -h fisher.header -c CHROM,POS,REF,ALT,-,-,-,-,PON_FISHER $name.sample.pileup.vcf -Ov -o $name.pileup.fisherPON.vcf
-            bcftools filter -i "INFO/PON_FISHER<$p_value" $name.pileup.fisherPON.vcf -Ov -o $name.filtered.pileup.fisherPON.vcf
+            bcftools annotate -a $name.fisher.output.gz -h fisher.header -c CHROM,POS,REF,ALT,-,-,-,-,PON_FISHER $name.sample.pileup.vcf -Oz -o $name.pileup.fisherPON.vcf.gz
+            bcftools filter -i "INFO/PON_FISHER<$p_value" $name.pileup.fisherPON.vcf.gz -Oz -o $name.filtered.pileup.fisherPON.vcf.gz
 
 inputs:
     vcf:
@@ -142,10 +145,10 @@ outputs:
     pon_vcf:
         type: File
         outputBinding:
-            glob: "$(inputs.vcf.nameroot).pileup.fisherPON.vcf"
+            glob: "$(inputs.vcf.nameroot).pileup.fisherPON.vcf.gz"
     pon_filtered_vcf:
         type: File
         outputBinding:
-            glob: "$(inputs.vcf.nameroot).filtered.pileup.fisherPON.vcf"
+            glob: "$(inputs.vcf.nameroot).filtered.pileup.fisherPON.vcf.gz"
 
 
