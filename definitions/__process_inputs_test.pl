@@ -19,23 +19,12 @@ my $build = Genome::Model::Build->get($build_id)
         is => 'Genome::Model::Build::CwlPipeline::InputProcessor',
         has_simple_input => [
             reference => { input_type => 'Text' },
-            mutect_pon2_file => { input_type => 'File' },
-            vardict_pon2_file => { input_type => 'File' },
-            varscan_pon2_file => { input_type => 'File' },
-            pindel_pon2_file => { input_type => 'File' },
+            mutect_pon2 => { input_type => 'File' },
+            vardict_pon2 => { input_type => 'File' },
+            varscan_pon2 => { input_type => 'File' },
+            pindel_pon2 => { input_type => 'File' },
             target_intervals => { input_type => 'File' },
             bait_intervals => { input_type => 'File' },
-            impact_annotation => { input_type => 'File' },
-            topmed_annotation => { input_type => 'File' },
-            cosmic_annotation => { input_type => 'File' },
-            tsg_annotation => { input_type => 'File' },
-            oncoKB_annotation => { input_type => 'File' },
-            pd_table_annotation => { input_type => 'File' },
-            panmyeloid_annotation => { input_type => 'File' },
-            blacklist_annotation => { input_type => 'File' },
-            segemental_duplications_annotation => { input_type => 'File' },
-            simple_repeats_annotation => { input_type => 'File' },
-            repeat_masker_annotation => { input_type => 'File' },
             picard_metric_accumulation_level => { input_type => 'Text' },
             vep_cache_dir => { input_type => 'Text' },
             mills => { input_type => 'File' },
@@ -62,10 +51,10 @@ my @inputs = $build->inputs;
 my $input_processor = InputProcessor->get($build->id);
 my $inputs = $input_processor->simple_inputs;
 $inputs->{scatter_count} = 50;
-$inputs->{bqsr_intervals} = [map 'chr'.$_, (1..22,"X","Y","M")];
+$inputs->{bqsr_intervals} = [map 'chr'.$_, (1..22,X,Y,M)];
 
 # pon
-my ($pon_file, @extra) = grep { $_->name eq 'pon_normal_bams_bulk' } @inputs;
+my ($pon_file, @extra) = grep { $_->name eq 'pon_normal_bams' } @inputs;
 if (@extra) {
     die 'multiple inputs found for PoN file';
 }
@@ -78,28 +67,25 @@ foreach (@pon_lines) {
 }
 $inputs->{pon_normal_bams} = \@pon_bams;
 
-# bqsr_known_sites
-# my ($bqsr_file, @extra) = grep { $_->name eq 'bqsr_known_sites' } @inputs;
+
+## What is this section? #################################################################
+# my ($tumor_input, @extra) = grep { $_->name eq 'tumor_sample' } @inputs;
 # if (@extra) {
-#     die 'multiple inputs found for bqsr_known_sites file';
+#     die 'multiple inputs found for tumor sample';
 # }
-# my @bqsr_lines = Genome::Sys->read_file($bqsr_file->value_id); chomp @bqsr_lines;
-# my @bqsr_known_sites;
-# foreach (@bqsr_lines) {
-#     push @bqsr_known_sites, { class => 'File', path => $_ };
+# my $tumor_sample = $tumor_input->value_class_name->get($tumor_input->value_id)
+#     or die 'no tumor found for input';
+
+# my ($normal_input, @extra) = grep { $_->name eq 'normal_sample' } @inputs;
+# if (@extra) {
+#     die 'multiple inputs found for normal sample';
 # }
-# $inputs->{bqsr_known_sites} = \@bqsr_known_sites;
-my @bqsr_known_sites;
-for my $input_name (qw(dbsnp_vcf known_indels mills)) {
-    my ($file_input, @extra) = grep { $_->name eq $input_name } @inputs;
-    if (@extra) { die 'multiple inputs found for ' . $input_name; }
-    push @bqsr_known_sites, { class => 'File', path => $file_input->value_id };
-}
+# my $normal_sample = $normal_input->value_class_name->get($normal_input->value_id)
+#     or die 'no normal found for input';
+##########################################################################################
 
-$inputs->{bqsr_known_sites} = \@bqsr_known_sites;
-
-# my @instrument_data_inputs = grep { $_->name eq 'instrument_data' } @inputs;
-# my @ids = map $_->value_id, @instrument_data_inputs;
+my @instrument_data_inputs = grep { $_->name eq 'instrument_data' } @inputs;
+my @ids = map $_->value_id, @instrument_data_inputs;
 
 #my $target_region_set_name;
 my $multiple_trsn = 0;
@@ -107,8 +93,8 @@ $inputs->{tumor_sample_name} = $build->subject->name;
 
 # cat /gscmnt/gc2560/core/processing-profile/cwl-pipeline/f6faba8d6c234cac9bcd58e60ebe7579/process_inputs.pl
 # cat /gscmnt/gc2560/core/processing-profile/cwl-pipeline/f5eb943e8a7b4fcbb7a4c26e4b98e1a3/process_inputs.pl
-# my @ids = map $_->value_id, @instrument_data_inputs; # this is never used even in somatic_exome process_inputs.pl
 my @instrument_data_inputs = grep { $_->name eq 'instrument_data' } @inputs;
+# my @ids = map $_->value_id, @instrument_data_inputs; # this is never used even in somatic_exome process_inputs.pl
 
 for my $input (@instrument_data_inputs) {
     my $id = $input->value_class_name->get($input->value_id)
@@ -119,27 +105,27 @@ for my $input (@instrument_data_inputs) {
        $inputs->{tumor_cram} = { class => 'File', path => $crams[0] };
     } else {
         die 'No CRAM found for instrument data ' . $id->id;
-    } 
+    }
+   
 }
 ######################################################
-## only 1 unmatched normal input for ever sample CRAM
+## only 1 unmatched normal
 my ($normal_bam, @extra) = grep { $_->name eq 'normal_bam' } @inputs;
 if (@extra) {
     die 'multiple inputs found for normal bam';
-}
 $inputs->{normal_bam} = {class => 'File', path => $normal_bam->value_id}; 
 my ($normal_sample_name, @extra) = grep { $_->name eq 'normal_sample_name' } @inputs;
 if (@extra) {
     die 'multiple inputs found for normal bam';
-}
 $inputs->{normal_sample_name} = $normal_sample_name->value_id;
 
 
+
 $inputs->{per_base_intervals} = [
-    { label => 'UKBB_WES', file => '/storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/xgen_plus_spikein.GRCh38.interval_list' },
+    { label => 'clinvar', file => '/gscmnt/gc2560/core/model_data/interval-list/01f4fae3699646c3af2fa47853da7a8c/06a82ecf9c434b7ab03d82e59eaa28c8.interval_list' },
 ];
 $inputs->{per_target_intervals} = [
-    { label => 'UKBB_WES', file => '/storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/xgen_plus_spikein.GRCh38.interval_list' },
+    { label => 'acmg_genes', file => '/gscmnt/gc2560/core/model_data/interval-list/db8c25932fd94d2a8a073a2e20449878/a35b64d628b94df194040032d53b5616.interval_list' },
 ];
 $inputs->{summary_intervals} = [];
 

@@ -68,8 +68,7 @@ inputs:
     pon_normal_bams:
         type: 
             type: array
-            items: File
-        secondaryFiles: [.bai, ^.bai]
+            items: string
     bqsr_known_sites:
         type: File[]
         secondaryFiles: [.tbi]
@@ -111,9 +110,6 @@ inputs:
           targeted. This parameter allows variants to be called in these wingspan regions, extending
           this many base pairs from each side of the target regions.
         default: 100
-    # vardict_bed_targets:
-    #     type: File
-    #     doc: "VardictJava requires a bed file to run the variant calling, i.e. '-c 1 -S 2 -E 3 -g 4 /path/to/my.bed'"
     per_base_intervals:
         type: ../types/labelled_file.yml#labelled_file[]
         label: "per_base_intervals: additional intervals over which to summarize coverage/QC at a per-base resolution"
@@ -135,12 +131,6 @@ inputs:
     qc_minimum_base_quality:
         type: int?
         default: 0
-    # nsamples:
-    #     type: int?
-    #     default: 15
-    #     doc: |
-    #         The minimum alloted threshold for number of samples a mutation can have to filter out artefacts and sequencing errors
-    #         Can be found with qbinom(p, size, prob, lower.tail = TRUE, log.p = FALSE) in R. 15 for UKBB Batch qbinom(0.95, 1000, .01)
     scatter_count:
         type: int
         default: 20
@@ -157,7 +147,7 @@ inputs:
         default: 0
     varscan_min_coverage:
         type: int?
-        default: 8
+        default: 4
     varscan_min_var_freq:
         type: float?
         default: 0.005
@@ -169,6 +159,29 @@ inputs:
     pindel_insert_size:
         type: int
         default: 400
+    impact_annotation:
+        type: File
+    topmed_annotation:
+        type: File
+    cosmic_annotation:
+        type: File
+    tsg_annotation:
+        type: File
+    oncoKB_annotation:
+        type: File
+    pd_table_annotation:
+        type: File
+    panmyeloid_annotation:
+        type: File
+    blacklist_annotation:
+        type: File
+    segemental_duplications_annotation:
+        type: File
+    simple_repeats_annotation:
+        type: File
+    repeat_masker_annotation:
+        type: File
+ 
     # docm_vcf:
     #     type: File
     #     secondaryFiles: [.tbi]
@@ -222,8 +235,15 @@ inputs:
         type: File
         default: 
             class: File
-            path: "/Users/brian/Bolton/CWL_TESTS/af-only-gnomad.hg38.chr22.vcf.gz"
+            path: "/storage1/fs1/bolton/Active/data/hg38/vcf/af-only-gnomad.biallelic.hg38.vcf.gz"
         secondaryFiles: [.tbi]
+    filter_flag:
+        type:
+          - "null" 
+          - type: enum
+            symbols: ["include", "exclude"]
+        default: "include"
+        doc: "we default the gnomad to include > than threshold because this is smaller file for isec complement"
     cle_vcf_filter:
         type: boolean
         default: false
@@ -252,15 +272,26 @@ inputs:
     af_threshold: 
         type: float?
         default: 0.005
-        doc: "for CH this is how low we want to call"
+        doc: "for CH this is how low we want to call, used for vardict"
+    bcbio_filter_string:
+        type: string
+        default: "((FMT/AF * FMT/DP < 6) && ((FMT/MQ < 55.0 && FMT/NM > 1.0) || (FMT/MQ < 60.0 && FMT/NM > 2.0) || (FMT/DP < 10) || (FMT/QUAL < 45)))"
+        doc: "http://bcb.io/2016/04/04/vardict-filtering/"
+    mutect_pon2_file:
+        type: File
+        secondaryFiles: [.tbi]
+    varscan_pon2_file:
+        type: File
+        secondaryFiles: [.tbi]
+    vardict_pon2_file:
+        type: File
+        secondaryFiles: [.tbi]
+    pindel_pon2_file:
+        type: File
+        secondaryFiles: [.tbi]
+
 
 outputs:
-    tumor_bam:
-        type: File
-        outputSource: index_bam/indexed_bam
-    # tumor_mark_duplicates_metrics:
-    #     type: File[]
-    #     outputSource: tumor_qc/mark_duplicates_metrics
     tumor_insert_size_metrics:
         type: File
         outputSource: tumor_qc/insert_size_metrics
@@ -294,67 +325,90 @@ outputs:
     tumor_verify_bam_id_depth:
         type: File
         outputSource: tumor_qc/verify_bam_id_depth
+
     mutect_full:
         type: File
         outputSource: mutect/unfiltered_vcf
-    mutect_gnomad_filter:
+    mutect_pon_annotated_unfiltered_vcf:
         type: File
-        outputSource:  mutect_gnomad_pon_filters/processed_gnomAD_vcf
-        secondaryFiles: [.tbi]
-    mutect_pon_filtered_vcf:
+        outputSource: mutect_gnomad_pon_filters/processed_gnomAD_filtered_vcf
+    mutect_pon_annotated_filtered_vcf:
         type: File
-        outputSource: mutect_gnomad_pon_filters/processed_filtered_vcf
-        secondaryFiles: [.tbi]
+        outputSource: mutect_pon2/annotated_vcf
     mutect_pon_total_counts:
         type: File
         outputSource: mutect_gnomad_pon_filters/pon_total_counts
         secondaryFiles: [.tbi]
 
-    # varscan_gnomad_filter:
-    #     type: File
-    #     outputSource:  varscan_gnomad_pon_filters/processed_gnomAD_vcf
-    #     secondaryFiles: [.tbi]
-    # varscan_pon_filtered_vcf:
-    #     type: File
-    #     outputSource: varscan_gnomad_pon_filters/processed_filtered_vcf
-    #     secondaryFiles: [.tbi]
-    # varscan_pon_total_counts:
-    #     type: File
-    #     outputSource: varscan_gnomad_pon_filters/pon_total_counts
-    #     secondaryFiles: [.tbi]
+    varscan_full:
+        type: File
+        outputSource: varscan/unfiltered_vcf
+    varscan_pon_annotated_unfiltered_vcf:
+        type: File
+        outputSource: varscan_gnomad_pon_filters/processed_gnomAD_filtered_vcf
+    varscan_pon_annotated_filtered_vcf:
+        type: File
+        outputSource: varscan_pon2/annotated_vcf
+    varscan_pon_total_counts:
+        type: File
+        outputSource: varscan_gnomad_pon_filters/pon_total_counts
+        secondaryFiles: [.tbi]
 
-    # vardict_gnomad_filter:
-    #     type: File
-    #     outputSource:  vardict_gnomad_pon_filters/processed_gnomAD_vcf
-    #     secondaryFiles: [.tbi]
-    # vardict_pon_filtered_vcf:
-    #     type: File
-    #     outputSource: vardict_gnomad_pon_filters/processed_filtered_vcf
-    #     secondaryFiles: [.tbi]
-    # vardict_pon_total_counts:
-    #     type: File
-    #     outputSource: vardict_gnomad_pon_filters/pon_total_counts
-    #     secondaryFiles: [.tbi]
+    vardict_full:
+        type: File
+        outputSource: vardict/unfiltered_vcf
+    vardict_bcbio_filtered:
+        type: File
+        outputSource: vardict/bcbio_filtered_vcf
+        secondaryFiles: [.tbi]
+    vardict_pon_annotated_unfiltered_vcf:
+        type: File
+        outputSource: vardict_gnomad_pon_filters/processed_gnomAD_filtered_vcf
+    vardict_pon_annotated_filtered_vcf:
+        type: File
+        outputSource: vardict_pon2/annotated_vcf
+    vardict_pon_total_counts:
+        type: File
+        outputSource: vardict_gnomad_pon_filters/pon_total_counts
+        secondaryFiles: [.tbi]
 
-    # pindel_gnomad_filter:
-    #     type: File
-    #     outputSource:  pindel_gnomad_pon_filters/processed_gnomAD_vcf
-    #     secondaryFiles: [.tbi]
-    # pindel_pon_filtered_vcf:
-    #     type: File
-    #     outputSource: pindel_gnomad_pon_filters/processed_filtered_vcf
-    #     secondaryFiles: [.tbi]
-    # pindel_pon_total_counts:
-    #     type: File
-    #     outputSource: pindel_gnomad_pon_filters/pon_total_counts
-    #     secondaryFiles: [.tbi]
+    pindel_full:
+        type: File
+        outputSource: pindel/unfiltered_vcf
+    pindel_pon_annotated_unfiltered_vcf:
+        type: File
+        outputSource: pindel_gnomad_pon_filters/processed_gnomAD_filtered_vcf
+    pindel_pon_annotated_filtered_vcf:
+        type: File
+        outputSource: pindel_pon2/annotated_vcf
+    pindel_pon_total_counts:
+        type: File
+        outputSource: pindel_gnomad_pon_filters/pon_total_counts
+        secondaryFiles: [.tbi]
+
+    gnomad_exclude:
+        type: File
+        outputSource: get_gnomad_exclude/normalized_gnomad_exclude
+        secondaryFiles: [.tbi]
+    final_tsv: 
+        type: File
+        outputSource: final_annotation/final_tsv
+    column_check:
+        type: File
+        outputSource: final_annotation/column_check
 
 steps:
+    index_cram:
+        run: ../tools/index_cram.cwl
+        in:
+            cram: tumor_cram
+        out:
+            [indexed_cram]
     tumor_cram_to_bam:
         run: ../subworkflows/cram_to_bam_and_index.cwl
         in:
             reference: reference
-            cram: tumor_cram
+            cram: index_cram/indexed_cram
         out:
             [bam]
     bqsr:
@@ -404,7 +458,19 @@ steps:
             roi_padding: target_interval_padding
         out:
             [expanded_interval_list]
-    ## scatter each caller
+    
+    get_gnomad_exclude:
+        run: ../subworkflows/get_gnomAD_filter.cwl
+        in:
+            gnomad_AF_only: gatk_gnomad_af_only
+            filter_flag: filter_flag
+            output_type:
+                default: "z"
+            output_vcf_name: 
+                valueFrom: "gnomad.AF.exclude.vcf.gz"
+        out: [gnomad_exclude, normalized_gnomad_exclude]
+        doc: "this filter's the gnomAD_af_only file based on gnomAD POPAF threshold, it is what should be excluded if our calls have it since above threshold"
+
     mutect:
         run: ../subworkflows/mutect_normalize.cwl
         in:
@@ -425,8 +491,7 @@ steps:
                 default: "z"
             tumor_sample_name: tumor_sample_name
             output_vcf_name: 
-                valueFrom: |
-                    $(inputs.tumor_sample_name).vcf.gz
+                valueFrom: $(inputs.tumor_sample_name).vcf.gz
         out:
             [tumor_only_vcf]
     mutect_extract_tumor_index:
@@ -440,8 +505,7 @@ steps:
         in:
             reference: reference
             caller_vcf: mutect_extract_tumor_index/indexed_vcf
-            gnomad_AF_only: gatk_gnomad_af_only
-            gnomad_AF: filter_gnomADe_maximum_population_allele_frequency
+            gnomAD_exclude_vcf: get_gnomad_exclude/normalized_gnomad_exclude
             caller_prefix: 
                 source: tumor_sample_name
                 valueFrom: "mutect.$(self)"
@@ -450,7 +514,7 @@ steps:
                 source: tumor_sample_name
                 valueFrom: "mutect.$(self).pon.total.counts"
         out:
-            [processed_gnomAD_vcf, processed_filtered_vcf, pon_total_counts]
+            [processed_gnomAD_filtered_vcf, processed_filtered_vcf, pon_total_counts]
         doc: "processed_filtered_vcf is gnomAD and PoN filtered"
     mutect_annotate_variants:
         run: ../tools/vep.cwl
@@ -468,82 +532,257 @@ steps:
             plugins: vep_plugins
         out:
             [annotated_vcf, vep_summary]
+    mutect_pon2:
+        run: ../tools/pon2percent.cwl
+        in:
+            vcf: mutect_annotate_variants/annotated_vcf
+            vcf2PON: mutect_pon2_file
+            caller:  
+                valueFrom: "mutect"
+            sample_name: tumor_sample_name
+        out:
+            [annotated_vcf]
 
+    varscan:
+        run: ../subworkflows/varscan_pre_and_post_processing.cwl
+        in:
+            reference: reference
+            tumor_bam: index_bam/indexed_bam
+            normal_bam: normal_bam
+            # interval_list: pad_target_intervals/expanded_interval_list
+            interval_list: target_intervals
+            scatter_count: scatter_count
+            strand_filter: varscan_strand_filter
+            min_coverage: varscan_min_coverage
+            min_var_freq: varscan_min_var_freq
+            p_value: varscan_p_value
+            max_normal_freq: varscan_max_normal_freq
+            normal_sample_name: normal_sample_name
+            tumor_sample_name: tumor_sample_name
+        out:
+            [unfiltered_vcf, filtered_vcf]
+    varscan_extract_tumor:
+        run: ../tools/bcftools_extract_tumor.cwl
+        in:
+            vcf: varscan/unfiltered_vcf
+            output_type:
+                default: "z"
+            tumor_sample_name: tumor_sample_name
+            output_vcf_name: 
+                valueFrom: $(inputs.tumor_sample_name).vcf.gz
+        out:
+            [tumor_only_vcf]
+    varscan_extract_tumor_index:
+        run: ../tools/index_vcf.cwl
+        in:
+            vcf: varscan_extract_tumor/tumor_only_vcf
+        out:
+            [indexed_vcf]
+    varscan_gnomad_pon_filters:
+        run: ../subworkflows/gnomad_and_PoN_filter.cwl
+        in:
+            reference: reference
+            caller_vcf: varscan_extract_tumor_index/indexed_vcf
+            gnomAD_exclude_vcf: get_gnomad_exclude/normalized_gnomad_exclude
+            caller_prefix: 
+                source: tumor_sample_name
+                valueFrom: "varscan.$(self)"
+            normal_bams: pon_normal_bams
+            pon_final_name: 
+                source: tumor_sample_name
+                valueFrom: "varscan.$(self).pon.total.counts"
+        out:
+            [processed_gnomAD_filtered_vcf, processed_filtered_vcf, pon_total_counts]
+    varscan_annotate_variants:
+        run: ../tools/vep.cwl
+        in:
+            vcf: varscan_gnomad_pon_filters/processed_filtered_vcf
+            cache_dir: vep_cache_dir
+            ensembl_assembly: vep_ensembl_assembly
+            ensembl_version: vep_ensembl_version
+            ensembl_species: vep_ensembl_species
+            synonyms_file: synonyms_file
+            coding_only: annotate_coding_only
+            reference: reference
+            pick: vep_pick
+            custom_annotations: vep_custom_annotations
+            plugins: vep_plugins
+        out:
+            [annotated_vcf, vep_summary]
+    varscan_pon2:
+        run: ../tools/pon2percent.cwl
+        in:
+            vcf: varscan_annotate_variants/annotated_vcf
+            vcf2PON: varscan_pon2_file
+            caller:  
+                valueFrom: "varscan"
+            sample_name: tumor_sample_name
+        out:
+            [annotated_vcf]
 
-    # vardict:
-    #     run: ../subworkflows/vardict.cwl
-    #     in:
-    #         reference: reference
-    #         tumor_bam: index_bam/indexed_bam
-    #         normal_bam: normal_bam
-    #         interval_list: target_intervals # splits to bed
-    #         scatter_count: scatter_count
-    #         tumor_sample_name: tumor_sample_name
-    #         af_threshold: af_threshold
-    #         normal_sample_name: normal_sample_name
-    #     out:
-    #         [unfiltered_vcf, filtered_vcf, bcbio_filtered_vcf]
-    # vardict_extract_tumor:
-    #     run: ../tools/bcftools_extract_tumor.cwl
-    #     in:
-    #         vcf: vardict/bcbio_filtered_vcf
-    #         output_type:
-    #             default: "z"
-    #         tumor_sample_name: tumor_sample_name
-    #     out:
-    #         [tumor_only_vcf]
-    # vardict_extract_tumor_index:
-    #     run: ../tools/index_vcf.cwl
-    #     in:
-    #         vcf: vardict_extract_tumor/tumor_only_vcf
-    #     out:
-    #         [indexed_vcf]
-    # vardict_gnomad_pon_filters:
-    #     run: ../subworkflows/gnomad_and_PoN_filter.cwl
-    #     in:
-    #         reference: reference
-    #         caller_vcf: vardict_extract_tumor_index/indexed_vcf
-    #         gnomad_AF_only: gatk_gnomad_af_only
-    #         gnomad_AF: filter_gnomADe_maximum_population_allele_frequency
-    #         caller_prefix: 
-    #             source: tumor_sample_name
-    #             valueFrom: "vardict.$(self)"
-    #         normal_bams: pon_normal_bams
-    #         pon_final_name: 
-    #             source: tumor_sample_name
-    #             valueFrom: "vardict.$(self).pon.total.counts"
-    #     out:
-    #         [processed_gnomAD_vcf, processed_filtered_vcf, pon_total_counts]
-    # vardict_annotate_variants:
-    #     run: ../tools/vep.cwl
-    #     in:
-    #         vcf: vardict_gnomad_pon_filters/processed_filtered_vcf
-    #         cache_dir: vep_cache_dir
-    #         ensembl_assembly: vep_ensembl_assembly
-    #         ensembl_version: vep_ensembl_version
-    #         ensembl_species: vep_ensembl_species
-    #         synonyms_file: synonyms_file
-    #         coding_only: annotate_coding_only
-    #         reference: reference
-    #         pick: vep_pick
-    #         custom_annotations: vep_custom_annotations
-    #         plugins: vep_plugins
-    #     out:
-    #         [annotated_vcf, vep_summary]
+    vardict:
+        run: ../subworkflows/vardict.cwl
+        in:
+            reference: reference
+            tumor_bam: index_bam/indexed_bam
+            normal_bam: normal_bam
+            interval_list: target_intervals # splits to bed
+            scatter_count: scatter_count
+            tumor_sample_name: tumor_sample_name
+            af_threshold: af_threshold
+            normal_sample_name: normal_sample_name
+            bcbio_filter_string: bcbio_filter_string
+        out:
+            [unfiltered_vcf, filtered_vcf, bcbio_filtered_vcf]
+    vardict_extract_tumor:
+        run: ../tools/bcftools_extract_tumor.cwl
+        in:
+            vcf: vardict/bcbio_filtered_vcf
+            output_type:
+                default: "z"
+            tumor_sample_name: tumor_sample_name
+            output_vcf_name: 
+                valueFrom: $(inputs.tumor_sample_name).vcf.gz
+        out:
+            [tumor_only_vcf]
+    vardict_extract_tumor_index:
+        run: ../tools/index_vcf.cwl
+        in:
+            vcf: vardict_extract_tumor/tumor_only_vcf
+        out:
+            [indexed_vcf]
+    vardict_gnomad_pon_filters:
+        run: ../subworkflows/gnomad_and_PoN_filter.cwl
+        in:
+            reference: reference
+            caller_vcf: vardict_extract_tumor_index/indexed_vcf
+            gnomAD_exclude_vcf: get_gnomad_exclude/normalized_gnomad_exclude
+            caller_prefix: 
+                source: tumor_sample_name
+                valueFrom: "vardict.$(self)"
+            normal_bams: pon_normal_bams
+            pon_final_name: 
+                source: tumor_sample_name
+                valueFrom: "vardict.$(self).pon.total.counts"
+        out:
+            [processed_gnomAD_filtered_vcf, processed_filtered_vcf, pon_total_counts]
+    vardict_annotate_variants:
+        run: ../tools/vep.cwl
+        in:
+            vcf: vardict_gnomad_pon_filters/processed_filtered_vcf
+            cache_dir: vep_cache_dir
+            ensembl_assembly: vep_ensembl_assembly
+            ensembl_version: vep_ensembl_version
+            ensembl_species: vep_ensembl_species
+            synonyms_file: synonyms_file
+            coding_only: annotate_coding_only
+            reference: reference
+            pick: vep_pick
+            custom_annotations: vep_custom_annotations
+            plugins: vep_plugins
+        out:
+            [annotated_vcf, vep_summary]
+    vardict_pon2:
+        run: ../tools/pon2percent.cwl
+        in:
+            vcf: vardict_annotate_variants/annotated_vcf
+            vcf2PON: vardict_pon2_file
+            caller:  
+                valueFrom: "vardict"
+            sample_name: tumor_sample_name
+        out:
+            [annotated_vcf]
 
-    # pindel:
-    #     run: ../subworkflows/pindel.cwl
-    #     in:
-    #         reference: reference
-    #         tumor_bam: index_bam/indexed_bam
-    #         normal_bam: normal_bam
-    #         interval_list: roi_intervals
-    #         scatter_count: scatter_count
-    #         insert_size: pindel_insert_size
-    #         tumor_sample_name: 
-    #             valueFrom: "$(inputs.tumor_bam.nameroot)"
-    #         normal_sample_name: 
-    #             valueFrom: "$(inputs.normal_bam.nameroot)"
-    #     out:
-    #         [unfiltered_vcf, filtered_vcf]
-    
+    pindel:
+        run: ../subworkflows/pindel.cwl
+        in:
+            reference: reference
+            tumor_bam: index_bam/indexed_bam
+            normal_bam: normal_bam
+            # interval_list: pad_target_intervals/expanded_interval_list
+            interval_list: target_intervals
+            scatter_count: scatter_count
+            insert_size: pindel_insert_size
+            tumor_sample_name: tumor_sample_name
+            normal_sample_name: normal_sample_name
+        out:
+            [unfiltered_vcf, filtered_vcf]
+    pindel_extract_tumor:
+        run: ../tools/bcftools_extract_tumor.cwl
+        in:
+            vcf: pindel/unfiltered_vcf
+            output_type:
+                default: "z"
+            tumor_sample_name: tumor_sample_name
+            output_vcf_name: 
+                valueFrom: $(inputs.tumor_sample_name).vcf.gz
+        out:
+            [tumor_only_vcf]
+    pindel_extract_tumor_index:
+        run: ../tools/index_vcf.cwl
+        in:
+            vcf: pindel_extract_tumor/tumor_only_vcf
+        out:
+            [indexed_vcf]
+    pindel_gnomad_pon_filters:
+        run: ../subworkflows/gnomad_and_PoN_filter.cwl
+        in:
+            reference: reference
+            caller_vcf: pindel_extract_tumor_index/indexed_vcf
+            gnomAD_exclude_vcf: get_gnomad_exclude/normalized_gnomad_exclude
+            caller_prefix: 
+                source: tumor_sample_name
+                valueFrom: "pindel.$(self)"
+            normal_bams: pon_normal_bams
+            pon_final_name: 
+                source: tumor_sample_name
+                valueFrom: "pindel.$(self).pon.total.counts"
+        out: 
+            [processed_gnomAD_filtered_vcf, processed_filtered_vcf, pon_total_counts]
+    pindel_annotate_variants:
+        run: ../tools/vep.cwl
+        in:
+            vcf: pindel_gnomad_pon_filters/processed_filtered_vcf
+            cache_dir: vep_cache_dir
+            ensembl_assembly: vep_ensembl_assembly
+            ensembl_version: vep_ensembl_version
+            ensembl_species: vep_ensembl_species
+            synonyms_file: synonyms_file
+            coding_only: annotate_coding_only
+            reference: reference
+            pick: vep_pick
+            custom_annotations: vep_custom_annotations
+            plugins: vep_plugins
+        out:
+            [annotated_vcf, vep_summary]
+    pindel_pon2:
+        run: ../tools/pon2percent.cwl
+        in:
+            vcf: pindel_annotate_variants/annotated_vcf
+            vcf2PON: pindel_pon2_file
+            caller:  
+                valueFrom: "pindel"
+            sample_name: tumor_sample_name
+        out:
+            [annotated_vcf]
+    final_annotation:
+        run: ../tools/annotate_CH_pd.cwl
+        in:
+            mutect_vcf: mutect_pon2/annotated_vcf
+            varscan_vcf: varscan_pon2/annotated_vcf
+            vardict_vcf: vardict_pon2/annotated_vcf
+            pindel_vcf: pindel_pon2/annotated_vcf
+            sample_name: tumor_sample_name
+            impact_annotation: impact_annotation
+            topmed_annotation: topmed_annotation
+            cosmic_annotation: cosmic_annotation
+            tsg_annotation: tsg_annotation
+            oncoKB_annotation: oncoKB_annotation
+            pd_table_annotation: pd_table_annotation
+            panmyeloid_annotation: panmyeloid_annotation
+            blacklist_annotation: blacklist_annotation
+            segemental_duplications_annotation: segemental_duplications_annotation
+            simple_repeats_annotation: simple_repeats_annotation
+            repeat_masker_annotation: repeat_masker_annotation
+        out:
+            [final_tsv, column_check]

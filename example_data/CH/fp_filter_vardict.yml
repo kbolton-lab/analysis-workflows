@@ -1,0 +1,7 @@
+reference: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/GRCh38_full_analysis_set_plus_decoy_hla.fa
+bam: tumor_bam
+vcf: 
+  class: File
+  path: /storage1/fs1/bolton/Active/gmsroot/model_data/c4a875fbe2f14c688d81ad911bfff5b9/build8b0d04f6559b42f7889b3c6f1251bd7b/tmp/cromwell-executions/CH_exome_Final.cwl/68805fce-d425-4b9e-91d3-5e5b83ae0394/call-vardict/vardict.cwl/1b94fa96-3d00-4708-80f9-fe6def858f40/call-index/execution/merged.vcf.gz
+variant_caller: "vardict"
+sample_name: UKB_5578287_232976521

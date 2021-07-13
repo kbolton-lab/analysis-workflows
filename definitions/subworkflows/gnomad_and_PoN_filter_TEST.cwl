@@ -73,7 +73,7 @@ steps:
         out:
             [complement_vcf]
     pon_pileup:
-        run: get_base_counts_multi_sample.cwl
+        run: get_base_counts_multi_sample_TEST.cwl
         in:
             reference: reference
             normal_bams: normal_bams

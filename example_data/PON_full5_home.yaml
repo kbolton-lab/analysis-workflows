@@ -1,0 +1,12 @@
+---
+reference:
+  class: File
+  path: /Volumes/bolton/Active/projects/mocha/UKBB/exome/GRCh38_full_analysis_set_plus_decoy_hla.fa
+normal_bams: 
+- "/Volumes/bolton/Active/projects/mocha/UKBB/exome/young/1006108_23153_0_0.bam"
+- "/Volumes/bolton/Active/projects/mocha/UKBB/exome/young/1010590_23153_0_0.bam"
+- "/Volumes/bolton/Active/projects/mocha/UKBB/exome/young/1043126_23153_0_0.bam"
+vcf: 
+  class: File
+  path: /Volumes/bolton/Active/projects/mocha/UKBB/exome/young/test/mutect.UKB_1418397_233013435.gnomAD_AF_filter.vcf
+pon_final_name: "mutect.pon.test.stringarray.txt"

@@ -15,16 +15,26 @@ requirements:
       tmpdirMin: 25000
     - class: DockerRequirement
       dockerPull: "mgibio/vep_helper-cwl:vep_101.0_v2"
+    - class: InitialWorkDirRequirement
+      listing: 
+        - entry: "/Volumes/bga/Active/gmsroot/gc2560/core/cwl/inputs/VEP_cache"
+          entryname: "/VEP_cache"
+
 arguments:
-    ["--format", "vcf",
-    "--vcf",
-    "--fork", "4",
-    "--term", "SO",
-    "--transcript_version",
-    "--offline",
-    "--cache",
-    "--symbol",
-    "-o", { valueFrom: $(runtime.outdir)/$(inputs.vcf.nameroot)_annotated.vcf }]
+    - "--format" 
+    - "vcf"
+    - "--vcf"
+    - "--fork" 
+    - "4"
+    - "--term"
+    - "SO"
+    - "--transcript_version"
+    - "--offline"
+    - "--cache"
+    - "--symbol"
+    #"-o", { valueFrom: $(runtime.outdir)/$(inputs.vcf.nameroot)_annotated.vcf }]
+    - "-o"
+    - $(runtime.outdir)/$(inputs.vcf.nameroot.replace(/.vcf$/, ''))_annotated.vcf
 inputs:
     vcf:
         type: File
@@ -125,8 +135,8 @@ outputs:
     annotated_vcf:
         type: File
         outputBinding:
-            glob: "$(inputs.vcf.nameroot)_annotated.vcf"
+            glob: $(inputs.vcf.nameroot.replace(/.vcf$/, ''))_annotated.vcf
     vep_summary:
         type: File
         outputBinding:
-            glob: "$(inputs.vcf.nameroot)_annotated.vcf_summary.html"
+            glob: $(inputs.vcf.nameroot.replace(/.vcf$/, ''))_annotated.vcf_summary.html

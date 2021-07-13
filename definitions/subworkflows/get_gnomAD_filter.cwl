@@ -10,9 +10,6 @@ requirements:
     - class: StepInputExpressionRequirement
     - class: InlineJavascriptRequirement
 inputs:
-    vcf:
-        type: File
-        secondaryFiles: [.tbi]
     gnomad_AF_only:
         type: File
         secondaryFiles: [.tbi]
@@ -27,9 +24,9 @@ inputs:
             type: enum
             symbols: ["include", "exclude"]
         doc: "we default the gnomad to include > than threshold because this is smaller file for isec complement"
-    output_prefix: 
-        type: string
-        default: "caller"
+    # output_prefix: 
+    #     type: string
+    #     default: "caller"
 outputs:
     gnomad_exclude:
         type: File
@@ -39,13 +36,10 @@ outputs:
         type: File
         outputSource: index_exclude_norm/indexed_vcf
         secondaryFiles: [.tbi]
-    filtered_vcf:
-        type: File
-        outputSource: isec_complement_gnomAD/complement_vcf
-    gnomad_exclude_vcf:
-        type: File
-        outputSource: index_exclude_norm/indexed_vcf
-        secondaryFiles: [.tbi]
+    # filtered_vcf:
+    #     type: File
+    #     outputSource: isec_complement_gnomAD/complement_vcf
+    
 
 steps:
     filter_gnomAD_exclude:
@@ -78,16 +72,16 @@ steps:
             vcf: normalize_gnomAD_exclude/normalized_vcf
         out:
             [indexed_vcf]
-    isec_complement_gnomAD:
-        run: ../tools/bcftools_isec_complement.cwl
-        in:
-            vcf: vcf
-            exclude_vcf: index_exclude_norm/indexed_vcf
-            output_vcf_name: 
-                source: "#output_prefix"
-                valueFrom: "$(self).gnomAD_AF_filter.vcf"
-            output_type: 
-                default: "v"
-        doc: "both input files should be bgzipped and indexed"
-        out:
-            [complement_vcf]
+    # isec_complement_gnomAD:
+    #     run: ../tools/bcftools_isec_complement.cwl
+    #     in:
+    #         vcf: vcf
+    #         exclude_vcf: index_exclude_norm/indexed_vcf
+    #         output_vcf_name: 
+    #             source: "#output_prefix"
+    #             valueFrom: "$(self).gnomAD_AF_filter.vcf"
+    #         output_type: 
+    #             default: "v"
+    #     doc: "both input files should be bgzipped and indexed"
+    #     out:
+    #         [complement_vcf]

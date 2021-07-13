@@ -45,7 +45,7 @@ outputs:
 steps:
     get_pileup_counts:
         scatter: [bam]
-        run: ../tools/msk_get_base_counts.cwl
+        run: ../tools/msk_get_base_counts_TEST.cwl
         in:
             bam: normal_bams
             sample_name: 

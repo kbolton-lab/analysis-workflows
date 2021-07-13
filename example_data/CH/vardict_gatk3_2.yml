@@ -1,0 +1,13 @@
+reference: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/GRCh38_full_analysis_set_plus_decoy_hla.fa
+tumor_bam: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/001/1000051_23153_0_0.bam
+variant_caller: "vardict"
+normal_bam: 
+  class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/4384617_23153_0_0.bam
+interval_list: 
+  class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/xgen_plus_spikein.GRCh38.interval_list # splits to bed
+scatter_count: 30
+tumor_sample_name: UKB_4926522_233027596 # 1000051
+af_threshold: 0.005
+normal_sample_name: UKB_5154445_233122979

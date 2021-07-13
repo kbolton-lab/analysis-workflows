@@ -1,0 +1,48 @@
+rules:
+  sequencing_platform: solexa
+  'library->is_rna': 0
+models:
+  'Genome::Model::CwlPipeline':
+    processing_profile_id: '1407f8815c6646ac993ddd25f6512029'
+    input_data:
+        reference: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/GRCh38_full_analysis_set_plus_decoy_hla.fa
+        normal_bam: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/4384617_23153_0_0.bam
+        normal_sample_name: UKB_5154445_233122979 
+        pon_normal_bams_bulk: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/50.pon.bam.paths.txt
+        mutect_pon2: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/mutect2.merged.SB.2N.vcf.gz
+        vardict_pon2: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/vardict/filtered/vardict.2N.vcf.gz
+        varscan_pon2: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/varscan/varscan.2N.vcf.gz
+        pindel_pon2: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/pindel200/pindel.merged.2N.AD1.vcf.gz
+        target_intervals: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/xgen_plus_spikein.GRCh38.interval_list
+        bait_intervals: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/xgen_plus_spikein.GRCh38.interval_list
+        cosmic_vcf: /gscmnt/gc2560/core/build_merged_alignments/detect-variants--linus2112.gsc.wustl.edu-jwalker-774-52fa2dadc4ba4b6490abe0701907d394/snvs.hq.vcf.gz
+        custom_clinvar_vcf: /gscmnt/gc2560/core/custom_clinvar_vcf/v20181028/custom.vcf.gz
+        custom_gnomad_vcf: /gscmnt/gc2560/core/model_data/genome-db-ensembl-gnomad/2dd4b53431674786b760adad60a29273/fixed_b38_exome.vcf.gz
+        dbsnp_vcf: /gscmnt/gc2560/core/build_merged_alignments/detect-variants--linus2112.gsc.wustl.edu-jwalker-19443-e48c595a620a432c93e8dd29e4af64f2/snvs.hq.vcf.gz
+        docm_vcf: /gscmnt/gc2560/core/build_merged_alignments/detect-variants--linus2112.gsc.wustl.edu-jwalker-16572-a6fc7db1ea124431af5271c8cb23ee26/snvs.hq.vcf.gz
+        known_indels: /gscmnt/gc2560/core/build_merged_alignments/detect-variants--linus2112.gsc.wustl.edu-jwalker-20267-00cb8ff552914c17ad66d86031e10d30/indels.hq.vcf.gz
+        mills: /gscmnt/gc2560/core/build_merged_alignments/detect-variants--linus2112.gsc.wustl.edu-jwalker-20211-26b393cc7ab04120ac68cc2cbd4a15df/indels.hq.vcf.gz
+        omni_vcf: /gscmnt/gc2709/info/production_reference_GRCh38DH/accessory_vcf/omni25-ld-pruned-20000-2000-0.5-annotated.wchr.sites_only.b38.autosomes_only.vcf.gz
+        panel_of_normals_vcf: /gscmnt/gc2560/core/build_merged_alignments/detect-variants--linus2112.gsc.wustl.edu-jwalker-2237-db881b860992443da9d6aac8b36a7ea6/snvs.hq.vcf.gz
+        picard_metric_accumulation_level: LIBRARY
+        synonyms_file: /gscmnt/gc2560/core/model_data/2887491634/build50f99e75d14340ffb5b7d21b03887637/chromAlias.ensembl.txt
+        somalier_vcf: /gscmnt/gc2560/core/annotation_data/concordance_snps/GRC-human-build38_gnomad_exome_common_snps.vcf
+        vep_cache_dir: /gscmnt/gc2560/core/cwl/inputs/VEP_cache
+        vep_ensembl_assembly: GRCh38
+        vep_ensembl_version: 95
+        vep_ensembl_species: homo_sapiens
+        gatk_gnomad_af_only: /storage1/fs1/bolton/Active/data/hg38/vcf/af-only-gnomad.biallelic.hg38.vcf.gz
+        impact_annotation: /storage1/fs1/bolton/Active/projects/annotation_files/hg38_mut_full_long_filtered_KB_deid_2.xlsx
+        topmed_annotation: /storage1/fs1/bolton/Active/projects/annotation_files/bick_topmed_variants.txt
+        cosmic_annotation: /storage1/fs1/bolton/Active/projects/annotation_files/hg38_cosmic78_parsed.sorted.txt
+        tsg_annotation: /storage1/fs1/bolton/Active/projects/annotation_files/gene_census_TSG.txt
+        oncoKB_annotation: /storage1/fs1/bolton/Active/projects/annotation_files/all_curated_genes_v2.0.tsv
+        pd_table_annotation: /storage1/fs1/bolton/Active/projects/annotation_files/pd_table_kbreview_bick.xlsx
+        panmyeloid_annotation: /storage1/fs1/bolton/Active/projects/annotation_files/panmyeloid_variant_counts.tsv
+        blacklist_annotation: /storage1/fs1/bolton/Active/projects/annotation_files/ENCFF356LFX.bed
+        segemental_duplications_annotation: /storage1/fs1/bolton/Active/projects/annotation_files/dup.grch38.bed.gz
+        simple_repeats_annotation: /storage1/fs1/bolton/Active/projects/annotation_files/simpleRepeat.bed
+        repeat_masker_annotation: /storage1/fs1/bolton/Active/projects/annotation_files/repeatMaskerJoinedCurrent.bed
+        
+    instrument_data_properties:
+        subject: sample

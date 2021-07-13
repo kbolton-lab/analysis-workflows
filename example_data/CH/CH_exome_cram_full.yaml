@@ -1,0 +1,219 @@
+---
+reference:
+  class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/GRCh38_full_analysis_set_plus_decoy_hla.fa
+tumor_cram: 
+  class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/001/1000043/1000043_23153_0_0.cram
+tumor_sample_name: "UKB_1626332_232918706"
+normal_bam:
+  class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1006108_23153_0_0.bam
+normal_sample_name: "UKB_5181257_0229406506"
+pon_normal_bams:
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1006108_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1010590_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1043126_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1053975_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1076180_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1096643_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1109314_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1163549_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1177049_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1183507_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1185386_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1189049_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1215686_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1256309_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1287640_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1293526_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1333300_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1375385_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1376371_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1382947_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1385418_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1424474_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1434733_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1452783_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1479568_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1518292_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1518546_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1577004_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1585568_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1589759_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1594947_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1607409_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1609231_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1616699_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1621299_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1643519_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1657489_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1693965_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1700381_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1732214_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1766211_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1799674_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1803533_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1825915_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1826368_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1830830_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1865670_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1867912_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1903301_23153_0_0.bam
+- class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1907578_23153_0_0.bam
+bait_intervals:
+  class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/xgen_plus_spikein.GRCh38.interval_list
+target_intervals:
+  class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/xgen_plus_spikein.GRCh38.interval_list
+per_base_intervals: []
+per_target_intervals: []
+summary_intervals: []
+bqsr_intervals:
+- chr1
+- chr2
+- chr3
+- chr4
+- chr5
+- chr6
+- chr7
+- chr8
+- chr9
+- chr10
+- chr11
+- chr12
+- chr13
+- chr14
+- chr15
+- chr16
+- chr17
+- chr18
+- chr19
+- chr20
+- chr21
+- chr22
+- chrX
+- chrY
+- chrM
+bqsr_known_sites:
+  - path: /storage1/fs1/bga/Active/gmsroot/gc2709/info/production_reference_GRCh38DH/accessory_vcf/omni25-ld-pruned-20000-2000-0.5-annotated.wchr.sites_only.b38.autosomes_only.vcf.gz
+    class: File
+  - path: /storage1/fs1/bga/Active/gmsroot/gc2560/core/build_merged_alignments/detect-variants--linus2112.gsc.wustl.edu-jwalker-19443-e48c595a620a432c93e8dd29e4af64f2/snvs.hq.vcf.gz
+    class: File
+  - path: /storage1/fs1/bga/Active/gmsroot/gc2560/core/build_merged_alignments/detect-variants--linus2112.gsc.wustl.edu-jwalker-20211-26b393cc7ab04120ac68cc2cbd4a15df/indels.hq.vcf.gz
+    class: File
+  - path: /storage1/fs1/bga/Active/gmsroot/gc2560/core/build_merged_alignments/detect-variants--linus2112.gsc.wustl.edu-jwalker-20267-00cb8ff552914c17ad66d86031e10d30/indels.hq.vcf.gz
+    class: File
+scatter_count: 30
+omni_vcf:
+  class: File
+  path: /storage1/fs1/bga/Active/gmsroot/gc2709/info/production_reference_GRCh38DH/accessory_vcf/omni25-ld-pruned-20000-2000-0.5-annotated.wchr.sites_only.b38.autosomes_only.vcf.gz
+vep_to_table_fields:
+- Consequence
+- SYMBOL
+- Feature_type
+- Feature
+- HGVSc
+- HGVSp
+- cDNA_position
+- CDS_position
+- Protein_position
+- Amino_acids
+- Codons
+- HGNC_ID
+- Existing_variation
+- gnomADe_AF
+- CLIN_SIG
+- SOMATIC
+- PHENO
+- clinvar_CLINSIGN
+- clinvar_PHENOTYPE
+- clinvar_SCORE
+- clinvar_RCVACC
+- clinvar_TESTEDINGTR
+- clinvar_PHENOTYPELIST
+- clinvar_NUMSUBMIT
+- clinvar_GUIDELINES
+variants_to_table_fields:
+- CHROM
+- POS
+- REF
+- ALT
+- set
+variants_to_table_genotype_fields:
+- GT
+- AD
+- AF
+- DP
+vep_cache_dir: /storage1/fs1/bga/Active/gmsroot/gc2560/core/cwl/inputs/VEP_cache
+vep_custom_annotations:
+- method: 'exact'
+  force_report_coordinates: true
+  annotation:
+    file:
+      class: File
+      path: /storage1/fs1/bga/Active/gmsroot/gc2560/core/model_data/genome-db-ensembl-gnomad/2dd4b53431674786b760adad60a29273/fixed_b38_exome.vcf.gz
+      secondaryFiles: [{class: File, path: /storage1/fs1/bga/Active/gmsroot/gc2560/core/model_data/genome-db-ensembl-gnomad/2dd4b53431674786b760adad60a29273/fixed_b38_exome.vcf.gz.tbi}]
+    data_format: 'vcf'
+    name: 'gnomADe'
+    vcf_fields: ['AF','AF_AFR','AF_AMR','AF_ASJ','AF_EAS','AF_FIN','AF_NFE','AF_OTH','AF_SAS']
+    gnomad_filter: true
+    check_existing: true
+vep_ensembl_assembly: GRCh38
+vep_ensembl_version: "95"
+vep_ensembl_species: homo_sapiens
+synonyms_file:
+  class: File
+  path: /storage1/fs1/bga/Active/gmsroot/gc2560/core/model_data/2887491634/build50f99e75d14340ffb5b7d21b03887637/chromAlias.ensembl.txt
+picard_metric_accumulation_level: LIBRARY

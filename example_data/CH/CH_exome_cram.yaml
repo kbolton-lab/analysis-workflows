@@ -1,5 +1,4 @@
 ---
-# 
 reference:
   class: File
   path: /Volumes/bolton/Active/projects/mocha/UKBB/exome/GRCh38_full_analysis_set_plus_decoy_hla.fa
@@ -58,7 +57,7 @@ bqsr_known_sites:
     class: File
   - path: /Volumes/bga/Active/gmsroot/gc2560/core/build_merged_alignments/detect-variants--linus2112.gsc.wustl.edu-jwalker-20267-00cb8ff552914c17ad66d86031e10d30/indels.hq.vcf.gz
     class: File
-scatter_count: 10
+scatter_count: 3
 omni_vcf:
   class: File
   path: /Volumes/bga/Active/gmsroot/gc2709/info/production_reference_GRCh38DH/accessory_vcf/omni25-ld-pruned-20000-2000-0.5-annotated.wchr.sites_only.b38.autosomes_only.vcf.gz
@@ -120,4 +119,3 @@ synonyms_file:
   class: File
   path: /Volumes/bga/Active/gmsroot/gc2560/core/model_data/2887491634/build50f99e75d14340ffb5b7d21b03887637/chromAlias.ensembl.txt
 picard_metric_accumulation_level: LIBRARY
-vardict_bed_targets: /Volumes/bolton/Active/projects/mocha/UKBB/exome/xgen_plus_spikein.GRCh38.bed

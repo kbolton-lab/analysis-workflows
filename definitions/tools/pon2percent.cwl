@@ -4,9 +4,6 @@ cwlVersion: v1.0
 class: CommandLineTool
 
 baseCommand: ["/bin/bash", "PON2.sh"]
-arguments: [
-    { position: 4, valueFrom: $(inputs.caller).final.annotated.vcf.gz }
-]
 
 requirements:
     - class: ResourceRequirement
@@ -25,7 +22,7 @@ requirements:
             export caller="$3"
             export vcf_in="$1"
             export normal2="$2"
-            export name="$4"
+            export name="$caller"."$4".final.annotated.vcf.gz
 
             printf "##INFO=<ID=PON_2AT2_percent,Number=1,Type=Integer,Description=\"If 2 PoN samples have variant at >=2 percent\">\n" > pon2.header;
             bcftools query -f "%CHROM\t%POS\t%REF\t%REF\t1\n" $normal2 > normal2.txt
@@ -51,12 +48,17 @@ inputs:
         default: "mutect2"
         inputBinding:
             position: 3
+    sample_name:
+        type: string
+        default: "tumor"
+        inputBinding:
+            position: 4
     
 outputs:
     annotated_vcf:
         type: File
         outputBinding:
-            glob: "$(inputs.caller).final.annotated.vcf.gz"
+            glob: "$(inputs.caller).$(inputs.sample_name).final.annotated.vcf.gz"
         secondaryFiles: [.tbi]
 
 

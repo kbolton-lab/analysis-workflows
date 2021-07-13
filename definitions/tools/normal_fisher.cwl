@@ -2,8 +2,8 @@
 
 cwlVersion: v1.0
 class: CommandLineTool
-label: "Using pyvcf count number of samples with variant in a multivcf. https://pyvcf.readthedocs.io/en/latest/FILTERS.html"
-doc: "If the number of samples with variant is greater than (>) these are flagged and then removed"
+label: "Run a fisher test on the PoN bam totals for each variant"
+
 
 baseCommand: ["/bin/bash", "PON.sh"]
 arguments: [

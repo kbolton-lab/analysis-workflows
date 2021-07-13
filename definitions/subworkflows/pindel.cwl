@@ -58,8 +58,8 @@ steps:
             normal_bam: normal_bam
             region_file: split_interval_list_to_bed/split_beds
             insert_size: insert_size
-            tumor_sample_name: tumor_sample_name
-            normal_sample_name: normal_sample_name
+            #tumor_sample_name: tumor_sample_name
+            #normal_sample_name: normal_sample_name
         out:
             [per_region_pindel_out]
     cat_all:
@@ -99,14 +99,39 @@ steps:
             vcf: remove_end_tags/processed_vcf
         out:
             [indexed_vcf]
+    rename_tumor_sample:
+        run: ../tools/replace_vcf_sample_name.cwl
+        in: 
+            input_vcf: reindex/indexed_vcf
+            sample_to_replace:
+                default: 'TUMOR'
+            new_sample_name: tumor_sample_name
+        out:
+            [renamed_vcf]
+    rename_normal_sample:
+        run: ../tools/replace_vcf_sample_name.cwl
+        in: 
+            input_vcf: rename_tumor_sample/renamed_vcf
+            sample_to_replace:
+                default: 'NORMAL'
+            new_sample_name: normal_sample_name
+        out:
+            [renamed_vcf]
+    index_renamed:
+        run: ../tools/index_vcf.cwl
+        in:
+            vcf: rename_normal_sample/renamed_vcf
+        out:
+            [indexed_vcf]
     filter:
         run: fp_filter.cwl
         in:
             reference: reference
             bam: tumor_bam
-            vcf: reindex/indexed_vcf
+            vcf: index_renamed/indexed_vcf
             variant_caller: 
                 valueFrom: "pindel"
             sample_name: tumor_sample_name
         out:
             [unfiltered_vcf, filtered_vcf]
+

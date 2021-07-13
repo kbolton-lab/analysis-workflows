@@ -144,7 +144,7 @@ steps:
             [complement_vcf]
         doc: "hard filter"
     pon_pileup: # done
-        run: ../subworflows/get_base_counts_multi_sample.cwl
+        run: ../subworkflows/get_base_counts_multi_sample.cwl
         in:
             reference: reference
             normal_bams: normal_bams

@@ -4,7 +4,7 @@ cwlVersion: v1.0
 class: CommandLineTool
 label: "Used for complementing first vcf from second vcf"
 
-baseCommand: ["/opt/bcftools/bin/bcftools", "isec"]
+baseCommand: ["/usr/local/bin/bcftools", "isec"]
 arguments: [
     { position: 1, valueFrom: "-C" },
     { position: 2, valueFrom: "-w1" },
@@ -13,7 +13,7 @@ requirements:
     - class: ResourceRequirement
       ramMin: 4000
     - class: DockerRequirement
-      dockerPull: "mgibio/bcftools-cwl:1.9"
+      dockerPull: "kboltonlab/sam_bcftools_tabix_bgzip:1.0"
 
 inputs:
     vcf:

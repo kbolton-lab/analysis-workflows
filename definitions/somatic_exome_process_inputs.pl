@@ -39,7 +39,6 @@ my $build = Genome::Model::Build->get($build_id)
         ],
     };
 }
-
 my @inputs = $build->inputs;
 my $input_processor = InputProcessor->get($build->id);
 my $inputs = $input_processor->simple_inputs;
@@ -53,8 +52,7 @@ if (@extra) {
 my $ref_build = $ref->value_class_name->get($ref->value_id)
     or die 'no reference found for input';
 $inputs->{reference} = $ref_build->full_consensus_path('fa');
-## we don't have these because we have alignments
-#my (@normal_sequence, @tumor_sequence);
+my (@normal_sequence, @tumor_sequence);
 
 my ($tumor_input, @extra) = grep { $_->name eq 'tumor_sample' } @inputs;
 if (@extra) {
@@ -81,46 +79,54 @@ my $multiple_trsn = 0;
 my $tumor_sample_name;
 my $normal_sample_name;
 
-###########################
-# cat /gscmnt/gc2560/core/processing-profile/cwl-pipeline/f6faba8d6c234cac9bcd58e60ebe7579/process_inputs.pl
-my (@bams, @rg_ids, @rg_fields);
-
-my @instrument_data_inputs = grep { $_->name eq 'instrument_data' } @inputs;
 for my $input (@instrument_data_inputs) {
     my $id = $input->value_class_name->get($input->value_id)
         or die 'no instrument data found for input';
-
-    my $bam_path = $id->bam_path
-        or die 'no bam_path found for instrument data ' . $id->id;
-
-    push @bams, {class => 'File', path => $id->bam_path};
-    push @rg_ids, $id->id;
 
     my $pu = join('.', $id->flow_cell_id, $id->lane, ( $id->can('index_sequence')? $id->index_sequence : () ));
     my $sm = $id->sample->name;
     my $lb = $id->library->name;
     my $pl = 'Illumina';
     my $cn = 'WUGSC';
+    my $rgid = $id->id;
 
-    push @rg_fields, ["PU:$pu", "SM:$sm", "LB:$lb", "PL:$pl", "CN:$cn"];
+    my $sequence = {};
+    $sequence->{readgroup} = join("\t", '@RG', "ID:$rgid", "PU:$pu", "SM:$sm", "LB:$lb", "PL:$pl", "CN:$cn");
 
-    if($id->sample eq $tumor_sample) {
-        #push @tumor_sequence, $sequence;
+    if (my $bam_path = $id->bam_path) {
+        $sequence->{sequence}{bam} = {class => 'File', path => $bam_path};
+    } elsif (my @fastqs = sort glob(File::Spec->join($id->disk_allocation->absolute_path, '*.fastq.gz'))) {
+        unless (@fastqs == 2) {
+            die "expected two fastqs but got " . scalar(@fastqs);
+        }
+
+        $sequence->{sequence}{fastq1} = { class => 'File', path => $fastqs[0] };
+        $sequence->{sequence}{fastq2} = { class => 'File', path => $fastqs[1] };
+    } else {
+        die 'No FASTQs or BAM found for instrument data ' . $id->id;
+    }
+
+    if($id->sample eq $tumor_sample){
+        push @tumor_sequence, $sequence;
         $tumor_sample_name = $sm
     } elsif($id->sample eq $normal_sample) {
-        #push @normal_sequence, $sequence;
+        push @normal_sequence, $sequence;
         $normal_sample_name = $sm
     } else {
        die "no sample match found:" . $id->id;
     }
+
+    unless ($target_region_set_name) {
+        $target_region_set_name = $id->target_region_set_name;
+    } else {
+        if ($id->target_region_set_name ne $target_region_set_name) {
+            $multiple_trsn = 1;
+        }
+    }
 }
 
-$inputs{instrument_data_bams} = \@bams;
-$inputs{read_group_id} = \@rg_ids;
-$inputs{read_group_fields} = \@rg_fields;
-$inputs{sample_name} = $build->subject->name;
-
-######################################################
+$inputs->{tumor_sequence} = \@tumor_sequence;
+$inputs->{normal_sequence} = \@normal_sequence;
 $inputs->{tumor_sample_name} = $tumor_sample_name;
 $inputs->{normal_sample_name} = $normal_sample_name;
 

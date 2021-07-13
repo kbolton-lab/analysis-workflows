@@ -1,0 +1,13 @@
+reference: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/GRCh38_full_analysis_set_plus_decoy_hla.fa
+tumor_bam: /storage1/fs1/bolton/Active/gmsroot/model_data/c4a875fbe2f14c688d81ad911bfff5b9/build8b0d04f6559b42f7889b3c6f1251bd7b/tmp/cromwell-executions/CH_exome_Final.cwl/68805fce-d425-4b9e-91d3-5e5b83ae0394/call-index_bam/execution/1000144_23153_0_0.final.bam
+variant_caller: "vardict"
+normal_bam: 
+  class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/4384617_23153_0_0.bam
+interval_list: 
+  class: File
+  path: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/xgen_plus_spikein.GRCh38.interval_list # splits to bed
+scatter_count: 30
+tumor_sample_name: UKB_5578287_232976521
+af_threshold: 0.005
+normal_sample_name: UKB_5154445_233122979

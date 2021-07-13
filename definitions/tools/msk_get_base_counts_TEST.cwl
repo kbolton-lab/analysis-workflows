@@ -46,7 +46,7 @@ inputs:
         type: string
         inputBinding:
             position: 3
-        doc: "Normal bam path to storage1"
+        doc: "Normal bam"
     sample_name:
         type: string
         inputBinding:
