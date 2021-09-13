@@ -3,7 +3,7 @@
 cwlVersion: v1.0
 class: CommandLineTool
 label: "lofreq v2.1.3.1 call"
-baseCommand: "lofreq_helper.sh"
+baseCommand: ["/bin/bash", "lofreq_helper.sh"]
 requirements:
     - class: ResourceRequirement
       ramMin: 12000
