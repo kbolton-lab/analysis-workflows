@@ -33,7 +33,7 @@ requirements:
 
             printf "##INFO=<ID=PON_RefDepth,Number=1,Type=Integer,Description=\"Total Ref_Depth for Normals\">\n##INFO=<ID=PON_AltCounts,Number=1,Type=Integer,Description=\"Total Alt_Counts for Normals\">\n" > pileup.header;
             printf "##INFO=<ID=PON_FISHER,Number=1,Type=Float,Description=\"P-value from Fisher's exact test with totals from PoN\">" > fisher.header;
-            printf "##INFO=<ID=SAMPLE,Number=1,Type=String,Description=\"Sample name \(with whitespace translated to underscores)\">" > sample.header;
+            printf "##INFO=<ID=SAMPLE,Number=1,Type=String,Description=\"Sample name (with whitespace translated to underscores)\">" > sample.header;
 
             sample=`bcftools query -l $vcf_in`
             bcftools view -H $vcf_in | awk -v sampleID=$sample '{print $1, $2, $3, $4, $5, sampleID}' OFS='\t' > $sample.name;
@@ -107,7 +107,7 @@ requirements:
                 })
                 write.table(df, file=args[2], row.names = F, quote = F, col.names = F, sep = "\t")
                 ' > fisherTestInput.R
-                 bcftools annotate -a $pon_total -h pileup.header -c CHROM,POS,REF,ALT,PON_RefDepth,PON_AltCounts $name.sample.vcf -Ov -o $name.sample.pileup.vcf;
+                bcftools annotate -a $pon_total -h pileup.header -c CHROM,POS,REF,ALT,PON_RefDepth,PON_AltCounts $name.sample.vcf -Ov -o $name.sample.pileup.vcf;
                 bcftools query -f '%CHROM\t%POS\t%REF\t%ALT\t%INFO/PON_RefDepth\t%INFO/PON_AltCounts\t[%AD]\n' $name.sample.pileup.vcf > $name.fisher.input;
                 
             fi

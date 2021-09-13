@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "../../../../../JHU_Summer"
+		},
+		{
+			"path": "../../../../../../../Library/WebServer/CGI-Executables"
+		},
+		{
+			"path": "../../../../../../../Library/WebServer/Documents"
+		},
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"git.ignoreLimitWarning": true
+	}
+}

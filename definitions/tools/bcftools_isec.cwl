@@ -3,11 +3,11 @@
 ### Need to do general isec ###
 cwlVersion: v1.0
 class: CommandLineTool
-label: "Used for complementing first vcf from second vcf"
+label: "Used for obtaining variants by intersecting vcfs, returns first vcf perspective"
 
 baseCommand: ["/opt/bcftools/bin/bcftools", "isec"]
 arguments: [
-    { position: 1, valueFrom: "-C" },
+    { position: 1, valueFrom: "-n+2" },
     { position: 2, valueFrom: "-w1" },
 ]
 requirements:
@@ -17,13 +17,13 @@ requirements:
       dockerPull: "mgibio/bcftools-cwl:1.9"
 
 inputs:
-    vcf:
+    vcf1:
         type: File
         inputBinding:
             position: 3
         doc: "input bgzipped tabix indexed vcf to obtain complement"
         secondaryFiles: [.tbi]
-    exclude_vcf:
+    vcf2:
         type: File
         inputBinding:
             position: 4
@@ -48,7 +48,7 @@ inputs:
     
 
 outputs:
-    complement_vcf:
+    overlap_vcf:
         type: File
         outputBinding:
             glob: $(inputs.output_vcf_name)

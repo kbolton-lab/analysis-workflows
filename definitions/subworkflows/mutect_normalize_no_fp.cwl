@@ -28,15 +28,15 @@ inputs:
     tumor_sample_name:
         type: string
 outputs:
-    filtered_vcf:
-        type: File
-        outputSource: filter/filtered_vcf
-        secondaryFiles: [.tbi]
+    # filtered_vcf:
+    #     type: File
+    #     outputSource: filter/filtered_vcf
+    #     secondaryFiles: [.tbi]
     unfiltered_vcf:
         type: File
         outputSource: norm_index/indexed_vcf
         secondaryFiles: [.tbi]
-        doc: "This is the unfiltered from fp_filter.cwl that is normalized with bcftools for use in nsamples.cwl"
+        doc: "This is the Mutect2 soft filter that is normalized with bcftools for use in nsamples.cwl"
 steps:
     split_interval_list:
         run: ../tools/split_interval_list.cwl
@@ -66,27 +66,21 @@ steps:
             vcf: merge/merged_vcf
         out:
             [indexed_vcf]
-    filter:
-        run: fp_filter.cwl
-        in:
-            reference: reference
-            bam: tumor_bam
-            vcf: index/indexed_vcf
-            variant_caller: 
-                valueFrom: "mutect"
-            sample_name: tumor_sample_name
-            # sample_name: 
-            #     source: mutect/tumor_sample_name
-            #     valueFrom: |
-            #         ${
-            #             return self[0]
-            #         }
-        out:
-            [unfiltered_vcf, filtered_vcf]
+    # filter:
+    #     run: fp_filter.cwl
+    #     in:
+    #         reference: reference
+    #         bam: tumor_bam
+    #         vcf: index/indexed_vcf
+    #         variant_caller: 
+    #             valueFrom: "mutect"
+    #         sample_name: tumor_sample_name
+    #     out:
+    #         [unfiltered_vcf, filtered_vcf]
     bcftools_norm:
         run: ../tools/bcftools_norm.cwl
         in: 
-            vcf: filter/unfiltered_vcf
+            vcf: index/indexed_vcf
             output_vcf_name: 
                 valueFrom: "mutect_full.vcf.gz"
         out:

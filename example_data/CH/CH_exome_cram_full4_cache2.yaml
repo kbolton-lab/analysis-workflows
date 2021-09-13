@@ -3,7 +3,7 @@ reference: /cache2/fs1/bolton/Active/projects/mocha/UKBB/exome/GRCh38_full_analy
 tumor_cram: 
   class: File
   path: /cache2/fs1/bolton/Active/projects/mocha/UKBB/exome/011/1251450/1251450_23153_0_0.cram
-tumor_sample_name: ""
+tumor_sample_name: "UKB_5889761_0230721720"
 normal_bam:
   class: File
   path: /cache2/fs1/bolton/Active/projects/mocha/UKBB/exome/young/1006108_23153_0_0.bam

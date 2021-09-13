@@ -25,7 +25,6 @@ my $build = Genome::Model::Build->get($build_id)
             pindel_pon2_file => { input_type => 'File' },
             target_intervals => { input_type => 'File' },
             bait_intervals => { input_type => 'File' },
-            gatk_gnomad_af_only_hc_0_005 => { input_type => 'File' },
             impact_annotation => { input_type => 'File' },
             topmed_annotation => { input_type => 'File' },
             cosmic_annotation => { input_type => 'File' },
@@ -62,7 +61,7 @@ my $build = Genome::Model::Build->get($build_id)
 my @inputs = $build->inputs;
 my $input_processor = InputProcessor->get($build->id);
 my $inputs = $input_processor->simple_inputs;
-$inputs->{scatter_count} = 20;
+$inputs->{scatter_count} = 50;
 $inputs->{bqsr_intervals} = [map 'chr'.$_, (1..22,"X","Y","M")];
 
 # pon
@@ -137,10 +136,10 @@ $inputs->{normal_sample_name} = $normal_sample_name->value_id;
 
 
 $inputs->{per_base_intervals} = [
-    { label => 'UKBB_WES', file => '/cache2/fs1/bolton/Active/projects/mocha/UKBB/exome/xgen_plus_spikein.GRCh38.interval_list' },
+    { label => 'UKBB_WES', file => '/storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/xgen_plus_spikein.GRCh38.interval_list' },
 ];
 $inputs->{per_target_intervals} = [
-    { label => 'UKBB_WES', file => '/cache2/fs1/bolton/Active/projects/mocha/UKBB/exome/xgen_plus_spikein.GRCh38.interval_list' },
+    { label => 'UKBB_WES', file => '/storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/xgen_plus_spikein.GRCh38.interval_list' },
 ];
 $inputs->{summary_intervals} = [];
 
