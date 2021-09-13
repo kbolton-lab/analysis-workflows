@@ -31,10 +31,10 @@ requirements:
 
             if [ -z ${3+x} ]; then
                 #run without ROI
-                /opt/lofreq/bin/lofreq call -A -B -f $REFERENCE --call-indels -o $OUTPUT $TUMOR_BAM
+                /opt/lofreq/bin/lofreq call -A -B -f $REFERENCE --call-indels -o $OUTPUT $TUMOR_BAM --force-overwrite
             else
                 ROI_BED="$3"
-                /opt/lofreq/bin/lofreq call -A -B -f $REFERENCE --call-indels --bed $ROI_BED -o $OUTPUT $TUMOR_BAM
+                /opt/lofreq/bin/lofreq call -A -B -f $REFERENCE --call-indels --bed $ROI_BED -o $OUTPUT $TUMOR_BAM --force-overwrite
             fi
             bgzip $OUTPUT && tabix $OUTPUT.gz
 inputs:
@@ -44,9 +44,7 @@ inputs:
             position: 1
         secondaryFiles: [^.bai]
     reference:
-        type:
-            - string
-            - File
+        type: File
         secondaryFiles: [.fai, ^.dict]
         inputBinding:
             position: 2
