@@ -19,7 +19,7 @@ requirements:
             set -o errexit
             set -o nounset
 
-            if [ $# -lt 2 ]
+            if [ $# -lt 3 ]
             then
                 echo "Usage: $0 [TUMOR_BAM] REFERENCE] [roi_bed?]"
                 exit 1
@@ -33,7 +33,7 @@ requirements:
                 #run without ROI
                 /opt/lofreq/bin/lofreq call -A -B -f $REFERENCE --call-indels -o $OUTPUT $TUMOR_BAM --force-overwrite
             else
-                ROI_BED="$3"
+                ROI_BED="$4"
                 /opt/lofreq/bin/lofreq call -A -B -f $REFERENCE --call-indels --bed $ROI_BED -o $OUTPUT $TUMOR_BAM --force-overwrite
             fi
             bgzip $OUTPUT && tabix $OUTPUT.gz
@@ -51,11 +51,11 @@ inputs:
     roi_bed:
         type: File?
         inputBinding:
-            position: 3
+            position: 4
     output_name:
         type: string?
         inputBinding:
-            position: 4
+            position: 3
         default: "lofreq.vcf"
 
 outputs:
