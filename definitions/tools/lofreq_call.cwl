@@ -59,7 +59,7 @@ inputs:
         default: "lofreq.vcf"
 
 outputs:
-    vcfs:
+    vcf:
         type: File
         outputBinding:
             glob: $(inputs.output_name).gz
