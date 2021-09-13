@@ -5,9 +5,7 @@ class: Workflow
 label: "lofreq somatic workflow"
 inputs:
     reference:
-        type:
-            - string
-            - File
+        type: File
         secondaryFiles: [.fai, ^.dict]
     tumor_bam:
         type: File
@@ -42,7 +40,7 @@ steps:
         in:
             reference: reference
             tumor_bam: tumor_bam
-            roi_bed: split_interval_list_to_bed/split_beds
+            interval_list: split_interval_list_to_bed/split_beds
         out:
             [vcf]
     merge:

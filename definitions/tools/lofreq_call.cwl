@@ -48,7 +48,7 @@ inputs:
         secondaryFiles: [.fai, ^.dict]
         inputBinding:
             position: 2
-    roi_bed:
+    interval_list:
         type: File?
         inputBinding:
             position: 4

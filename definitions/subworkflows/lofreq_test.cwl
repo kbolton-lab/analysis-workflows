@@ -38,6 +38,6 @@ steps:
         in:
             reference: reference
             tumor_bam: tumor_bam
-            roi_bed: split_interval_list_to_bed/split_beds
+            interval_list: split_interval_list_to_bed/split_beds
         out:
             [vcf]
