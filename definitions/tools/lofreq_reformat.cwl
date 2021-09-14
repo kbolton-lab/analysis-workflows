@@ -35,6 +35,8 @@ inputs:
             position: 1
     tumor_sample_name:
         type: string
+        inputBinding:
+            position: 2
 outputs:
     reformat_vcf:
         type: File
