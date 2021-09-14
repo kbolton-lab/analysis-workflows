@@ -7,6 +7,8 @@ baseCommand: ["/bin/bash", "lofreq_reformat_helper.sh"]
 requirements:
     - class: ResourceRequirement
       ramMin: 2000
+    - class: DockerRequirement
+      dockerPull: "ubuntu:xenial"
     - class: InitialWorkDirRequirement
       listing:
       - entryname: 'lofreq_reformat_helper.sh'
