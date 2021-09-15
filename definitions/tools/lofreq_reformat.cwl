@@ -8,7 +8,7 @@ requirements:
     - class: ResourceRequirement
       ramMin: 2000
     - class: DockerRequirement
-      dockerPull: "mgibio/samtools:1.0.0"
+      dockerPull: "quay.io/biocontainers/samtools:1.11--h6270b1f_0"
     - class: InitialWorkDirRequirement
       listing:
       - entryname: 'lofreq_reformat_helper.sh'
