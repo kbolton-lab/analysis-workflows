@@ -43,24 +43,23 @@ steps:
             interval_list: split_interval_list_to_bed/split_beds
         out:
             [vcf]
-    reformat_vcf:
-        scatter: interval_list
-        run: ../tools/lofreq_reformat.cwl
-        in:
-            vcf: lofreq/vcf
-            tumor_sample_name: tumor_sample_name
-        out:
-            [reformat_vcf]
     merge:
         run: ../tools/merge_vcf.cwl
         in:
-            vcfs: reformat_vcf/reformat_vcf
+            vcfs: lofreq/vcf
         out:
             [merged_vcf]
+    reformat_vcf:
+        run: ../tools/lofreq_reformat.cwl
+        in:
+            vcf: merge/merged_vcf
+            tumor_sample_name: tumor_sample_name
+        out:
+            [reformat_vcf]
     index:
         run: ../tools/index_vcf.cwl
         in:
-            vcf: merge/merged_vcf
+            vcf: reformat_vcf/reformat_vcf
         out:
             [indexed_vcf]
     filter:
