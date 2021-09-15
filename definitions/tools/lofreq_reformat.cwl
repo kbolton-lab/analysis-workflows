@@ -24,9 +24,9 @@ requirements:
                 exit 1
             fi
 
-            zgrep "##" $1 > lofreq.reformat.vcf;
+            zcat $1 | grep "##" $1 > lofreq.reformat.vcf;
             echo -e "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\t$2" >> lofreq.reformat.vcf;
-            zgrep -v '#' $1  | awk '{ n=split($8, semi, /;/); sample=""; format=""; for(i in semi){ split(semi[i], equ, /=/); if(i<=3){ if(i+1==4) sample=sample equ[2]; else sample=sample equ[2] ":"; if(i+1==4) format=format equ[1]; else format=format equ[1] ":";}}{print $0, format, sample}}' OFS='\t' >> lofreq.reformat.vcf;
+            zcat $1 | grep -v '#' | awk '{ n=split($8, semi, /;/); sample=""; format=""; for(i in semi){ split(semi[i], equ, /=/); if(i<=3){ if(i+1==4) sample=sample equ[2]; else sample=sample equ[2] ":"; if(i+1==4) format=format equ[1]; else format=format equ[1] ":";}}{print $0, format, sample}}' OFS='\t' >> lofreq.reformat.vcf;
             bgzip lofreq.reformat.vcf;
 inputs:
     vcf:
