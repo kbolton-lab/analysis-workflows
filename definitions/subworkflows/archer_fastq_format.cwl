@@ -26,7 +26,7 @@ outputs:
         type: File
         outputSource: repair/fastq2
 steps:
-    filter_eight_base_umi:
+    filter_umi_length:
         scatter: [sequence]
         scatterMethod: dotproduct
         run: ../tools/filter_umi_length.cwl
@@ -34,15 +34,15 @@ steps:
             sequence: sequence
             umi_length: umi_length
         out:
-            [fastqs, fastq1, fastq2]
+            [fastq1, fastq2]
     repair:
         run: ../tools/bbmap_repair.cwl
         in:
-        fastq1:
-            source: repair/fastq1
-            linkMerge: merge_flattened
-        fastq2:
-            source: repair/fastq2
-            linkMerge: merge_flattened
+            fastq1:
+                source: filter_umi_length/fastq1
+                linkMerge: merge_flattened
+            fastq2:
+                source: filter_umi_length/fastq2
+                linkMerge: merge_flattened
         out:
             [fastqs, fastq1, fastq2]

@@ -16,6 +16,10 @@ inputs:
     fastq2:
         type: File[]
 outputs:
+    fastqs:
+        type: File[]
+        outputBinding:
+            glob: "*.fixed.fastq.gz"
     fastq1:
         type: File
         outputBinding:
