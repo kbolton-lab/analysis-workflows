@@ -2,7 +2,7 @@
 
 cwlVersion: v1.0
 class: Workflow
-label: "lofreq somatic workflow"
+label: "lofreq tumor-only workflow"
 inputs:
     reference:
         type: File
