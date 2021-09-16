@@ -31,7 +31,7 @@ arguments:
     - {valueFrom: "$(inputs.sequence.sequence.fastq2)"}
 inputs:
     sequence:
-        type: ../types/sequence_data.yml
+        type: ../types/sequence_data.yml#sequence_data[]
     umi_length:
         type: int
         inputBinding:
