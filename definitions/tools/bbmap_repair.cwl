@@ -9,10 +9,7 @@ requirements:
       ramMin: 4000
     - class: DockerRequirement
       dockerPull: "quay.io/biocontainers/bbmap:38.92--he522d1c_0"
-arguments: [
-    - {valueFrom: "in1=$(inputs.fastq1)"}
-    - {valueFrom: "in2=$(inputs.fastq2)"}
-]
+arguments: [ "in1=", { valueFrom: $(inputs.fastq1) }, "in2=", { valueFrom: $(inputs.fastq2) }]
 inputs:
     fastq1:
         type: File[]
