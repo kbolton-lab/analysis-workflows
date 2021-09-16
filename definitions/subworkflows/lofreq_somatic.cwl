@@ -50,7 +50,7 @@ steps:
     merge:
         run: ../tools/merge_vcf.cwl
         in:
-            vcfs: lofreq/vcf
+            vcfs: lofreq_somatic/vcf
         out:
             [merged_vcf]
     reformat_vcf:
