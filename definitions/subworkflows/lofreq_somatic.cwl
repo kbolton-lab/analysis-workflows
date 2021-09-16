@@ -10,6 +10,9 @@ inputs:
     tumor_bam:
         type: File
         secondaryFiles: [^.bai]
+    normal_bam:
+        type: File
+        secondaryFiles: [^.bai]
     roi_bed:
         type: File?
     interval_list:
@@ -40,6 +43,7 @@ steps:
         in:
             reference: reference
             tumor_bam: tumor_bam
+            normal_bam: normal_bam
             interval_list: split_interval_list_to_bed/split_beds
         out:
             [vcf]
