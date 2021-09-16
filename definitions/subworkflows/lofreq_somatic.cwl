@@ -39,7 +39,7 @@ steps:
         out: [split_beds]
     lofreq_somatic:
         scatter: interval_list
-        run: lofreq_somatic.cwl
+        run: ../tools/lofreq_somatic.cwl
         in:
             reference: reference
             tumor_bam: tumor_bam
