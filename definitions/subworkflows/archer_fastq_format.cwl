@@ -4,14 +4,14 @@ cwlVersion: v1.0
 class: Workflow
 label: "ArcherDX FastQ Umi Extraction"
 requirements:
-    - class: SubworkflowFeatureRequirement
     - class: SchemaDefRequirement
-        types:
-            - $import: ../types/sequence_data.yml
+      types:
+        - $import: ../types/sequence_data.yml
     - class: ScatterFeatureRequirement
+    - class: SubworkflowFeatureRequirement
 inputs:
     sequence:
-        type: ../types/sequence_data.yml
+        type: ../types/sequence_data.yml#sequence_data[]
     umi_length:
         type: int
         default: 8
