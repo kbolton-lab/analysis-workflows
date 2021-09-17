@@ -12,9 +12,9 @@ requirements:
 arguments: [ "in1=", { valueFrom: $(inputs.fastq1) }, "in2=", { valueFrom: $(inputs.fastq2) }]
 inputs:
     fastq1:
-        type: File[]
+        type: File
     fastq2:
-        type: File[]
+        type: File
 outputs:
     fastqs:
         type: File[]
