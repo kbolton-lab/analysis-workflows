@@ -12,7 +12,7 @@ requirements:
     - class: InlineJavascriptRequirement
 inputs:
     sequence:
-        type: ../types/sequence_data.yml#sequence_data[]
+        type: ../types/sequence_data.yml#sequence_data
     umi_length:
         type: int
         default: 8
@@ -31,11 +31,11 @@ steps:
         run: ../tools/filter_umi_length.cwl
         in:
             fastq1:
-                source: "#sequence"
-                valueFrom: ${ return self[0].sequence.fastq1; }
+                source: sequence
+                valueFrom: "$(self.sequence.hasOwnProperty('fastq1') self.sequence.fastq1 : null)"
             fastq2:
-                source: "#sequence"
-                valueFrom: ${ return self[0].sequence.fastq2; }
+                source: sequence
+                valueFrom: "$(self.sequence.hasOwnProperty('fastq2') self.sequence.fastq2 : null)"
             umi_length: umi_length
         out:
             [fastq1, fastq2]
