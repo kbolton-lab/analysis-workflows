@@ -9,6 +9,7 @@ requirements:
         - $import: ../types/sequence_data.yml
     - class: ScatterFeatureRequirement
     - class: SubworkflowFeatureRequirement
+    - class: InlineJavascriptRequirement
 inputs:
     sequence:
         type: ../types/sequence_data.yml#sequence_data[]
