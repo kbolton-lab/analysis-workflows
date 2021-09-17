@@ -32,10 +32,10 @@ steps:
         in:
             fastq1:
                 source: sequence
-                valueFrom: "$(self.sequence.hasOwnProperty('fastq1') self.sequence.fastq1 : null)"
+                valueFrom: "$(self.sequence.hasOwnProperty('fastq1')? self.sequence.fastq1 : null)"
             fastq2:
                 source: sequence
-                valueFrom: "$(self.sequence.hasOwnProperty('fastq2') self.sequence.fastq2 : null)"
+                valueFrom: "$(self.sequence.hasOwnProperty('fastq2')? self.sequence.fastq2 : null)"
             umi_length: umi_length
         out:
             [fastq1, fastq2]
