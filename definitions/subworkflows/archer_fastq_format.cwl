@@ -11,7 +11,7 @@ requirements:
     - class: SubworkflowFeatureRequirement
 inputs:
     sequence:
-        type: ../types/sequence_data.yml#sequence_data[]
+        type: ../types/sequence_data.yml#sequence_data
         label: "sequence: sequencing data and readgroup information"
         doc: |
           sequence represents the sequencing data as either FASTQs or BAMs with accompanying
@@ -31,17 +31,7 @@ outputs:
         type: File
         outputSource: repair/fastq2
 steps:
-    sequence_to_bam:
-        scatter: [sequence]
-        scatterMethod: dotproduct
-        run: ../tools/sequence_to_bam.cwl
-        in:
-            sequence: sequence
-        out:
-            [bam]
     filter_umi_length:
-        scatter: [sequence]
-        scatterMethod: dotproduct
         run: ../tools/filter_umi_length.cwl
         in:
             sequence: sequence
