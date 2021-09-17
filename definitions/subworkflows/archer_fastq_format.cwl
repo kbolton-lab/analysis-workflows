@@ -30,11 +30,11 @@ steps:
         run: ../tools/filter_umi_length.cwl
         in:
             fastq1:
-                source: #sequence
-                valueFrom: ${ return self[0]; }
+                source: sequence
+                valueFrom: ${ return self.sequence.fastq1; }
             fastq2:
-                source: #sequence
-                valueFrom: ${ return self[1]; }
+                source: sequence
+                valueFrom: ${ return self.sequence.fastq2; }
             umi_length: umi_length
         out:
             [fastq1, fastq2]
