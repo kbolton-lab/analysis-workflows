@@ -53,4 +53,4 @@ outputs:
     fastq2:
         type: File
         outputBinding:
-            glob: $(inputs.sequence.sequence.fastq2)
+            glob: $(inputs.fastq2)
