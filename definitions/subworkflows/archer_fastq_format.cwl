@@ -11,7 +11,7 @@ requirements:
     - class: SubworkflowFeatureRequirement
 inputs:
     sequence:
-        type: ../types/sequence_data.yml#sequence_data
+        type: ../types/sequence_data.yml#sequence_data[]
         label: "sequence: sequencing data and readgroup information"
         doc: |
           sequence represents the sequencing data as either FASTQs or BAMs with accompanying
