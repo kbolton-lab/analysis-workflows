@@ -32,10 +32,10 @@ steps:
         in:
             fastq1:
                 source: "#sequence"
-                valueFrom: ${ return self.sequence.fastq1; }
+                valueFrom: ${ return self[0].sequence.fastq1; }
             fastq2:
                 source: "#sequence"
-                valueFrom: ${ return self.sequence.fastq2; }
+                valueFrom: ${ return self[0].sequence.fastq2; }
             umi_length: umi_length
         out:
             [fastq1, fastq2]
