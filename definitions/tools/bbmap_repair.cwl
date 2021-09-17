@@ -6,7 +6,8 @@ label: "BBMap Repair Fastq1 with Fastq2"
 baseCommand: ["repair.sh", "repair=t", "overwrite=true", "interleaved=false", "outs=singletons.fq", "out1=R1.fixed.fastq.gz", "out2=R2.fixed.fastq.gz"]
 requirements:
     - class: ResourceRequirement
-      ramMin: 12000
+      ramMin: 24000
+      coresMin: 8
     - class: DockerRequirement
       dockerPull: "quay.io/biocontainers/bbmap:38.92--he522d1c_0"
 arguments: [ "in1=$(inputs.fastq1)", "in2=$(inputs.fastq2)" ]
