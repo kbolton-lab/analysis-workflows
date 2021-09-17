@@ -37,6 +37,8 @@ inputs:
     output_fastq_name:
         type: string
         default: "R1_filtered"
+        inputBinding:
+            position: 4
 outputs:
     fastq1:
         type: File
