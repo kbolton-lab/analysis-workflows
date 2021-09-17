@@ -12,11 +12,6 @@ requirements:
 inputs:
     sequence:
         type: ../types/sequence_data.yml#sequence_data[]
-        label: "sequence: sequencing data and readgroup information"
-        doc: |
-          sequence represents the sequencing data as either FASTQs or BAMs with accompanying
-          readgroup information. Note that in the @RG field ID and SM are required for FASTQs.
-          For BAMs, this pipeline assumes that the RG information is already in the header.
     umi_length:
         type: int
         default: 8
