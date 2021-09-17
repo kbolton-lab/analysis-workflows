@@ -27,10 +27,10 @@ requirements:
             NAME="$4"
 
             zcat $FASTQ_ONE | awk -v regex="AACCGCCAGGAGT" length="$UMI_LENGTH" 'BEGIN {FS = "\t" ; OFS = "\n"} {header = $0 ; getline seq ; getline qheader ; getline qseq ; split(seq,a,regex); if (length(a[1]) == length) {print header, seq, qheader, qseq}}' > $NAME.fastq.gz
-arguments: [{ valueFrom: $(inputs.sequence.sequence.fastq1) }, { valueFrom: $(inputs.sequence.sequence.fastq2) }]
+arguments: [{ valueFrom: $(inputs.sequence.fastq1) }, { valueFrom: $(inputs.sequence.fastq2) }]
 inputs:
     sequence:
-        type: ../types/sequence_data.yml#sequence_data[]
+        type: ../types/sequence_data.yml#sequence_data
     umi_length:
         type: int
         inputBinding:
