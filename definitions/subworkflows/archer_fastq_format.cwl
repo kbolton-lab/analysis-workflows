@@ -44,9 +44,7 @@ steps:
         in:
             fastq1:
                 source: filter_umi_length/fastq1
-                linkMerge: merge_flattened
             fastq2:
                 source: filter_umi_length/fastq2
-                linkMerge: merge_flattened
         out:
             [fastqs, fastq1, fastq2]
