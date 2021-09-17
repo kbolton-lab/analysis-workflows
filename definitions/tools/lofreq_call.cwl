@@ -34,7 +34,8 @@ requirements:
                 /opt/lofreq/bin/lofreq call -A -B -f $REFERENCE --call-indels -o $OUTPUT $TUMOR_BAM --force-overwrite
             else
                 ROI_BED="$4"
-                /opt/lofreq/bin/lofreq call -A -B -f $REFERENCE --call-indels --bed $ROI_BED -o $OUTPUT $TUMOR_BAM --force-overwrite
+                #/opt/lofreq/bin/lofreq call -A -B -f $REFERENCE --call-indels --bed $ROI_BED -o $OUTPUT $TUMOR_BAM --force-overwrite
+                /opt/lofreq/bin/lofreq call --no-default-filter -A -B -a 1 -b 1 -l $ROI_BED -f $REFERENCE --call-indels -o $OUTPUT $TUMOR_BAM --force-overwrite
             fi
             bgzip $OUTPUT && tabix $OUTPUT.gz
 inputs:
