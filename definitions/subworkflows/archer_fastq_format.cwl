@@ -27,7 +27,7 @@ outputs:
         outputSource: repair/fastq2
 steps:
     filter_umi_length:
-        scatter: [sequence]
+        scatter: sequence
         scatterMethod: dotproduct
         run: ../tools/filter_umi_length.cwl
         in:
