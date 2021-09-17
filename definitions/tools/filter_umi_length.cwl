@@ -50,7 +50,3 @@ outputs:
         type: File
         outputBinding:
             glob: "R1_filtered.fastq.gz"
-    fastq2:
-        type: File
-        outputBinding:
-            glob: $(inputs.fastq2)
