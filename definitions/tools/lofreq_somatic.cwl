@@ -34,7 +34,7 @@ requirements:
                 #run without ROI
                 /opt/lofreq/bin/lofreq somatic -n $NORMAL_BAM -t $TUMOR_BAM -f $REFERENCE -o $OUTPUT
             else
-                ROI_BED="$4"
+                ROI_BED="$5"
                 /opt/lofreq/bin/lofreq somatic -n $NORMAL_BAM -t $TUMOR_BAM -f $REFERENCE -l $ROI_BED -o $OUTPUT
             fi
             tabix $OUTPUTsomatic_final.snvs.vcf.gz
