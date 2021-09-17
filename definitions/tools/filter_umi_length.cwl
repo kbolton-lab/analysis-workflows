@@ -51,7 +51,7 @@ outputs:
         type: File
         outputBinding:
             glob: "R1_filtered.fastq.gz"
-    fastq1:
+    fastq2:
         type: File
         outputBinding:
             glob: "R2_filtered.fastq.gz"
