@@ -12,6 +12,7 @@ requirements:
     - class: SchemaDefRequirement
       types:
         - $import: ../types/sequence_data.yml
+    - class: InlineJavascriptRequirement
     - class: InitialWorkDirRequirement
       listing:
         - entryname: "filter_umi_length_helper.sh"
