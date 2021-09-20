@@ -41,6 +41,17 @@ inputs:
         inputBinding:
             position: 2
         doc: "input bgzipped tabix indexed vcf to normalize"
+    reference:
+        type:
+            - string
+            - File
+        inputBinding:
+            position: 5
+            prefix: "-f"
+        secondaryFiles: [.fai, ^.dict, .amb, .ann, .bwt, .pac, .sa]
+        label: "reference: Reference fasta file for a desired assembly"
+        doc: "input bgzipped tabix indexed vcf to normalize"
+
 
 outputs:
     normalized_vcf:
