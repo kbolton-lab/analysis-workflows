@@ -18,7 +18,7 @@ requirements:
         entry: |
           #!/bin/bash
 
-          set -eou pipefail
+          set -eo pipefail
 
           REF="$1"
           AF_THR="$2"
@@ -28,7 +28,7 @@ requirements:
           normal_bam="$8"
           normal_sample_name="$6"
           out="$7"
-          
+
           if [ -z "${normal_bam}" ]; then
             /opt/VarDictJava/build/install/VarDict/bin/VarDict -G $REF -f $AF_THR -N $tumor_sample_name -b $tumor_bam -c 1 -S 2 -E 3 -g 4 $bed -U | /opt/VarDictJava/build/install/VarDict/bin/teststrandbias.R | /opt/VarDictJava/build/install/VarDict/bin/var2vcf_valid.pl -N "$tumor_sample_name" -E -f $AF_THR > $out
           else
