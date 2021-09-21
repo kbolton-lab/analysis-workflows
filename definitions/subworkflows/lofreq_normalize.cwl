@@ -5,7 +5,9 @@ class: Workflow
 label: "lofreq tumor-only workflow"
 inputs:
     reference:
-        type: File
+        type:
+            - string
+            - File
         secondaryFiles: [.fai, ^.dict]
     tumor_bam:
         type: File

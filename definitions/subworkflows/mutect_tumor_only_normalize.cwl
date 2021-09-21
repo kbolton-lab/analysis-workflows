@@ -18,9 +18,6 @@ inputs:
     tumor_bam:
         type: File
         secondaryFiles: [^.bai, .bai]
-    normal_bam:
-        type: File?
-        secondaryFiles: [^.bai, .bai]
     interval_list:
         type: File
     scatter_count:

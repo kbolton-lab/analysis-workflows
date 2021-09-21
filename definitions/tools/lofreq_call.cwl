@@ -44,7 +44,9 @@ inputs:
             position: 1
         secondaryFiles: [^.bai]
     reference:
-        type: File
+        type:
+            - string
+            - File
         secondaryFiles: [.fai, ^.dict]
         inputBinding:
             position: 2
