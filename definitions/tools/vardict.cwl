@@ -19,17 +19,20 @@ requirements:
           #!/bin/bash
 
           set -eou pipefail
-          
+
           REF="$1"
           AF_THR="$2"
           tumor_bam="$3"
           tumor_sample_name="$4"
           bed="$5"
-          normal_bam="$6"
-          normal_sample_name="$7"
-          out="$8"
-
-          /opt/VarDictJava/build/install/VarDict/bin/VarDict -G $REF -f $AF_THR -N $tumor_sample_name -b "$tumor_bam|$normal_bam" -c 1 -S 2 -E 3 -g 4 $bed | /opt/VarDictJava/build/install/VarDict/bin/testsomatic.R | /opt/VarDictJava/build/install/VarDict/bin/var2vcf_paired.pl -N "$tumor_sample_name|$normal_sample_name" -f $AF_THR > $out
+          normal_bam="$8"
+          normal_sample_name="$6"
+          out="$7"
+          if [ -z ${normal_bam+x} ]; then
+            /opt/VarDictJava/build/install/VarDict/bin/VarDict -G $REF -f $AF_THR -N $tumor_sample_name -b $tumor_bam -c 1 -S 2 -E 3 -g 4 $bed -U | /opt/VarDictJava/build/install/VarDict/bin/teststrandbias.R | /opt/VarDictJava/build/install/VarDict/bin/var2vcf_valid.pl -N "$tumor_sample_name" -E -f $AF_THR > $out
+          else
+            /opt/VarDictJava/build/install/VarDict/bin/VarDict -G $REF -f $AF_THR -N $tumor_sample_name -b "$tumor_bam|$normal_bam" -c 1 -S 2 -E 3 -g 4 $bed -U | /opt/VarDictJava/build/install/VarDict/bin/testsomatic.R | /opt/VarDictJava/build/install/VarDict/bin/var2vcf_paired.pl -N "$tumor_sample_name|$normal_sample_name" -f $AF_THR > $out
+          fi
 
           bgzip $out && tabix $out.gz
 
@@ -62,18 +65,18 @@ inputs:
             position: 5
         doc: "required bed file by VardictJava"
     normal_bam:
-        type: File
+        type: File?
         inputBinding:
-            position: 6
+            position: 8
     normal_sample_name:
         type: string
         inputBinding:
-            position: 7
+            position: 6
         default: 'NORMAL'
     output_name:
         type: string?
         inputBinding:
-            position: 8
+            position: 7
         default: 'vardict.vcf'
 
 outputs:
@@ -82,4 +85,3 @@ outputs:
         outputBinding:
             glob: $(inputs.output_name).gz
         secondaryFiles: [.tbi]
-

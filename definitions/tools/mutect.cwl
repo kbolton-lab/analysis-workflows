@@ -20,15 +20,19 @@ requirements:
             set -o errexit
 
             export tumor_bam="$3"
-            export normal_bam="$4"
+            export normal_bam="$5"
 
-            NORMAL=`samtools view -H $normal_bam | perl -nE 'say $1 if /^\@RG.+\tSM:([ -~]+)/' | head -n 1`
             TUMOR=`samtools view -H $tumor_bam | perl -nE 'say $1 if /^\@RG.+\tSM:([ -~]+)/' | head -n 1`
             echo -n $TUMOR > sampleName.txt
             # echo "{'tumor_sample_name': $TUMOR}"
-
-            /gatk/gatk Mutect2 --java-options "-Xmx20g" -O $1 -R $2 -I $3 -tumor "$TUMOR" -I $4 -normal "$NORMAL" -L $5 #Running Mutect2.
-            /gatk/gatk FilterMutectCalls -R $2 -V mutect.vcf.gz -O mutect.filtered.vcf.gz #Running FilterMutectCalls on the output vcf.
+            if [ -z ${normal_bam+x} ]; then
+                /gatk/gatk Mutect2 --java-options "-Xmx20g" --native-pair-hmm-threads 28 -R $2 -L $4 -I $3 --max-reads-per-alignment-start 0 -O $1
+                /gatk/gatk FilterMutectCalls -V mutect.vcf.gz --reference $2 -O mutect.filtered.vcf.gz
+            else
+                NORMAL=`samtools view -H $normal_bam | perl -nE 'say $1 if /^\@RG.+\tSM:([ -~]+)/' | head -n 1`
+                /gatk/gatk Mutect2 --java-options "-Xmx20g" --native-pair-hmm-threads 28 -O $1 -R $2 -I $3 -tumor "$TUMOR" -I $5 -normal "$NORMAL" -L $4 --max-reads-per-alignment-start 0 #Running Mutect2.
+                /gatk/gatk FilterMutectCalls -R $2 -V mutect.vcf.gz -O mutect.filtered.vcf.gz #Running FilterMutectCalls on the output vcf.
+            fi
 
 arguments:
     - position: 1
@@ -50,12 +54,12 @@ inputs:
     normal_bam:
         type: File?
         inputBinding:
-            position: 4
+            position: 5
         secondaryFiles: [.bai]
     interval_list:
         type: File
         inputBinding:
-            position: 5
+            position: 4
 
 outputs:
     vcf:
@@ -70,4 +74,3 @@ outputs:
             glob: sampleName.txt
             loadContents: true
             outputEval: $(self[0].contents)
-
