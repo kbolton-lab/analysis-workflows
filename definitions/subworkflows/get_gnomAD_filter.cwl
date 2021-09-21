@@ -10,13 +10,18 @@ requirements:
     - class: StepInputExpressionRequirement
     - class: InlineJavascriptRequirement
 inputs:
+    reference:
+        type:
+            - string
+            - File
+        secondaryFiles: [.fai, ^.dict]
     gnomad_AF_only:
         type: File
         secondaryFiles: [.tbi]
     gnomad_AF:
         type: float
         default: .005
-    info_af_filter_string: 
+    info_af_filter_string:
         type: string
         default: "INFO/AF>"
     filter_flag:
@@ -24,7 +29,7 @@ inputs:
             type: enum
             symbols: ["include", "exclude"]
         doc: "we default the gnomad to include > than threshold because this is smaller file for isec complement"
-    # output_prefix: 
+    # output_prefix:
     #     type: string
     #     default: "caller"
 outputs:
@@ -39,30 +44,31 @@ outputs:
     # filtered_vcf:
     #     type: File
     #     outputSource: isec_complement_gnomAD/complement_vcf
-    
+
 
 steps:
     filter_gnomAD_exclude:
         run: ../tools/bcftools_filter.cwl
         in:
             vcf: gnomad_AF_only
-            filter_string: 
+            filter_string:
                 source: ["#info_af_filter_string", "#gnomad_AF"]
                 valueFrom: ${ return self[0] + self[1].toString(); }
             filter_flag: filter_flag
             output_type:
                 default: "z"
-            output_vcf_name: 
+            output_vcf_name:
                 valueFrom: "gnomad.AF.exclude.vcf.gz"
         out: [filtered_vcf]
         doc: "this filter's the gnomAD_af_only file based on gnomAD POPAF threshold, it is what should be excluded if our calls have it since above threshold"
     normalize_gnomAD_exclude:
         run: ../tools/bcftools_norm.cwl
         in:
+            reference: reference
             vcf: filter_gnomAD_exclude/filtered_vcf
             output_type:
                 default: "z"
-            output_vcf_name: 
+            output_vcf_name:
                 valueFrom: "gnomad.AF.exclude.norm.vcf.gz"
         out: [normalized_vcf]
         doc: "for isec to work on multiallelics, the file must be normalized"
@@ -77,10 +83,10 @@ steps:
     #     in:
     #         vcf: vcf
     #         exclude_vcf: index_exclude_norm/indexed_vcf
-    #         output_vcf_name: 
+    #         output_vcf_name:
     #             source: "#output_prefix"
     #             valueFrom: "$(self).gnomAD_AF_filter.vcf"
-    #         output_type: 
+    #         output_type:
     #             default: "v"
     #     doc: "both input files should be bgzipped and indexed"
     #     out:
