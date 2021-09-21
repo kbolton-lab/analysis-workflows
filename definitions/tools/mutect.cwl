@@ -24,8 +24,9 @@ requirements:
 
             TUMOR=`samtools view -H $tumor_bam | perl -nE 'say $1 if /^\@RG.+\tSM:([ -~]+)/' | head -n 1`
             echo -n $TUMOR > sampleName.txt
+            echo -n $normal_bam >> sampleName.txt
             # echo "{'tumor_sample_name': $TUMOR}"
-            if [ -z ${normal_bam+x} ]; then
+            if [ -z "${normal_bam}" ]; then
                 /gatk/gatk Mutect2 --java-options "-Xmx20g" --native-pair-hmm-threads 28 -R $2 -L $4 -I $3 --max-reads-per-alignment-start 0 -O $1
                 /gatk/gatk FilterMutectCalls -V mutect.vcf.gz --reference $2 -O mutect.filtered.vcf.gz
             else
