@@ -72,10 +72,10 @@ steps:
             reference: reference
             bam: tumor_bam
             vcf: index/indexed_vcf
-            variant_caller: 
+            variant_caller:
                 valueFrom: "mutect"
             sample_name: tumor_sample_name
-            # sample_name: 
+            # sample_name:
             #     source: mutect/tumor_sample_name
             #     valueFrom: |
             #         ${
@@ -85,9 +85,10 @@ steps:
             [unfiltered_vcf, filtered_vcf]
     bcftools_norm:
         run: ../tools/bcftools_norm.cwl
-        in: 
+        in:
+            reference: reference
             vcf: filter/unfiltered_vcf
-            output_vcf_name: 
+            output_vcf_name:
                 valueFrom: "mutect_full.vcf.gz"
         out:
             [normalized_vcf]
@@ -98,5 +99,3 @@ steps:
             vcf: bcftools_norm/normalized_vcf
         out:
             [indexed_vcf]
-
-    

@@ -19,7 +19,7 @@ requirements:
             set -o pipefail
             set -o errexit
 
-            $OUTPUT="$1"
+            OUTPUT="$1"
             REF="$2"
             export tumor_bam="$3"
             BAM="$3"

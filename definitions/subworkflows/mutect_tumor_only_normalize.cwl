@@ -82,6 +82,7 @@ steps:
     bcftools_norm:
         run: ../tools/bcftools_norm.cwl
         in:
+            reference: reference
             vcf: filter/unfiltered_vcf
             output_vcf_name:
                 valueFrom: "mutect_full.vcf.gz"
