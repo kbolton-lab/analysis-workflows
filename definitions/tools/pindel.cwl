@@ -21,9 +21,10 @@ requirements:
             use warnings;
 
             use IO::File;
+            use File::Basename;
 
             my $normal_bam = pop @ARGV;
-            if (defined $normal_bam) {
+            if ($normal_bam =~ /\.bam$/i) {
                 unless (@ARGV > 5) {
                     die "Usage: $0 normal.bam tumor.bam insert_size normal_sample_name tumor_sample_name <args>";
                 }
