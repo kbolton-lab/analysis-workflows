@@ -58,7 +58,7 @@ inputs:
         type: File?
         secondaryFiles: ["^.bai"]
         inputBinding:
-            position: 8
+            position: 20
     insert_size:
         type: int
         default: 400

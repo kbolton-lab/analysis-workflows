@@ -90,6 +90,9 @@ inputs:
         type: string
         default: "((FMT/AF * FMT/DP < 6) && ((INFO/MQ < 55.0 && INFO/NM > 1.0) || (INFO/MQ < 60.0 && INFO/NM > 2.0) || (FMT/DP < 10) || (INFO/QUAL < 45)))"
         doc: "http://bcb.io/2016/04/04/vardict-filtering/"
+    pindel_insert_size:
+        type: int
+        default: 400
 outputs:
     # mutect_full:
     #     type: File
@@ -169,17 +172,14 @@ steps:
         doc: "this filter's the gnomAD_af_only file based on gnomAD POPAF threshold, it is what should be excluded if our calls have it since above threshold"
 
     pindel:
-        run: ../subworkflows/pindel.cwl
+        run: ../subworkflows/pindel_tumor_only.cwl
         in:
             reference: reference
-            tumor_bam: index_bam/indexed_bam
-            normal_bam: normal_bam
-            # interval_list: pad_target_intervals/expanded_interval_list
+            tumor_bam: tumor_bam
             interval_list: target_intervals
             scatter_count: scatter_count
             insert_size: pindel_insert_size
             tumor_sample_name: tumor_sample_name
-            normal_sample_name: normal_sample_name
         out:
             [unfiltered_vcf, filtered_vcf]
     pindel_gnomad_pon_filters:
