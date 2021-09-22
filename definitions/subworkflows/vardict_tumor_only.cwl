@@ -39,8 +39,9 @@ outputs:
         secondaryFiles: [.tbi]
     unfiltered_vcf:
         type: File
-        outputSource: filter/unfiltered_vcf
+        outputSource: norm_index/indexed_vcf
         secondaryFiles: [.tbi]
+        doc: "This is the unfiltered from fp_filter.cwl that is normalized with bcftools for use in nsamples.cwl"
     bcbio_filtered_vcf:
         type: File
         #outputSource: filter/filtered_vcf

@@ -45,7 +45,7 @@ outputs:
         secondaryFiles: [.tbi]
     unfiltered_vcf:
         type: File
-        outputSource: filter/unfiltered_vcf
+        outputSource: norm_index/indexed_vcf
         secondaryFiles: [.tbi]
     bcbio_filtered_vcf:
         type: File
