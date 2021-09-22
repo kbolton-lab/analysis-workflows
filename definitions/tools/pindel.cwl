@@ -22,8 +22,8 @@ requirements:
 
             use IO::File;
 
-            my $normal_bam = $ARGV[7];
-            if (defined $normal_bam) {
+            my $n_bam = $ARGV[7];
+            if (defined $n_bam) {
                 unless (@ARGV > 5) {
                     die "Usage: $0 normal.bam tumor.bam insert_size normal_sample_name tumor_sample_name <args>";
                 }
@@ -33,6 +33,8 @@ requirements:
                 $fh->say(join("\t", $normal_bam, $insert_size, $normal_name));
                 $fh->say(join("\t", $tumor_bam, $insert_size, $tumor_name));
                 $fh->close;
+
+                exit system(qw(/usr/bin/pindel -i pindel.config -w 30 -T 4 -o all), @args);
             } else {
                 unless (@ARGV > 4) {
                     die "Usage: $0 tumor.bam insert_size normal_sample_name tumor_sample_name <args>";
@@ -42,9 +44,9 @@ requirements:
 
                 $fh->say(join("\t", $tumor_bam, $insert_size, $tumor_name));
                 $fh->close;
-            }
 
-            exit system(qw(/usr/bin/pindel -i pindel.config -w 30 -T 4 -o all), @args);
+                exit system(qw(/usr/bin/pindel -i pindel.config -w 30 -T 4 -o all), @args);
+            }
 
 inputs:
     tumor_bam:
