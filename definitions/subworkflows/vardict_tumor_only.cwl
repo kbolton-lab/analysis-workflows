@@ -30,7 +30,7 @@ inputs:
         default: 0.005
     bcbio_filter_string:
         type: string
-        default: "((FMT/AF * FMT/DP < 6) && ((FMT/MQ < 55.0 && FMT/NM > 1.0) || (FMT/MQ < 60.0 && FMT/NM > 2.0) || (FMT/DP < 10) || (FMT/QUAL < 45)))"
+        default: "((FMT/AF * FMT/DP < 6) && ((INFO/MQ < 55.0 && INFO/NM > 1.0) || (INFO/MQ < 60.0 && INFO/NM > 2.0) || (FMT/DP < 10) || (INFO/QUAL < 45)))"
         doc: "http://bcb.io/2016/04/04/vardict-filtering/"
 outputs:
     filtered_vcf:

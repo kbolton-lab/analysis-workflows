@@ -71,7 +71,7 @@ steps:
             interval_list: split_interval_list/split_beds
             tumor_sample_name: tumor_sample_name
             normal_sample_name: normal_sample_name
-            output_name: 
+            output_name:
                 valueFrom: $(inputs.tumor_sample_name).vardict.vcf
         out:
             [vcf]
@@ -93,7 +93,7 @@ steps:
             reference: reference
             bam: tumor_bam
             vcf: index/indexed_vcf
-            variant_caller: 
+            variant_caller:
                 valueFrom: "vardict"
             sample_name: tumor_sample_name
         out:
@@ -105,7 +105,7 @@ steps:
             output_type:
                 default: "z"
             tumor_sample_name: tumor_sample_name
-            output_vcf_name: 
+            output_vcf_name:
                 valueFrom: $(inputs.tumor_sample_name).vcf.gz
         out:
             [tumor_only_vcf]
@@ -115,16 +115,32 @@ steps:
             vcf: vardict_extract_tumor/tumor_only_vcf
         out:
             [indexed_vcf]
+    bcftools_norm:
+        run: ../tools/bcftools_norm.cwl
+        in:
+            reference: reference
+            vcf: vardict_extract_tumor_index/indexed_vcf
+            output_vcf_name:
+                valueFrom: "vardict_full.vcf.gz"
+        out:
+            [normalized_vcf]
+        doc: "required so that we can split multi-allelic in a better way than GATK does for counting Nsamples by pyvcf"
+    norm_index:
+        run: ../tools/index_vcf.cwl
+        in:
+            vcf: bcftools_norm/normalized_vcf
+        out:
+            [indexed_vcf]
     bcbio_filter:
         run: ../tools/bcftools_filter_bcbio.cwl
         in:
-            vcf: vardict_extract_tumor_index/indexed_vcf
+            vcf: norm_index/indexed_vcf
             filter_string: bcbio_filter_string
-            filter_flag: 
+            filter_flag:
                 valueFrom: "exclude"
             output_type:
                 default: "z"
-            output_vcf_name: 
+            output_vcf_name:
                 valueFrom: $(inputs.vcf.nameroot.replace(".vcf","")).bcbiofilter.vcf.gz
         out: [filtered_vcf]
         doc: "this is bcbio's filter for vardict"
@@ -134,5 +150,3 @@ steps:
             vcf: bcbio_filter/filtered_vcf
         out:
             [indexed_vcf]
-
-
