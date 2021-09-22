@@ -22,12 +22,12 @@ requirements:
 
             use IO::File;
 
-            my $n_bam = $ARGV[7];
-            if (defined $n_bam) {
+            my $normal_bam = pop @ARGV;
+            if (defined $normal_bam) {
                 unless (@ARGV > 5) {
                     die "Usage: $0 normal.bam tumor.bam insert_size normal_sample_name tumor_sample_name <args>";
                 }
-                my ($normal_bam, $tumor_bam, $insert_size, $normal_name, $tumor_name, @args) = @ARGV;
+                my ($tumor_bam, $insert_size, $normal_name, $tumor_name, @args) = @ARGV;
                 my $fh = IO::File->new("> pindel.config");
 
                 $fh->say(join("\t", $normal_bam, $insert_size, $normal_name));
