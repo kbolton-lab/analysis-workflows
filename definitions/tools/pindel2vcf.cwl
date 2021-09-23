@@ -11,7 +11,7 @@ requirements:
     - class: DockerRequirement
       dockerPull: "mgibio/cle:v1.3.1"
 arguments:
-    ["-G", "-d", "20161216"]
+    ["-G"]
 inputs:
     pindel_out:
         type: File
@@ -34,6 +34,11 @@ inputs:
         inputBinding:
             prefix: "-e"
         default: 3
+    ref_date:
+        type: string?
+        inputBinding:
+            prefix: "-d"
+        default: "20161216"
     output_name:
         type: string?
         inputBinding:

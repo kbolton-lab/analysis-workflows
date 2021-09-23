@@ -23,7 +23,9 @@ requirements:
             use IO::File;
             use File::Basename;
 
-            my $normal_bam = pop @ARGV;
+            #If this is a normal bam then it will go into the config.txt file. If not, then it will be used with the -j <bed_file> parameter
+            my $normal_bam = $ARGV[-1];
+
             if ($normal_bam =~ /\.bam$/i) {
                 unless (@ARGV > 5) {
                     die "Usage: $0 normal.bam tumor.bam insert_size normal_sample_name tumor_sample_name <args>";
@@ -45,7 +47,7 @@ requirements:
 
                 $fh->say(join("\t", $tumor_bam, $insert_size, $tumor_name));
                 $fh->close;
-
+                
                 exit system(qw(/usr/bin/pindel -i pindel.config -w 30 -T 4 -o all), @args);
             }
 

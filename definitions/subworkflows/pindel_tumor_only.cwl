@@ -27,6 +27,15 @@ inputs:
         default: 50
     tumor_sample_name:
         type: string
+    ref_name:
+        type: string?
+        default: "GRCh38DH"
+    ref_date:
+        type: string?
+        default: "20161216"
+    pindel_min_supporting_reads:
+        type: int?
+        default: 3
 outputs:
     filtered_vcf:
         type: File
@@ -62,17 +71,20 @@ steps:
             region_pindel_outs: pindel_cat/per_region_pindel_out
         out:
             [all_region_pindel_head]
-    somaticfilter:
-        run: ../tools/pindel_somatic_filter.cwl
+    pindel2vcf:
+        run: ../tools/pindel2vcf.cwl
         in:
             reference: reference
-            pindel_output_summary: cat_all/all_region_pindel_head
+            pindel_out: cat_all/all_region_pindel_head
+            ref_name: ref_name
+            ref_date: ref_date
+            min_supporting_reads: pindel_min_supporting_reads
         out:
-            [vcf]
+            [pindel_vcf]
     bgzip:
         run: ../tools/bgzip.cwl
         in:
-            file: somaticfilter/vcf
+            file: pindel2vcf/pindel_vcf
         out:
             [bgzipped_file]
     index:
