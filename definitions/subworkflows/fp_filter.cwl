@@ -41,7 +41,8 @@ steps:
         out:
             [sanitized_vcf]
     normalize_variants:
-        run: ../tools/normalize_variants.cwl
+        run: ../tools/bcftools_norm.cwl
+        #run: ../tools/normalize_variants.cwl
         in:
             reference: reference
             vcf: sanitize_vcf/sanitized_vcf
@@ -89,11 +90,10 @@ steps:
         in:
             reference: reference
             vcf: fp_index/indexed_vcf
-            exclude_filtered: 
+            exclude_filtered:
                 default: true
             output_vcf_basename:
                 source: variant_caller
                 valueFrom: $(self)_filtered
         out:
             [filtered_vcf]
-

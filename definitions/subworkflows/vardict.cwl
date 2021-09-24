@@ -45,7 +45,7 @@ outputs:
         secondaryFiles: [.tbi]
     unfiltered_vcf:
         type: File
-        outputSource: norm_index/indexed_vcf
+        outputSource: filter/unfiltered_vcf
         secondaryFiles: [.tbi]
     bcbio_filtered_vcf:
         type: File
@@ -88,7 +88,7 @@ steps:
         out:
             [indexed_vcf]
     filter:
-        run: fp_filter_vardict.cwl
+        run: fp_filter_old_GATK.cwl
         in:
             reference: reference
             bam: tumor_bam
@@ -115,26 +115,10 @@ steps:
             vcf: vardict_extract_tumor/tumor_only_vcf
         out:
             [indexed_vcf]
-    bcftools_norm:
-        run: ../tools/bcftools_norm.cwl
-        in:
-            reference: reference
-            vcf: vardict_extract_tumor_index/indexed_vcf
-            output_vcf_name:
-                valueFrom: "vardict_full.vcf.gz"
-        out:
-            [normalized_vcf]
-        doc: "required so that we can split multi-allelic in a better way than GATK does for counting Nsamples by pyvcf"
-    norm_index:
-        run: ../tools/index_vcf.cwl
-        in:
-            vcf: bcftools_norm/normalized_vcf
-        out:
-            [indexed_vcf]
     bcbio_filter:
         run: ../tools/bcftools_filter_bcbio.cwl
         in:
-            vcf: norm_index/indexed_vcf
+            vcf: vardict_extract_tumor_index/indexed_vcf
             filter_string: bcbio_filter_string
             filter_flag:
                 valueFrom: "exclude"

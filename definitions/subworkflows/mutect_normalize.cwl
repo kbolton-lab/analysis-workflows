@@ -34,9 +34,9 @@ outputs:
         secondaryFiles: [.tbi]
     unfiltered_vcf:
         type: File
-        outputSource: norm_index/indexed_vcf
+        outputSource: filter/unfiltered_vcf
         secondaryFiles: [.tbi]
-        doc: "This is the unfiltered from fp_filter.cwl that is normalized with bcftools for use in nsamples.cwl"
+        doc: "This is the unfiltered from fp_filter.cwlfor use in nsamples.cwl"
 steps:
     split_interval_list:
         run: ../tools/split_interval_list.cwl
@@ -83,19 +83,3 @@ steps:
             #         }
         out:
             [unfiltered_vcf, filtered_vcf]
-    bcftools_norm:
-        run: ../tools/bcftools_norm.cwl
-        in:
-            reference: reference
-            vcf: filter/unfiltered_vcf
-            output_vcf_name:
-                valueFrom: "mutect_full.vcf.gz"
-        out:
-            [normalized_vcf]
-        doc: "required so that we can split multi-allelic in a better way than GATK does for counting Nsamples by pyvcf"
-    norm_index:
-        run: ../tools/index_vcf.cwl
-        in:
-            vcf: bcftools_norm/normalized_vcf
-        out:
-            [indexed_vcf]
