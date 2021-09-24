@@ -48,13 +48,19 @@ steps:
             vcf: sanitize_vcf/sanitized_vcf
         out:
             [normalized_vcf]
-    decompose_variants:
-        run: ../tools/vt_decompose.cwl
+    index:
+        run: ../tools/index_vcf.cwl
         in:
             vcf: normalize_variants/normalized_vcf
         out:
+            [indexed_vcf]
+    decompose_variants:
+        run: ../tools/vt_decompose.cwl
+        in:
+            vcf: index/indexed_vcf
+        out:
             [decomposed_vcf]
-    index:
+    reindex:
         run: ../tools/index_vcf.cwl
         in:
             vcf: decompose_variants/decomposed_vcf
@@ -65,7 +71,7 @@ steps:
         in:
             reference: reference
             bam: bam
-            vcf: index/indexed_vcf
+            vcf: reindex/indexed_vcf
             sample_name: sample_name
             min_var_freq: min_var_freq
             output_vcf_basename:

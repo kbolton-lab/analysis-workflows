@@ -81,7 +81,7 @@ steps:
         out:
             [indexed_vcf]
     filter:
-        run: fp_filter_old_GATK.cwl
+        run: fp_filter.cwl
         in:
             reference: reference
             bam: tumor_bam
