@@ -22,11 +22,6 @@ requirements:
             else
                 /usr/local/bin/fgbio ExtractUmisFromBam --molecular-index-tags ZA --single-tag RX --input $1 --read-structure $2 $3 --output $4
             fi
-
-arguments:
-    - output:
-      valueFrom: $(runtime.outdir)/umi_extracted.bam
-      position: 3
 inputs:
     bam:
         type: File
@@ -41,6 +36,11 @@ inputs:
         default: 1
         inputBinding:
             position: 5
+    output_name:
+        type: string?
+        inputBinding:
+            position: 3
+        default: "umi_extracted.bam"
 outputs:
     umi_extracted_bam:
         type: File

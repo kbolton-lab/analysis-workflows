@@ -22,12 +22,6 @@ requirements:
             else
                 /usr/local/bin/fgbio GroupReadsByUmi --strategy adjacency --assign-tag MI --raw-tag RX --min-map-q 1 --edits 1 --input $1 --output $2
             fi
-
-arguments:
-    - output:
-      valueFrom: $(runtime.outdir)/umi_grouped.bam
-      position: 2
-
 inputs:
     bam:
         type: File
@@ -38,6 +32,11 @@ inputs:
         default: 1
         inputBinding:
             position: 3
+    output_name:
+        type: string?
+        inputBinding:
+            position: 3
+        default: "umi_grouped.bam"
 outputs:
     grouped_bam:
         type: File
