@@ -93,6 +93,15 @@ inputs:
     pindel_insert_size:
         type: int
         default: 400
+    ref_name:
+        type: string?
+        default: "GRCh38DH"
+    ref_date:
+        type: string?
+        default: "20161216"
+    pindel_min_supporting_reads:
+        type: int?
+        default: 3
 outputs:
     # mutect_full:
     #     type: File
@@ -180,6 +189,9 @@ steps:
             scatter_count: scatter_count
             insert_size: pindel_insert_size
             tumor_sample_name: tumor_sample_name
+            ref_name: ref_name
+            ref_date: ref_date
+            pindel_min_supporting_reads: pindel_min_supporting_reads
         out:
             [unfiltered_vcf, filtered_vcf]
     pindel_gnomad_pon_filters:
