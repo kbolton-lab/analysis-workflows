@@ -1,0 +1,13 @@
+---
+reference: /storage1/fs1/bolton/Active/data/hg19/bwa/all_sequences.fa
+tumor_bam:
+    class: File
+    path: /storage1/fs1/bolton/Active/projects/Dilution/CWL_TEST/BAM/218281_T_S209.bam
+# normal_bam:
+#     class: File
+#     path: /storage1/fs1/bolton/Active/projects/Dilution/CWL_TEST/BAM/11108_14__S46.bam
+interval_list:
+    class: File
+    path: /storage1/fs1/bolton/Active/data/hg19/bed/archer_panel.interval_list
+scatter_count: 50
+tumor_sample_name: "218281_T_S209"

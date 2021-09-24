@@ -19,6 +19,7 @@ models:
         cosmic_vcf: /gscmnt/gc2560/core/build_merged_alignments/detect-variants--linus2112.gsc.wustl.edu-jwalker-774-52fa2dadc4ba4b6490abe0701907d394/snvs.hq.vcf.gz
         custom_clinvar_vcf: /gscmnt/gc2560/core/custom_clinvar_vcf/v20181028/custom.vcf.gz
         custom_gnomad_vcf: /gscmnt/gc2560/core/model_data/genome-db-ensembl-gnomad/2dd4b53431674786b760adad60a29273/fixed_b38_exome.vcf.gz
+        custom_gnomadV3_vcf: /storage1/fs1/bolton/Active/data/hg38/gnomad.genomes.r3.0.sites.full_trimmed_info.af_only.UKBB_intervals.vcf.bgz
         dbsnp_vcf: /gscmnt/gc2560/core/build_merged_alignments/detect-variants--linus2112.gsc.wustl.edu-jwalker-19443-e48c595a620a432c93e8dd29e4af64f2/snvs.hq.vcf.gz
         docm_vcf: /gscmnt/gc2560/core/build_merged_alignments/detect-variants--linus2112.gsc.wustl.edu-jwalker-16572-a6fc7db1ea124431af5271c8cb23ee26/snvs.hq.vcf.gz
         known_indels: /gscmnt/gc2560/core/build_merged_alignments/detect-variants--linus2112.gsc.wustl.edu-jwalker-20267-00cb8ff552914c17ad66d86031e10d30/indels.hq.vcf.gz
@@ -30,7 +31,7 @@ models:
         somalier_vcf: /gscmnt/gc2560/core/annotation_data/concordance_snps/GRC-human-build38_gnomad_exome_common_snps.vcf
         vep_cache_dir: /gscmnt/gc2560/core/cwl/inputs/VEP_cache
         vep_ensembl_assembly: GRCh38
-        vep_ensembl_version: 95
+        vep_ensembl_version: 104
         vep_ensembl_species: homo_sapiens
         gatk_gnomad_af_only_hc_0_005: /storage1/fs1/bolton/Active/data/hg38/vcf/af-only-gnomad.biallelic.above.005.hg38.vcf.gz
         impact_annotation: /storage1/fs1/bolton/Active/projects/annotation_files/hg38_mut_full_long_filtered_KB_deid_2.xlsx
