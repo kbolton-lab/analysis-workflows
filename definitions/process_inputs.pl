@@ -146,7 +146,8 @@ $inputs->{summary_intervals} = [];
 
 $inputs->{variants_to_table_fields} = [qw(CHROM POS REF ALT set)];
 $inputs->{variants_to_table_genotype_fields} = [qw(GT AD AF DP)];
-$inputs->{vep_to_table_fields} = [qw(Consequence SYMBOL Feature_type Feature HGVSc HGVSp cDNA_position CDS_position Protein_position Amino_acids Codons HGNC_ID Existing_variation gnomADe_AF CLIN_SIG SOMATIC PHENO clinvar_CLINSIGN clinvar_PHENOTYPE clinvar_SCORE clinvar_RCVACC clinvar_TESTEDINGTR clinvar_PHENOTYPELIST clinvar_NUMSUBMIT clinvar_GUIDELINES)];
+## adding gnomADg_AF for gnomAD 3.1 genomes
+$inputs->{vep_to_table_fields} = [qw(Consequence SYMBOL Feature_type Feature HGVSc HGVSp cDNA_position CDS_position Protein_position Amino_acids Codons HGNC_ID Existing_variation gnomADe_AF gnomADg_AF CLIN_SIG SOMATIC PHENO clinvar_CLINSIGN clinvar_PHENOTYPE clinvar_SCORE clinvar_RCVACC clinvar_TESTEDINGTR clinvar_PHENOTYPELIST clinvar_NUMSUBMIT clinvar_GUIDELINES)];
 
 my @vep_custom_annotations;
 
@@ -165,6 +166,26 @@ if($gnomad_file) {
     $annotation_info->{gnomad_filter} = 'true';
     $annotation_info->{check_existing} = 'true';
     $annotation_info->{vcf_fields} = ['AF','AF_AFR','AF_AMR','AF_ASJ','AF_EAS','AF_FIN','AF_NFE','AF_OTH','AF_SAS'];
+    $custom_annotation->{annotation} = $annotation_info;
+
+    push @vep_custom_annotations, $custom_annotation;
+}
+
+my ($gnomad_file, @extra) = grep { $_->name eq 'custom_gnomadV3_vcf' } @inputs;
+if (@extra) {
+    die 'multiple inputs found for custom_gnomadV3_vcf';
+}
+if($gnomad3_file) {
+    my $vcf_path = $gnomad3_file->value_id;
+    my $custom_annotation->{method} = 'exact';
+    $custom_annotation->{force_report_coordinates} = 'true';
+
+    my $annotation_info->{data_format} = 'vcf';
+    $annotation_info->{file} = { class => 'File', path => $vcf_path, secondaryFiles => [{class => 'File', path => $vcf_path . '.tbi' }]};
+    $annotation_info->{name} = 'gnomADg'; # if changed should update the `vep_to_table_fields` input below
+    $annotation_info->{gnomad_filter} = 'true';
+    $annotation_info->{check_existing} = 'true';
+    $annotation_info->{vcf_fields} = ['AF','AF_ami','AF_oth','AF_afr','AF_sas','AF_asj','AF_fin','AF_amr','AF_nfe','AF_eas'];
     $custom_annotation->{annotation} = $annotation_info;
 
     push @vep_custom_annotations, $custom_annotation;
