@@ -13,14 +13,14 @@ requirements:
     - class: InlineJavascriptRequirement
     - class: ResourceRequirement
       coresMin: 4
-      ramMin: 16000
+      ramMin: 64000
     - class: DockerRequirement
       dockerPull: "kboltonlab/msk_getbasecounts:1.0"
     - class: InitialWorkDirRequirement
       listing:
       - entryname: "msk_pileup.sh"
         entry: |
-          
+
           set -eou pipefail
 
           export sample_name="$2"
@@ -74,4 +74,3 @@ outputs:
         type: File
         outputBinding:
             glob: "$(inputs.sample_name).pileup.txt"
-    

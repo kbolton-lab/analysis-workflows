@@ -35,7 +35,7 @@ inputs:
     output_name:
         type: string?
         inputBinding:
-            position: 3
+            position: 2
         default: "umi_grouped.bam"
 outputs:
     grouped_bam:
