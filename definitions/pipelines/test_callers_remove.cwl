@@ -37,7 +37,7 @@ inputs:
         type: File
         default:
             class: File
-            path: "/storage1/fs1/bolton/Active/data/hg38/vcf/af-only-gnomad.biallelic.hg38.vcf.gz"
+            path: "/storage1/fs1/bolton/Active/data/hg19/vcf/af-only-gnomad.raw.sites.vcf.gz"
         secondaryFiles: [.tbi]
     filter_flag:
         type:
