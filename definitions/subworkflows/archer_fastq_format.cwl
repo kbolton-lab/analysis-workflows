@@ -12,7 +12,7 @@ requirements:
     - class: InlineJavascriptRequirement
 inputs:
     sequence:
-        type: ../types/sequence_data.yml#sequence_data
+        type: ../types/sequence_data.yml#sequence_data[]
     umi_length:
         type: int
         default: 8
