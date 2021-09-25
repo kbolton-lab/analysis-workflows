@@ -5,9 +5,6 @@ class: Workflow
 requirements:
     - class: SchemaDefRequirement
       types:
-          - $import: ../types/sequence_data.yml
-    - class: SchemaDefRequirement
-      types:
           - $import: ../types/labelled_file.yml
           - $import: ../types/sequence_data.yml
           - $import: ../types/trimming_options.yml
