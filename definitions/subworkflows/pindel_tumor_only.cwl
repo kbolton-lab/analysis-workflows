@@ -36,6 +36,9 @@ inputs:
     pindel_min_supporting_reads:
         type: int?
         default: 3
+    min_var_freq:
+        type: float?
+        default: 0.05
 outputs:
     filtered_vcf:
         type: File
@@ -114,5 +117,6 @@ steps:
             variant_caller:
                 valueFrom: "pindel"
             sample_name: tumor_sample_name
+            min_var_freq: min_var_freq
         out:
             [unfiltered_vcf, filtered_vcf]

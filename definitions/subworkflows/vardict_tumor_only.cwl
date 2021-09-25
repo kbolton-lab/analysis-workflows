@@ -89,6 +89,7 @@ steps:
             variant_caller:
                 valueFrom: "vardict"
             sample_name: tumor_sample_name
+            min_var_freq: af_threshold
         out:
             [unfiltered_vcf, filtered_vcf]
     bcbio_filter:

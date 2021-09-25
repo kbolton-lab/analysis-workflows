@@ -12,8 +12,8 @@ arguments: [
 requirements:
     - class: InlineJavascriptRequirement
     - class: ResourceRequirement
-      coresMin: 4
-      ramMin: 64000
+      coresMin: 16
+      ramMin: 128000
     - class: DockerRequirement
       dockerPull: "kboltonlab/msk_getbasecounts:1.0"
     - class: InitialWorkDirRequirement
@@ -29,12 +29,11 @@ requirements:
           # export sample_name=`samtools view -H test.bam | grep '^@RG' | sed "s/.*SM:\([^\t]*\).*/\1/g" | uniq`
           echo "$sample_name:$bam_path"
 
-          /opt/GetBaseCountsMultiSample/GetBaseCountsMultiSample --fasta "$1" --bam "$sample_name:$bam_path"  --vcf "$4" --output "$sample_name.pileup.vcf" --maq "$5" --baq "$6" --thread "$7";
+          /opt/GetBaseCountsMultiSample/GetBaseCountsMultiSample --fasta "$1" --bam "$sample_name:$bam_path"  --vcf "$4" --output "$sample_name.pileup.vcf" --maq "$5" --baq "$6" --thread 16;
 
           bgzip $sample_name.pileup.vcf && tabix $sample_name.pileup.vcf.gz
 
           bcftools query -f '%CHROM\t%POS\t%REF\t%ALT\t[%RD]\t[%AD]\n' $sample_name.pileup.vcf.gz > $sample_name.pileup.txt
-
 inputs:
     reference:
         type:

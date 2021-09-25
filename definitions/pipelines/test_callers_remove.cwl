@@ -37,7 +37,7 @@ inputs:
         type: File
         default:
             class: File
-            path: "/storage1/fs1/bolton/Active/data/hg19/vcf/af-only-gnomad.raw.sites.vcf.gz"
+            path: "/storage1/fs1/bolton/Active/data/hg38/vcf/af-only-gnomad.biallelic.hg38.vcf.gz"
         secondaryFiles: [.tbi]
     filter_flag:
         type:
@@ -46,9 +46,6 @@ inputs:
             symbols: ["include", "exclude"]
         default: "include"
         doc: "we default the gnomad to include > than threshold because this is smaller file for isec complement"
-    target_intervals:
-        type: File
-        label: "target_intervals: interval_list file of targets used in the sequencing experiment"
     vep_cache_dir:
         type:
             - string
@@ -102,6 +99,68 @@ inputs:
     pindel_min_supporting_reads:
         type: int?
         default: 3
+    bqsr_known_sites:
+        type: File[]
+        secondaryFiles: [.tbi]
+        label: "bqsr_known_sites: One or more databases of known polymorphic sites used to exclude regions around known polymorphisms from analysis."
+        doc: |
+          Known polymorphic indels recommended by GATK for a variety of
+          tools including the BaseRecalibrator. This is part of the GATK resource
+          bundle available at http://www.broadinstitute.org/gatk/guide/article?id=1213
+          File should be in vcf format, and tabix indexed.
+    bqsr_intervals:
+        type: string[]
+        label: "bqsr_intervals: Array of strings specifying regions for base quality score recalibration"
+        doc: |
+          bqsr_intervals provides an array of genomic intervals for which to apply
+          GATK base quality score recalibrations. Typically intervals are given
+          for the entire chromosome (chr1, chr2, etc.), these names should match
+          the format in the reference file.
+    bait_intervals:
+        type: File
+        label: "bait_intervals: interval_list file of baits used in the sequencing experiment"
+        doc: |
+          bait_intervals is an interval_list corresponding to the baits used in sequencing reagent.
+          These are essentially coordinates for regions you were able to design probes for in the reagent.
+          Typically the reagent provider has this information available in bed format and it can be
+          converted to an interval_list with Picard BedToIntervalList. Astrazeneca also maintains a repo
+          of baits for common sequencing reagents available at https://github.com/AstraZeneca-NGS/reference_data
+    target_intervals:
+        type: File
+        label: "target_intervals: interval_list file of targets used in the sequencing experiment"
+        doc: |
+          target_intervals is an interval_list corresponding to the targets for the capture reagent.
+          Bed files with this information can be converted to interval_lists with Picard BedToIntervalList.
+          In general for a WES exome reagent bait_intervals and target_intervals are the same. UKBB is xgen_plus_spikein.GRCh38.intervals
+    target_interval_padding:
+        type: int
+        label: "target_interval_padding: number of bp flanking each target region in which to allow variant calls"
+        doc: |
+          The effective coverage of capture products generally extends out beyond the actual regions
+          targeted. This parameter allows variants to be called in these wingspan regions, extending
+          this many base pairs from each side of the target regions.
+        default: 100
+    per_base_intervals:
+        type: ../types/labelled_file.yml#labelled_file[]
+        label: "per_base_intervals: additional intervals over which to summarize coverage/QC at a per-base resolution"
+        doc: "per_base_intervals is a list of regions (in interval_list format) over which to summarize coverage/QC at a per-base resolution."
+    per_target_intervals:
+        type: ../types/labelled_file.yml#labelled_file[]
+        label: "per_target_intervals: additional intervals over which to summarize coverage/QC at a per-target resolution"
+        doc: "per_target_intervals list of regions (in interval_list format) over which to summarize coverage/QC at a per-target resolution."
+    summary_intervals:
+        type: ../types/labelled_file.yml#labelled_file[]
+    omni_vcf:
+        type: File
+        secondaryFiles: [.tbi]
+    picard_metric_accumulation_level:
+        type: string
+    qc_minimum_mapping_quality:
+        type: int?
+        default: 0
+    qc_minimum_base_quality:
+        type: int?
+        default: 0
 outputs:
     mutect_full:
         type: File
@@ -121,52 +180,100 @@ outputs:
         secondaryFiles: [.tbi]
         doc: "results from MSK pileup"
 
-    vardict_full:
-        type: File
-        outputSource: vardict/unfiltered_vcf
-        doc: "full soft-filtered from fp_filter"
-    vardict_bcbio_filtered:
-        type: File
-        outputSource: vardict/bcbio_filtered_vcf
-        secondaryFiles: [.tbi]
-        doc: "bcbio soft filtered"
-    vardict_pon_annotated_unfiltered_vcf:
-        type: File
-        outputSource: vardict_gnomad_pon_filters/processed_gnomAD_filtered_vcf
-        doc: "gnomad filter only with fisher PoN p-value"
-    vardict_pon_annotated_filtered_vcf:
-        type: File
-        outputSource: vardict_annotate_variants/annotated_vcf
-        doc: "final annotated VCF with PoN fisher test hard filter"
-    vardict_pon_total_counts:
-        type: File
-        outputSource: vardict_gnomad_pon_filters/pon_total_counts
-        secondaryFiles: [.tbi]
-        doc: "results from MSK pileup"
-
-    pindel_full:
-        type: File
-        outputSource: pindel/unfiltered_vcf
-        doc: "full soft-filtered from fp_filter"
-    pindel_pon_annotated_unfiltered_vcf:
-        type: File
-        outputSource: pindel_gnomad_pon_filters/processed_gnomAD_filtered_vcf
-        doc: "gnomad filter only with fisher PoN p-value"
-    pindel_pon_annotated_filtered_vcf:
-        type: File
-        outputSource: pindel_annotate_variants/annotated_vcf
-        doc: "final annotated VCF with PoN fisher test hard filter"
-    pindel_pon_total_counts:
-        type: File
-        outputSource: pindel_gnomad_pon_filters/pon_total_counts
-        secondaryFiles: [.tbi]
-        doc: "results from MSK pileup"
+    # vardict_full:
+    #     type: File
+    #     outputSource: vardict/unfiltered_vcf
+    #     doc: "full soft-filtered from fp_filter"
+    # vardict_bcbio_filtered:
+    #     type: File
+    #     outputSource: vardict/bcbio_filtered_vcf
+    #     secondaryFiles: [.tbi]
+    #     doc: "bcbio soft filtered"
+    # vardict_pon_annotated_unfiltered_vcf:
+    #     type: File
+    #     outputSource: vardict_gnomad_pon_filters/processed_gnomAD_filtered_vcf
+    #     doc: "gnomad filter only with fisher PoN p-value"
+    # vardict_pon_annotated_filtered_vcf:
+    #     type: File
+    #     outputSource: vardict_annotate_variants/annotated_vcf
+    #     doc: "final annotated VCF with PoN fisher test hard filter"
+    # vardict_pon_total_counts:
+    #     type: File
+    #     outputSource: vardict_gnomad_pon_filters/pon_total_counts
+    #     secondaryFiles: [.tbi]
+    #     doc: "results from MSK pileup"
+    #
+    # pindel_full:
+    #     type: File
+    #     outputSource: pindel/unfiltered_vcf
+    #     doc: "full soft-filtered from fp_filter"
+    # pindel_pon_annotated_unfiltered_vcf:
+    #     type: File
+    #     outputSource: pindel_gnomad_pon_filters/processed_gnomAD_filtered_vcf
+    #     doc: "gnomad filter only with fisher PoN p-value"
+    # pindel_pon_annotated_filtered_vcf:
+    #     type: File
+    #     outputSource: pindel_annotate_variants/annotated_vcf
+    #     doc: "final annotated VCF with PoN fisher test hard filter"
+    # pindel_pon_total_counts:
+    #     type: File
+    #     outputSource: pindel_gnomad_pon_filters/pon_total_counts
+    #     secondaryFiles: [.tbi]
+    #     doc: "results from MSK pileup"
 
     gnomad_exclude:
         type: File
         outputSource: get_gnomad_exclude/normalized_gnomad_exclude
         secondaryFiles: [.tbi]
 steps:
+    bqsr:
+        run: ../tools/bqsr.cwl
+        in:
+            reference: reference
+            bam: tumor_bam
+            intervals: bqsr_intervals
+            known_sites: bqsr_known_sites
+        out:
+            [bqsr_table]
+    apply_bqsr:
+        run: ../tools/apply_bqsr.cwl
+        in:
+            reference: reference
+            bam: tumor_bam
+            bqsr_table: bqsr/bqsr_table
+            output_name:
+                valueFrom: "$(inputs.bam.nameroot).final"
+        out:
+            [bqsr_bam]
+    index_bam:
+        run: ../tools/index_bam.cwl
+        in:
+            bam: apply_bqsr/bqsr_bam
+        out:
+            [indexed_bam]
+    tumor_qc:
+        run: ../subworkflows/qc_exome.cwl
+        in:
+            bam: index_bam/indexed_bam
+            reference: reference
+            bait_intervals: bait_intervals
+            target_intervals: target_intervals
+            per_base_intervals: per_base_intervals
+            per_target_intervals: per_target_intervals
+            summary_intervals: summary_intervals
+            omni_vcf: omni_vcf
+            picard_metric_accumulation_level: picard_metric_accumulation_level
+            minimum_mapping_quality: qc_minimum_mapping_quality
+            minimum_base_quality: qc_minimum_base_quality
+        out: [insert_size_metrics, insert_size_histogram, alignment_summary_metrics, hs_metrics, per_target_coverage_metrics, per_target_hs_metrics, per_base_coverage_metrics, per_base_hs_metrics, summary_hs_metrics, flagstats, verify_bam_id_metrics, verify_bam_id_depth]
+    pad_target_intervals:
+        run: ../tools/interval_list_expand.cwl
+        in:
+            interval_list: target_intervals
+            roi_padding: target_interval_padding
+        out:
+            [expanded_interval_list]
+
     get_gnomad_exclude:
         run: ../subworkflows/get_gnomAD_filter.cwl
         in:
@@ -180,94 +287,94 @@ steps:
         out: [gnomad_exclude, normalized_gnomad_exclude]
         doc: "this filter's the gnomAD_af_only file based on gnomAD POPAF threshold, it is what should be excluded if our calls have it since above threshold"
 
-    pindel:
-        run: ../subworkflows/pindel_tumor_only.cwl
-        in:
-            reference: reference
-            tumor_bam: tumor_bam
-            interval_list: target_intervals
-            scatter_count: scatter_count
-            insert_size: pindel_insert_size
-            tumor_sample_name: tumor_sample_name
-            ref_name: ref_name
-            ref_date: ref_date
-            pindel_min_supporting_reads: pindel_min_supporting_reads
-        out:
-            [unfiltered_vcf, filtered_vcf]
-    pindel_gnomad_pon_filters:
-        run: ../subworkflows/gnomad_and_PoN_filter.cwl
-        in:
-            reference: reference
-            caller_vcf: pindel/unfiltered_vcf
-            gnomAD_exclude_vcf: get_gnomad_exclude/normalized_gnomad_exclude
-            caller_prefix:
-                source: tumor_sample_name
-                valueFrom: "pindel.$(self)"
-            normal_bams: pon_normal_bams
-            pon_final_name:
-                source: tumor_sample_name
-                valueFrom: "pindel.$(self).pon.total.counts"
-        out:
-            [processed_gnomAD_filtered_vcf, processed_filtered_vcf, pon_total_counts]
-    pindel_annotate_variants:
-        run: ../tools/vep.cwl
-        in:
-            vcf: pindel_gnomad_pon_filters/processed_filtered_vcf
-            cache_dir: vep_cache_dir
-            ensembl_assembly: vep_ensembl_assembly
-            ensembl_version: vep_ensembl_version
-            ensembl_species: vep_ensembl_species
-            synonyms_file: synonyms_file
-            coding_only: annotate_coding_only
-            reference: reference
-            pick: vep_pick
-            custom_annotations: vep_custom_annotations
-            plugins: vep_plugins
-        out:
-            [annotated_vcf, vep_summary]
-    vardict:
-        run: ../subworkflows/vardict_tumor_only.cwl
-        in:
-            reference: reference
-            tumor_bam: tumor_bam
-            interval_list: target_intervals # splits to bed
-            scatter_count: scatter_count
-            tumor_sample_name: tumor_sample_name
-            af_threshold: af_threshold
-            bcbio_filter_string: bcbio_filter_string
-        out:
-            [unfiltered_vcf, filtered_vcf, bcbio_filtered_vcf]
-    vardict_gnomad_pon_filters:
-        run: ../subworkflows/gnomad_and_PoN_filter.cwl
-        in:
-            reference: reference
-            caller_vcf: vardict/bcbio_filtered_vcf
-            gnomAD_exclude_vcf: get_gnomad_exclude/normalized_gnomad_exclude
-            caller_prefix:
-                source: tumor_sample_name
-                valueFrom: "vardict.$(self)"
-            normal_bams: pon_normal_bams
-            pon_final_name:
-                source: tumor_sample_name
-                valueFrom: "vardict.$(self).pon.total.counts"
-        out:
-            [processed_gnomAD_filtered_vcf, processed_filtered_vcf, pon_total_counts]
-    vardict_annotate_variants:
-        run: ../tools/vep.cwl
-        in:
-            vcf: vardict_gnomad_pon_filters/processed_filtered_vcf
-            cache_dir: vep_cache_dir
-            ensembl_assembly: vep_ensembl_assembly
-            ensembl_version: vep_ensembl_version
-            ensembl_species: vep_ensembl_species
-            synonyms_file: synonyms_file
-            coding_only: annotate_coding_only
-            reference: reference
-            pick: vep_pick
-            custom_annotations: vep_custom_annotations
-            plugins: vep_plugins
-        out:
-            [annotated_vcf, vep_summary]
+    # pindel:
+    #     run: ../subworkflows/pindel_tumor_only.cwl
+    #     in:
+    #         reference: reference
+    #         tumor_bam: tumor_bam
+    #         interval_list: target_intervals
+    #         scatter_count: scatter_count
+    #         insert_size: pindel_insert_size
+    #         tumor_sample_name: tumor_sample_name
+    #         ref_name: ref_name
+    #         ref_date: ref_date
+    #         pindel_min_supporting_reads: pindel_min_supporting_reads
+    #     out:
+    #         [unfiltered_vcf, filtered_vcf]
+    # pindel_gnomad_pon_filters:
+    #     run: ../subworkflows/gnomad_and_PoN_filter.cwl
+    #     in:
+    #         reference: reference
+    #         caller_vcf: pindel/unfiltered_vcf
+    #         gnomAD_exclude_vcf: get_gnomad_exclude/normalized_gnomad_exclude
+    #         caller_prefix:
+    #             source: tumor_sample_name
+    #             valueFrom: "pindel.$(self)"
+    #         normal_bams: pon_normal_bams
+    #         pon_final_name:
+    #             source: tumor_sample_name
+    #             valueFrom: "pindel.$(self).pon.total.counts"
+    #     out:
+    #         [processed_gnomAD_filtered_vcf, processed_filtered_vcf, pon_total_counts]
+    # pindel_annotate_variants:
+    #     run: ../tools/vep.cwl
+    #     in:
+    #         vcf: pindel_gnomad_pon_filters/processed_filtered_vcf
+    #         cache_dir: vep_cache_dir
+    #         ensembl_assembly: vep_ensembl_assembly
+    #         ensembl_version: vep_ensembl_version
+    #         ensembl_species: vep_ensembl_species
+    #         synonyms_file: synonyms_file
+    #         coding_only: annotate_coding_only
+    #         reference: reference
+    #         pick: vep_pick
+    #         custom_annotations: vep_custom_annotations
+    #         plugins: vep_plugins
+    #     out:
+    #         [annotated_vcf, vep_summary]
+    # vardict:
+    #     run: ../subworkflows/vardict_tumor_only.cwl
+    #     in:
+    #         reference: reference
+    #         tumor_bam: tumor_bam
+    #         interval_list: target_intervals # splits to bed
+    #         scatter_count: scatter_count
+    #         tumor_sample_name: tumor_sample_name
+    #         af_threshold: af_threshold
+    #         bcbio_filter_string: bcbio_filter_string
+    #     out:
+    #         [unfiltered_vcf, filtered_vcf, bcbio_filtered_vcf]
+    # vardict_gnomad_pon_filters:
+    #     run: ../subworkflows/gnomad_and_PoN_filter.cwl
+    #     in:
+    #         reference: reference
+    #         caller_vcf: vardict/bcbio_filtered_vcf
+    #         gnomAD_exclude_vcf: get_gnomad_exclude/normalized_gnomad_exclude
+    #         caller_prefix:
+    #             source: tumor_sample_name
+    #             valueFrom: "vardict.$(self)"
+    #         normal_bams: pon_normal_bams
+    #         pon_final_name:
+    #             source: tumor_sample_name
+    #             valueFrom: "vardict.$(self).pon.total.counts"
+    #     out:
+    #         [processed_gnomAD_filtered_vcf, processed_filtered_vcf, pon_total_counts]
+    # vardict_annotate_variants:
+    #     run: ../tools/vep.cwl
+    #     in:
+    #         vcf: vardict_gnomad_pon_filters/processed_filtered_vcf
+    #         cache_dir: vep_cache_dir
+    #         ensembl_assembly: vep_ensembl_assembly
+    #         ensembl_version: vep_ensembl_version
+    #         ensembl_species: vep_ensembl_species
+    #         synonyms_file: synonyms_file
+    #         coding_only: annotate_coding_only
+    #         reference: reference
+    #         pick: vep_pick
+    #         custom_annotations: vep_custom_annotations
+    #         plugins: vep_plugins
+    #     out:
+    #         [annotated_vcf, vep_summary]
 
     mutect:
         run: ../subworkflows/mutect.cwl

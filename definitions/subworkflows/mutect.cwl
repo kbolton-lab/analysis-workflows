@@ -26,6 +26,9 @@ inputs:
         type: int
     tumor_sample_name:
         type: string
+    min_var_freq:
+        type: float?
+        default: 0.05
 outputs:
     unfiltered_vcf:
         type: File
@@ -70,10 +73,9 @@ steps:
             reference: reference
             bam: tumor_bam
             vcf: index/indexed_vcf
-            variant_caller: 
+            variant_caller:
                 valueFrom: "mutect"
             sample_name: tumor_sample_name
+            min_var_freq: min_var_freq
         out:
             [unfiltered_vcf, filtered_vcf]
-
-
