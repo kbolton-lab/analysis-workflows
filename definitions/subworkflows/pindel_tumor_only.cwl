@@ -69,7 +69,7 @@ steps:
         out:
             [per_region_pindel_out]
     cat_all:
-        run: ../tools/cat_all.cwl
+        run: ../tools/cat_all_from_file.cwl
         in:
             region_pindel_outs: pindel_cat/per_region_pindel_out
         out:
