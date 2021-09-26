@@ -14,8 +14,6 @@ requirements:
     - class: StepInputExpressionRequirement
     - class: InlineJavascriptRequirement
 inputs:
-    sequence:
-        type: ../types/sequence_data.yml#sequence_data
     reference:
         type:
             - string
