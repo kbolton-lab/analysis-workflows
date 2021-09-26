@@ -255,15 +255,6 @@ inputs:
         type: string
         default: "((FMT/AF * FMT/DP < 6) && ((INFO/MQ < 55.0 && INFO/NM > 1.0) || (INFO/MQ < 60.0 && INFO/NM > 2.0) || (FMT/DP < 10) || (INFO/QUAL < 45)))"
         doc: "http://bcb.io/2016/04/04/vardict-filtering/"
-    ref_name:
-        type: string?
-        default: "GRCh38DH"
-    ref_date:
-        type: string?
-        default: "20161216"
-    pindel_min_supporting_reads:
-        type: int?
-        default: 3
     # mutect_pon2_file:
     #     type: File
     #     secondaryFiles: [.tbi]
@@ -372,24 +363,6 @@ outputs:
     vardict_pon_total_counts:
         type: File
         outputSource: vardict_gnomad_pon_filters/pon_total_counts
-        secondaryFiles: [.tbi]
-        doc: "results from MSK pileup"
-
-    pindel_full:
-        type: File
-        outputSource: pindel/unfiltered_vcf
-        doc: "full soft-filtered from fp_filter"
-    pindel_pon_annotated_unfiltered_vcf:
-        type: File
-        outputSource: pindel_gnomad_pon_filters/processed_gnomAD_filtered_vcf
-        doc: "gnomad filter only with fisher PoN p-value"
-    # pindel_pon_annotated_filtered_vcf:
-    #     type: File
-    #     outputSource: pindel_pon2/annotated_vcf
-    #     doc: "final annotated VCF with PoN fisher test hard filter"
-    pindel_pon_total_counts:
-        type: File
-        outputSource: pindel_gnomad_pon_filters/pon_total_counts
         secondaryFiles: [.tbi]
         doc: "results from MSK pileup"
 
@@ -665,63 +638,6 @@ steps:
     #         vcf2PON: vardict_pon2_file
     #         caller:
     #             valueFrom: "vardict"
-    #         sample_name: tumor_sample_name
-    #     out:
-    #         [annotated_vcf]
-
-    pindel:
-        run: ../subworkflows/pindel_tumor_only.cwl
-        in:
-            reference: reference
-            tumor_bam: index_bam/indexed_bam
-            interval_list: target_intervals
-            scatter_count: scatter_count
-            insert_size: pindel_insert_size
-            tumor_sample_name: tumor_sample_name
-            ref_name: ref_name
-            ref_date: ref_date
-            pindel_min_supporting_reads: pindel_min_supporting_reads
-            min_var_freq: af_threshold
-        out:
-            [unfiltered_vcf, filtered_vcf]
-    pindel_gnomad_pon_filters:
-        run: ../subworkflows/gnomad_and_PoN_filter.cwl
-        in:
-            reference: reference
-            caller_vcf: pindel/unfiltered_vcf
-            gnomAD_exclude_vcf: get_gnomad_exclude/normalized_gnomad_exclude
-            caller_prefix:
-                source: tumor_sample_name
-                valueFrom: "pindel.$(self)"
-            normal_bams: pon_normal_bams
-            pon_final_name:
-                source: tumor_sample_name
-                valueFrom: "pindel.$(self).pon.total.counts"
-        out:
-            [processed_gnomAD_filtered_vcf, processed_filtered_vcf, pon_total_counts]
-    pindel_annotate_variants:
-        run: ../tools/vep.cwl
-        in:
-            vcf: pindel_gnomad_pon_filters/processed_filtered_vcf
-            cache_dir: vep_cache_dir
-            ensembl_assembly: vep_ensembl_assembly
-            ensembl_version: vep_ensembl_version
-            ensembl_species: vep_ensembl_species
-            synonyms_file: synonyms_file
-            coding_only: annotate_coding_only
-            reference: reference
-            pick: vep_pick
-            custom_annotations: vep_custom_annotations
-            plugins: vep_plugins
-        out:
-            [annotated_vcf, vep_summary]
-    # pindel_pon2:
-    #     run: ../tools/pon2percent.cwl
-    #     in:
-    #         vcf: pindel_annotate_variants/annotated_vcf
-    #         vcf2PON: pindel_pon2_file
-    #         caller:
-    #             valueFrom: "pindel"
     #         sample_name: tumor_sample_name
     #     out:
     #         [annotated_vcf]

@@ -7,7 +7,7 @@ requirements:
     - class: DockerRequirement
       dockerPull: "ubuntu:xenial"
     - class: ResourceRequirement
-      ramMin: 4000
+      ramMin: 16000
 arguments: [
     { shellQuote: false, valueFrom: "|" },
     "/bin/grep", "ChrID", "/dev/stdin"
@@ -17,7 +17,7 @@ inputs:
     region_pindel_outs:
         type: File[]
         inputBinding:
-            position: -1 
+            position: -1
 outputs:
     all_region_pindel_head:
         type: stdout

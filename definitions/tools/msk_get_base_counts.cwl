@@ -12,8 +12,8 @@ arguments: [
 requirements:
     - class: InlineJavascriptRequirement
     - class: ResourceRequirement
-      coresMin: 16
-      ramMin: 128000
+      coresMin: 4
+      ramMin: 64000
     - class: DockerRequirement
       dockerPull: "kboltonlab/msk_getbasecounts:1.0"
     - class: InitialWorkDirRequirement

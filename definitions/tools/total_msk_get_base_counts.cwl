@@ -9,7 +9,7 @@ baseCommand: ["/bin/bash", "combine.sh"]
 requirements:
     - class: InlineJavascriptRequirement
     - class: ResourceRequirement
-      ramMin: 2000
+      ramMin: 16000
     - class: DockerRequirement
       dockerPull: "kboltonlab/sam_bcftools_tabix_bgzip:1.0"
     - class: InitialWorkDirRequirement
@@ -27,17 +27,17 @@ requirements:
                 if ((c[i]+b[i])==0) printf "%s",chrom[i]"\t"pos[i]"\t"ref[i]"\t"alt[i]"\t"b[i]"\t"c[i]"\t0.0\n";
                 else printf "%s",chrom[i]"\t"pos[i]"\t"ref[i]"\t"alt[i]"\t"b[i]"\t"c[i]"\t"(c[i]/(c[i]+b[i]))"\n";}
             }' `printf '%s\n' $array` > "$output";
-            
+
             tail -n +2 "$output" | bgzip -c > "$output.gz" && tabix -f -s1 -b2 -e2 "$output.gz";
 
 inputs:
     counts:
-        type: 
+        type:
             type: array
             items: File
         inputBinding:
             position: 1
-            itemSeparator: " " 
+            itemSeparator: " "
     final_name:
         type: string
         default: "all.counts"
