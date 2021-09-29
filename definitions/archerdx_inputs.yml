@@ -40,7 +40,7 @@ models:
         somalier_vcf: /gscmnt/gc2560/core/annotation_data/concordance_snps/GRC-human-build38_gnomad_exome_common_snps.vcf
         vep_cache_dir: /gscmnt/gc2560/core/cwl/inputs/VEP_cache
         vep_ensembl_assembly: GRCh38
-        vep_ensembl_version: 101
+        vep_ensembl_version: 104
         vep_ensembl_species: homo_sapiens
         impact_annotation: /storage1/fs1/bolton/Active/projects/annotation_files/hg38_mut_full_long_filtered_KB_deid_2.xlsx
         topmed_annotation: /storage1/fs1/bolton/Active/projects/annotation_files/bick_topmed_variants.txt

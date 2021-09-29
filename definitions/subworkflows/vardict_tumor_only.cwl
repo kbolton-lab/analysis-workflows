@@ -98,7 +98,7 @@ steps:
             vcf: index/indexed_vcf
             filter_string: bcbio_filter_string
             filter_flag:
-                valueFrom: "exclude"
+                valueFrom: "include"
             output_type:
                 default: "z"
             output_vcf_name:
