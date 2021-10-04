@@ -24,7 +24,6 @@ models:
         pindel_pon2_file: /storage1/fs1/bolton/Active/projects/Archer/Normals/pindel.merged.2percent.2N.vcf.gz
         target_intervals: /storage1/fs1/bolton/Active/data/hg38/bed/archer_panel.hg38.interval_list
         bait_intervals: /storage1/fs1/bolton/Active/data/hg38/bed/archer_panel.hg38.interval_list
-        #bqsr_known_sites: /storage1/fs1/bolton/Active/projects/annotation_files/bqsr_known_sites.txt
         cosmic_vcf: /gscmnt/gc2560/core/build_merged_alignments/detect-variants--linus2112.gsc.wustl.edu-jwalker-774-52fa2dadc4ba4b6490abe0701907d394/snvs.hq.vcf.gz
         custom_clinvar_vcf: /gscmnt/gc2560/core/custom_clinvar_vcf/v20210629/clinvar.vcf.gz
         custom_gnomad_vcf: /gscmnt/gc2560/core/model_data/genome-db-ensembl-gnomad/2dd4b53431674786b760adad60a29273/fixed_b38_exome.vcf.gz
