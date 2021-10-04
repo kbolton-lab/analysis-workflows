@@ -264,18 +264,18 @@ inputs:
     pindel_min_supporting_reads:
         type: int?
         default: 3
-    # mutect_pon2_file:
-    #     type: File
-    #     secondaryFiles: [.tbi]
-    # varscan_pon2_file:
-    #     type: File
-    #     secondaryFiles: [.tbi]
-    # vardict_pon2_file:
-    #     type: File
-    #     secondaryFiles: [.tbi]
-    # pindel_pon2_file:
-    #     type: File
-    #     secondaryFiles: [.tbi]
+    mutect_pon2_file:
+        type: File
+        secondaryFiles: [.tbi]
+    lofreq_pon2_file:
+        type: File
+        secondaryFiles: [.tbi]
+    vardict_pon2_file:
+        type: File
+        secondaryFiles: [.tbi]
+    pindel_pon2_file:
+        type: File
+        secondaryFiles: [.tbi]
 
 
 outputs:

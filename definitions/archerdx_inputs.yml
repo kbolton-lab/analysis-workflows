@@ -17,11 +17,11 @@ models:
         max_no_call_fraction: 0.5
         af_threshold: 0.0001
         reference: /gscmnt/gc2560/core/model_data/2887491634/build21f22873ebe0486c8e6f69c15435aa96/all_sequences.fa
-        pon_normal_bams_bulk: /storage1/fs1/bolton/Active/projects/ArcherPilot/GMS_N/pon.bam.paths.txt
-        #mutect_pon2_file: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/mutect2.merged.SB.2N.vcf.gz
-        #vardict_pon2_file: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/vardict/filtered/vardict.2N.vcf.gz
-        #varscan_pon2_file: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/varscan/varscan.2N.vcf.gz
-        #pindel_pon2_file: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/pindel200/pindel.merged.2N.AD1.vcf.gz
+        pon_normal_bams_bulk: /storage1/fs1/bolton/Active/projects/Archer/Normals/pon.bam.paths.txt
+        mutect_pon2_file: /storage1/fs1/bolton/Active/projects/Archer/Normals/mutect2.merged.SB.2N.vcf.gz
+        vardict_pon2_file: /storage1/fs1/bolton/Active/projects/Archer/Normals/vardict.merged.BQSR.2N.vcf.gz
+        lofreq_pon2_file: /storage1/fs1/bolton/Active/projects/Archer/Normals/lofreq.merged.2percent.2N.vcf.gz
+        pindel_pon2_file: /storage1/fs1/bolton/Active/projects/Archer/Normals/pindel.merged.2percent.2N.vcf.gz
         target_intervals: /storage1/fs1/bolton/Active/data/hg38/bed/archer_panel.hg38.interval_list
         bait_intervals: /storage1/fs1/bolton/Active/data/hg38/bed/archer_panel.hg38.interval_list
         #bqsr_known_sites: /storage1/fs1/bolton/Active/projects/annotation_files/bqsr_known_sites.txt
