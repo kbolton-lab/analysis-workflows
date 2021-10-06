@@ -255,15 +255,15 @@ inputs:
         type: string
         default: "((FMT/AF * FMT/DP < 6) && ((INFO/MQ < 55.0 && INFO/NM > 1.0) || (INFO/MQ < 60.0 && INFO/NM > 2.0) || (FMT/DP < 10) || (INFO/QUAL < 45)))"
         doc: "http://bcb.io/2016/04/04/vardict-filtering/"
-    # mutect_pon2_file:
-    #     type: File
-    #     secondaryFiles: [.tbi]
-    # varscan_pon2_file:
-    #     type: File
-    #     secondaryFiles: [.tbi]
-    # vardict_pon2_file:
-    #     type: File
-    #     secondaryFiles: [.tbi]
+    mutect_pon2_file:
+        type: File
+        secondaryFiles: [.tbi]
+    lofreq_pon2_file:
+        type: File
+        secondaryFiles: [.tbi]
+    vardict_pon2_file:
+        type: File
+        secondaryFiles: [.tbi]
     # pindel_pon2_file:
     #     type: File
     #     secondaryFiles: [.tbi]
@@ -315,10 +315,10 @@ outputs:
         type: File
         outputSource: mutect_gnomad_pon_filters/processed_gnomAD_filtered_vcf
         doc: "gnomad filter only with fisher PoN p-value"
-    # mutect_pon_annotated_filtered_vcf:
-    #     type: File
-    #     outputSource: mutect_pon2/annotated_vcf
-    #     doc: "final annotated VCF with PoN fisher test hard filter"
+    mutect_pon_annotated_filtered_vcf:
+        type: File
+        outputSource: mutect_pon2/annotated_vcf
+        doc: "final annotated VCF with PoN fisher test hard filter"
     mutect_pon_total_counts:
         type: File
         outputSource: mutect_gnomad_pon_filters/pon_total_counts
@@ -333,10 +333,10 @@ outputs:
         type: File
         outputSource: lofreq_gnomad_pon_filters/processed_gnomAD_filtered_vcf
         doc: "gnomad filter only with fisher PoN p-value"
-    # varscan_pon_annotated_filtered_vcf:
-    #     type: File
-    #     outputSource: varscan_pon2/annotated_vcf
-    #     doc: "final annotated VCF with PoN fisher test hard filter"
+    lofreq_pon_annotated_filtered_vcf:
+        type: File
+        outputSource: lofreq_pon2/annotated_vcf
+        doc: "final annotated VCF with PoN fisher test hard filter"
     lofreq_pon_total_counts:
         type: File
         outputSource: lofreq_gnomad_pon_filters/pon_total_counts
@@ -356,10 +356,10 @@ outputs:
         type: File
         outputSource: vardict_gnomad_pon_filters/processed_gnomAD_filtered_vcf
         doc: "gnomad filter only with fisher PoN p-value"
-    # vardict_pon_annotated_filtered_vcf:
-    #     type: File
-    #     outputSource: vardict_pon2/annotated_vcf
-    #     doc: "final annotated VCF with PoN fisher test hard filter"
+    vardict_pon_annotated_filtered_vcf:
+        type: File
+        outputSource: vardict_pon2/annotated_vcf
+        doc: "final annotated VCF with PoN fisher test hard filter"
     vardict_pon_total_counts:
         type: File
         outputSource: vardict_gnomad_pon_filters/pon_total_counts
@@ -524,16 +524,16 @@ steps:
             plugins: vep_plugins
         out:
             [annotated_vcf, vep_summary]
-    # mutect_pon2:
-    #     run: ../tools/pon2percent.cwl
-    #     in:
-    #         vcf: mutect_annotate_variants/annotated_vcf
-    #         vcf2PON: mutect_pon2_file
-    #         caller:
-    #             valueFrom: "mutect"
-    #         sample_name: tumor_sample_name
-    #     out:
-    #         [annotated_vcf]
+    mutect_pon2:
+        run: ../tools/pon2percent.cwl
+        in:
+            vcf: mutect_annotate_variants/annotated_vcf
+            vcf2PON: mutect_pon2_file
+            caller:
+                valueFrom: "mutect"
+            sample_name: tumor_sample_name
+        out:
+            [annotated_vcf]
 
     lofreq:
         run: ../subworkflows/lofreq.cwl
@@ -577,16 +577,16 @@ steps:
             plugins: vep_plugins
         out:
             [annotated_vcf, vep_summary]
-    # lofreq_pon2:
-    #     run: ../tools/pon2percent.cwl
-    #     in:
-    #         vcf: lofreq_annotate_variants/annotated_vcf
-    #         vcf2PON: lofreq_pon2_file
-    #         caller:
-    #             valueFrom: "lofreq"
-    #         sample_name: tumor_sample_name
-    #     out:
-    #         [annotated_vcf]
+    lofreq_pon2:
+        run: ../tools/pon2percent.cwl
+        in:
+            vcf: lofreq_annotate_variants/annotated_vcf
+            vcf2PON: lofreq_pon2_file
+            caller:
+                valueFrom: "lofreq"
+            sample_name: tumor_sample_name
+        out:
+            [annotated_vcf]
 
     vardict:
         run: ../subworkflows/vardict_tumor_only.cwl
@@ -631,16 +631,16 @@ steps:
             plugins: vep_plugins
         out:
             [annotated_vcf, vep_summary]
-    # vardict_pon2:
-    #     run: ../tools/pon2percent.cwl
-    #     in:
-    #         vcf: vardict_annotate_variants/annotated_vcf
-    #         vcf2PON: vardict_pon2_file
-    #         caller:
-    #             valueFrom: "vardict"
-    #         sample_name: tumor_sample_name
-    #     out:
-    #         [annotated_vcf]
+    vardict_pon2:
+        run: ../tools/pon2percent.cwl
+        in:
+            vcf: vardict_annotate_variants/annotated_vcf
+            vcf2PON: vardict_pon2_file
+            caller:
+                valueFrom: "vardict"
+            sample_name: tumor_sample_name
+        out:
+            [annotated_vcf]
 
     # final_annotation:
     #     run: ../tools/annotate_CH_pd.cwl
