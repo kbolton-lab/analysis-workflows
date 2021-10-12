@@ -13,12 +13,16 @@ requirements:
     - class: SubworkflowFeatureRequirement
     - class: StepInputExpressionRequirement
     - class: InlineJavascriptRequirement
+    - class: ScatterFeatureRequirement
 inputs:
     reference:
         type:
             - string
             - File
         secondaryFiles: [.fai, ^.dict, .amb, .ann, .bwt, .pac, .sa]
+    tumor_name:
+        type: string?
+        default: 'tumor'
     tumor_sample_name:
         type: string
     tumor_bam:
@@ -159,6 +163,21 @@ inputs:
     qc_minimum_base_quality:
         type: int?
         default: 0
+    mutect_pon2_file:
+        type: File
+        secondaryFiles: [.tbi]
+    lofreq_pon2_file:
+        type: File
+        secondaryFiles: [.tbi]
+    vardict_pon2_file:
+        type: File
+        secondaryFiles: [.tbi]
+    pindel_pon2_file:
+        type: File
+        secondaryFiles: [.tbi]
+    pon_pvalue:
+        type: string?
+        default: "4.098606e-08"
 outputs:
     # mutect_full:
     #     type: File
@@ -307,7 +326,7 @@ steps:
         run: ../subworkflows/lofreq.cwl
         in:
             reference: reference
-            tumor_bam: index_bam/indexed_bam
+            tumor_bam: tumor_bam
             interval_list: target_intervals
             scatter_count: scatter_count
             tumor_sample_name: tumor_sample_name
