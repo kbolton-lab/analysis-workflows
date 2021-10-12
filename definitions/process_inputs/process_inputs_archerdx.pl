@@ -26,6 +26,7 @@ my $build = Genome::Model::Build->get($build_id)
             min_base_quality => { input_type => 'Number' },
             max_no_call_fraction => { input_type => 'Number' },
             af_threshold => { input_type => 'Number' },
+            pon_pvalue => { input_type => 'Text' },
             tumor_name => { input_type => 'Text' },
             mutect_pon2_file => { input_type => 'File' },
             vardict_pon2_file => { input_type => 'File' },

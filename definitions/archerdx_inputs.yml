@@ -16,6 +16,7 @@ models:
         min_base_quality: 1
         max_no_call_fraction: 0.5
         af_threshold: 0.0001
+        pon_pvalue: 4.098606e-08
         reference: /gscmnt/gc2560/core/model_data/2887491634/build21f22873ebe0486c8e6f69c15435aa96/all_sequences.fa
         pon_normal_bams_bulk: /storage1/fs1/bolton/Active/projects/Archer/Normals/pon.bam.paths.txt
         mutect_pon2_file: /storage1/fs1/bolton/Active/projects/Archer/Normals/mutect2.merged.SB.2N.vcf.gz
