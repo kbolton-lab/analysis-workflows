@@ -83,7 +83,7 @@ requirements:
                 ' > fisherTestInput.R
                 bcftools annotate -a $pon_total -h pileup.header -c CHROM,POS,REF,ALT,PON_RefDepth,PON_AltCounts,PON_VAF $name.sample.vcf -Ov -o $name.sample.pileup.vcf;
                 bcftools query -f '%CHROM\t%POS\t%REF\t%ALT\t%INFO/PON_RefDepth\t%INFO/PON_AltCounts\t[%RD]\t[%AD]\n' $name.sample.pileup.vcf > $name.fisher.input;
-            else if [[ $caller =~ $patt ]]
+            elif [[ $caller =~ $patt ]]
             then
                 echo '
                 #!/usr/bin/env Rscript
