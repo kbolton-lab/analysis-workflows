@@ -276,12 +276,18 @@ inputs:
     pindel_pon2_file:
         type: File
         secondaryFiles: [.tbi]
+    pon_pvalue:
+        type: string?
+        default: "4.098606e-08"
 
 
 outputs:
     aligned_bam:
         type: File
         outputSource: alignment_workflow/aligned_bam
+    bqsr_bam:
+        type: File
+        outputSource: index_bam/indexed_bam
     tumor_insert_size_metrics:
         type: File
         outputSource: tumor_qc/insert_size_metrics
@@ -532,6 +538,7 @@ steps:
             pon_final_name:
                 source: tumor_sample_name
                 valueFrom: "mutect.$(self).pon.total.counts"
+            pon_pvalue: pon_pvalue
         out:
             [processed_gnomAD_filtered_vcf, processed_filtered_vcf, pon_total_counts]
         doc: "processed_filtered_vcf is gnomAD and PoN filtered"
@@ -586,6 +593,7 @@ steps:
             pon_final_name:
                 source: tumor_sample_name
                 valueFrom: "lofreq.$(self).pon.total.counts"
+            pon_pvalue: pon_pvalue
         out:
             [processed_gnomAD_filtered_vcf, processed_filtered_vcf, pon_total_counts]
     lofreq_annotate_variants:
@@ -640,6 +648,7 @@ steps:
             pon_final_name:
                 source: tumor_sample_name
                 valueFrom: "vardict.$(self).pon.total.counts"
+            pon_pvalue: pon_pvalue
         out:
             [processed_gnomAD_filtered_vcf, processed_filtered_vcf, pon_total_counts]
     vardict_annotate_variants:
@@ -697,6 +706,7 @@ steps:
             pon_final_name:
                 source: tumor_sample_name
                 valueFrom: "pindel.$(self).pon.total.counts"
+            pon_pvalue: pon_pvalue
         out:
             [processed_gnomAD_filtered_vcf, processed_filtered_vcf, pon_total_counts]
     pindel_annotate_variants:
