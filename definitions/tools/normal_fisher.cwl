@@ -69,11 +69,13 @@ requirements:
 
                 df$fisher.exact.pval <- apply(df, 1, function(x) {
                 x <- as.numeric(x[-c(1,2,3,4)])
-                if (x[2]==0 & x[1]!=0) {
+                if (x[1]+x[2]==0){
+                    return(0)
+                } else if (x[2]==0 & x[1]!=0) {
                     return(0)
                 } else if ((x[1]==0 & x[2]!=0) | (x[3]==0 & x[4]!=0)) {
                     return(1)
-                } else if (x[2]/(x[1]+x[2]) >= x[4]/(x[3]+x[4])) {
+                } else if (x[2]/(x[1]+x[2]) >= x[4]/(x[3]+ x[4])) {
                     return(1)
                 } else {
                     return(fisher.test(matrix(c(x[1], x[2], x[3], x[4]), ncol=2))$p.value)
@@ -111,7 +113,9 @@ requirements:
                 # Remember, Lofreq splits DP4 into RefFwd, RefRev and AltFwd, AltRev so technically ref = x[3] + x[4] and alt = x[5] + x[6]
                 ref = x[3] + x[4]
                 alt = x[5] + x[6]
-                if (x[2]==0 & x[1]!=0) {
+                if (x[1]+x[2]==0){
+                    return(0)
+                } else if (x[2]==0 & x[1]!=0) {
                     return(0)
                 } else if ((x[1]==0 & x[2]!=0) | (ref==0 & alt!=0)) {
                     return(1)
@@ -148,7 +152,9 @@ requirements:
 
                 df$fisher.exact.pval <- apply(df, 1, function(x) {
                 x <- as.numeric(x[-c(1,2,3,4)])
-                if (x[2]==0 & x[1]!=0) {
+                if (x[1]+x[2]==0){
+                    return(0)
+                } else if (x[2]==0 & x[1]!=0) {
                     return(0)
                 } else if ((x[1]==0 & x[2]!=0) | (x[3]==0 & x[4]!=0)) {
                     return(1)
