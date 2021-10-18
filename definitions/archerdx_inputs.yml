@@ -4,7 +4,7 @@ rules:
   is_capture: 0
 models:
   'Genome::Model::CwlPipeline':
-    processing_profile_id: '<INSERT_HERE>'
+    processing_profile_id: '760513a1c1d34aec88dcacfab867af45'
     input_data:
         read_structure_R1: 8M13S+T
         read_structure_R2: +T
@@ -38,7 +38,7 @@ models:
         picard_metric_accumulation_level: LIBRARY
         synonyms_file: /gscmnt/gc2560/core/model_data/2887491634/build50f99e75d14340ffb5b7d21b03887637/chromAlias.ensembl.txt
         somalier_vcf: /gscmnt/gc2560/core/annotation_data/concordance_snps/GRC-human-build38_gnomad_exome_common_snps.vcf
-        vep_cache_dir: /gscmnt/gc2560/core/cwl/inputs/VEP_cache
+        vep_cache_dir: /storage1/fs1/bolton/Active/projects/mocha/UKBB/ukbb_calls/pvcf/vep
         vep_ensembl_assembly: GRCh38
         vep_ensembl_version: 104
         vep_ensembl_species: homo_sapiens_merged
