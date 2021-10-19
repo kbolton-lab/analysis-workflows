@@ -30,7 +30,7 @@ my $build = Genome::Model::Build->get($build_id)
             tumor_name => { input_type => 'Text' },
             mutect_pon2_file => { input_type => 'File' },
             vardict_pon2_file => { input_type => 'File' },
-            varscan_pon2_file => { input_type => 'File' },
+            lofreq_pon2_file => { input_type => 'File' },
             pindel_pon2_file => { input_type => 'File' },
             target_intervals => { input_type => 'File' },
             target_interval_padding => { input_type => 'Number' },
@@ -66,7 +66,7 @@ my $build = Genome::Model::Build->get($build_id)
             validated_variants => { input_type => 'File' },
             mutect_max_alt_allele_in_normal_fraction => { input_type =>'Number' },
             mutect_max_alt_alleles_in_normal_count => { input_type => 'Number' },
-            pindel_insert_size => { inputy_type => 'Number' },
+            pindel_insert_size => { input_type => 'Number' },
             ref_name => { input_type => 'Text' },
             ref_date => { input_type => 'Text' },
             pindel_min_supporting_reads => { input_type => 'Number' },
@@ -179,7 +179,7 @@ $inputs->{bqsr_known_sites} = \@bqsr_known_sites;
 # my @ids = map $_->value_id, @instrument_data_inputs;
 
 #my $target_region_set_name;
-my $multiple_trsn = 0;
+#my $multiple_trsn = 0;
 $inputs->{tumor_sample_name} = $build->subject->name;
 
 $inputs->{per_base_intervals} = [
