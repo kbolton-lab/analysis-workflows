@@ -42,6 +42,7 @@ models:
         vep_ensembl_assembly: GRCh38
         vep_ensembl_version: 104
         vep_ensembl_species: homo_sapiens_merged
+        vep_pick: pick
         impact_annotation: /storage1/fs1/bolton/Active/projects/annotation_files/hg38_mut_full_long_filtered_KB_deid_2.xlsx
         topmed_annotation: /storage1/fs1/bolton/Active/projects/annotation_files/bick_topmed_variants.txt
         cosmic_annotation: /storage1/fs1/bolton/Active/projects/annotation_files/hg38_cosmic78_parsed.sorted.txt
