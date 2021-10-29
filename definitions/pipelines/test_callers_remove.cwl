@@ -493,7 +493,7 @@ steps:
         run: ../subworkflows/mutect_no_scatter.cwl
         in:
             reference: reference
-            tumor_bam: index_bam/indexed_bam
+            tumor_bam: tumor_bam
             # interval_list: pad_target_intervals/expanded_interval_list
             interval_list: target_intervals
             scatter_count: scatter_count
