@@ -514,7 +514,7 @@ steps:
         doc: "this filter's the gnomAD_af_only file based on gnomAD POPAF threshold, it is what should be excluded if our calls have it since above threshold"
 
     mutect:
-        run: ../subworkflows/mutect.cwl
+        run: ../subworkflows/mutect_no_scatter.cwl
         in:
             reference: reference
             tumor_bam: index_bam/indexed_bam
