@@ -163,18 +163,18 @@ inputs:
     qc_minimum_base_quality:
         type: int?
         default: 0
-    mutect_pon2_file:
-        type: File
-        secondaryFiles: [.tbi]
-    lofreq_pon2_file:
-        type: File
-        secondaryFiles: [.tbi]
-    vardict_pon2_file:
-        type: File
-        secondaryFiles: [.tbi]
-    pindel_pon2_file:
-        type: File
-        secondaryFiles: [.tbi]
+    # mutect_pon2_file:
+    #     type: File
+    #     secondaryFiles: [.tbi]
+    # lofreq_pon2_file:
+    #     type: File
+    #     secondaryFiles: [.tbi]
+    # vardict_pon2_file:
+    #     type: File
+    #     secondaryFiles: [.tbi]
+    # pindel_pon2_file:
+    #     type: File
+    #     secondaryFiles: [.tbi]
     pon_pvalue:
         type: string?
         default: "4.098606e-08"
