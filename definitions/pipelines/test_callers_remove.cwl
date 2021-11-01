@@ -39,7 +39,7 @@ inputs:
         type: File
         default:
             class: File
-            path: "/storage1/fs1/bolton/Active/data/hg38/vcf/af-only-gnomad.biallelic.hg38.vcf.gz"
+            path: "/storage1/fs1/bolton/Active/data/hg38/vcf/gnomad.AF.exclude.0.005.norm.vcf.gz"
         secondaryFiles: [.tbi]
     filter_flag:
         type:
@@ -309,18 +309,18 @@ steps:
     #     out:
     #         [expanded_interval_list]
 
-    get_gnomad_exclude:
-        run: ../subworkflows/get_gnomAD_filter.cwl
-        in:
-            reference: reference
-            gnomad_AF_only: gatk_gnomad_af_only
-            filter_flag: filter_flag
-            output_type:
-                default: "z"
-            output_vcf_name:
-                valueFrom: "gnomad.AF.exclude.vcf.gz"
-        out: [gnomad_exclude, normalized_gnomad_exclude]
-        doc: "this filter's the gnomAD_af_only file based on gnomAD POPAF threshold, it is what should be excluded if our calls have it since above threshold"
+    # get_gnomad_exclude:
+    #     run: ../subworkflows/get_gnomAD_filter.cwl
+    #     in:
+    #         reference: reference
+    #         gnomad_AF_only: gatk_gnomad_af_only
+    #         filter_flag: filter_flag
+    #         output_type:
+    #             default: "z"
+    #         output_vcf_name:
+    #             valueFrom: "gnomad.AF.exclude.vcf.gz"
+    #     out: [gnomad_exclude, normalized_gnomad_exclude]
+    #     doc: "this filter's the gnomAD_af_only file based on gnomAD POPAF threshold, it is what should be excluded if our calls have it since above threshold"
 
     # lofreq:
     #     run: ../subworkflows/lofreq.cwl
@@ -505,7 +505,7 @@ steps:
         in:
             reference: reference
             caller_vcf: mutect/unfiltered_vcf
-            gnomAD_exclude_vcf: get_gnomad_exclude/normalized_gnomad_exclude
+            gnomAD_exclude_vcf: gatk_gnomad_af_only
             caller_prefix:
                 source: tumor_sample_name
                 valueFrom: "mutect.$(self)"
