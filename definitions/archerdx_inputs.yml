@@ -4,7 +4,7 @@ rules:
   is_capture: 0
 models:
   'Genome::Model::CwlPipeline':
-    processing_profile_id: '<pp>'
+    processing_profile_id: '4b19d9eb9b37449293eb35e895b11de5'
     input_data:
         read_structure_R1: 8M13S+T
         read_structure_R2: +T
