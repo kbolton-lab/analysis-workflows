@@ -63,6 +63,7 @@ my $build = Genome::Model::Build->get($build_id)
             vep_ensembl_assembly => { input_type => 'Text' },
             vep_ensembl_version => { input_type => 'Text' },
             vep_ensembl_species => { input_type => 'Text' },
+            vep_pick => { input_type => 'Text' },
             validated_variants => { input_type => 'File' },
             mutect_max_alt_allele_in_normal_fraction => { input_type =>'Number' },
             mutect_max_alt_alleles_in_normal_count => { input_type => 'Number' },
