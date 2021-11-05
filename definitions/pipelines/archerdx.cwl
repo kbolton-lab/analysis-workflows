@@ -253,7 +253,7 @@ inputs:
         doc: "for CH this is how low we want to call, used for vardict"
     bcbio_filter_string:
         type: string
-        default: "((FMT/AF * FMT/DP < 6) && ((INFO/MQ < 55.0 && INFO/NM > 1.0) || (INFO/MQ < 60.0 && INFO/NM > 2.0) || (FMT/DP < 10) || (INFO/QUAL < 45)))"
+        default: "((FMT/AF * FMT/DP < 6) && ((INFO/MQ < 55.0 && INFO/NM > 1.0) || (INFO/MQ < 60.0 && INFO/NM > 3.0) || (FMT/DP < 6500) || (INFO/QUAL < 27)))"
         doc: "http://bcb.io/2016/04/04/vardict-filtering/"
     ref_name:
         type: string?
