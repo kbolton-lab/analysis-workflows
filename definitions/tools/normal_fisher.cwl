@@ -31,7 +31,7 @@ requirements:
             export p_value="$4"
 
 
-            printf "##INFO=<ID=PON_RefDepth,Number=1,Type=Integer,Description=\"Total Ref_Depth for Normals\">\n##INFO=<ID=PON_AltDepth,Number=1,Type=Integer,Description=\"Total Alt_Counts for Normals\">\n##INFO=<ID=PON_VAF,Number=1,Type=Float,Description=\"VAF for Normals\">\n" > pileup.header;
+            printf "##INFO=<ID=PON_RefDepth,Number=1,Type=Integer,Description=\"Total Ref_Depth for Normals\">\n##INFO=<ID=PON_AltDepth,Number=1,Type=Integer,Description=\"Total Alt_Counts for Normals\">\n" > pileup.header;
             printf "##INFO=<ID=PON_FISHER,Number=1,Type=Float,Description=\"P-value from Fisher's exact test with totals from PoN\">" > fisher.header;
             printf "##INFO=<ID=SAMPLE,Number=1,Type=String,Description=\"Sample name (with whitespace translated to underscores)\">" > sample.header;
 
@@ -83,7 +83,7 @@ requirements:
                 })
                 write.table(df, file=args[2], row.names = F, quote = F, col.names = F, sep = "\t")
                 ' > fisherTestInput.R
-                bcftools annotate -a $pon_total -h pileup.header -c CHROM,POS,REF,ALT,PON_RefDepth,PON_AltDepth,PON_VAF $name.sample.vcf -Ov -o $name.sample.pileup.vcf;
+                bcftools annotate -a $pon_total -h pileup.header -c CHROM,POS,REF,ALT,PON_RefDepth,PON_AltDepth $name.sample.vcf -Ov -o $name.sample.pileup.vcf;
                 bcftools query -f '%CHROM\t%POS\t%REF\t%ALT\t%INFO/PON_RefDepth\t%INFO/PON_AltDepth\t[%RD]\t[%AD]\n' $name.sample.pileup.vcf > $name.fisher.input;
             elif [[ $caller =~ $patt ]]
             then
@@ -127,7 +127,7 @@ requirements:
                 })
                 write.table(df[, -c(9:10)], file=args[2], row.names = F, quote = F, col.names = F, sep = "\t")
                 ' > fisherTestInput.R
-                bcftools annotate -a $pon_total -h pileup.header -c CHROM,POS,REF,ALT,PON_RefDepth,PON_AltDepth,PON_VAF $name.sample.vcf -Ov -o $name.sample.pileup.vcf;
+                bcftools annotate -a $pon_total -h pileup.header -c CHROM,POS,REF,ALT,PON_RefDepth,PON_AltDepth $name.sample.vcf -Ov -o $name.sample.pileup.vcf;
                 bcftools query -f '%CHROM\t%POS\t%REF\t%ALT\t%INFO/PON_RefDepth\t%INFO/PON_AltDepth\t%INFO/DP4\n' $name.sample.pileup.vcf > $name.fisher.input;
             else
                 echo '
@@ -166,7 +166,7 @@ requirements:
                 })
                 write.table(df, file=args[2], row.names = F, quote = F, col.names = F, sep = "\t")
                 ' > fisherTestInput.R
-                bcftools annotate -a $pon_total -h pileup.header -c CHROM,POS,REF,ALT,PON_RefDepth,PON_AltDepth,PON_VAF $name.sample.vcf -Ov -o $name.sample.pileup.vcf;
+                bcftools annotate -a $pon_total -h pileup.header -c CHROM,POS,REF,ALT,PON_RefDepth,PON_AltDepth $name.sample.vcf -Ov -o $name.sample.pileup.vcf;
                 bcftools query -f '%CHROM\t%POS\t%REF\t%ALT\t%INFO/PON_RefDepth\t%INFO/PON_AltDepth\t[%AD]\n' $name.sample.pileup.vcf > $name.fisher.input;
 
             fi
