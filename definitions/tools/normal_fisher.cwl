@@ -31,7 +31,7 @@ requirements:
             export p_value="$4"
 
 
-            printf "##INFO=<ID=PON_RefDepth,Number=1,Type=Integer,Description=\"Total Ref_Depth for Normals\">\n##INFO=<ID=PON_AltCounts,Number=1,Type=Integer,Description=\"Total Alt_Counts for Normals\">\n##INFO=<ID=PON_VAF,Number=1,Type=Float,Description=\"VAF for Normals\">\n" > pileup.header;
+            printf "##INFO=<ID=PON_RefDepth,Number=1,Type=Integer,Description=\"Total Ref_Depth for Normals\">\n##INFO=<ID=PON_AltDepth,Number=1,Type=Integer,Description=\"Total Alt_Counts for Normals\">\n##INFO=<ID=PON_VAF,Number=1,Type=Float,Description=\"VAF for Normals\">\n" > pileup.header;
             printf "##INFO=<ID=PON_FISHER,Number=1,Type=Float,Description=\"P-value from Fisher's exact test with totals from PoN\">" > fisher.header;
             printf "##INFO=<ID=SAMPLE,Number=1,Type=String,Description=\"Sample name (with whitespace translated to underscores)\">" > sample.header;
 
@@ -64,7 +64,7 @@ requirements:
                 df = read.table(args[1], header=F)
 
                 if (length(colnames(df)) != 8) {
-                stop("Must supply file with 8 columns: %CHROM\t%POS\t%REF\t%ALT\t%INFO/PON_RefDepth\t%INFO/PON_AltCounts\t[%RD]\t[%AD]", call.=FALSE)
+                stop("Must supply file with 8 columns: %CHROM\t%POS\t%REF\t%ALT\t%INFO/PON_RefDepth\t%INFO/PON_AltDepth\t[%RD]\t[%AD]", call.=FALSE)
                 }
 
                 df$fisher.exact.pval <- apply(df, 1, function(x) {
@@ -83,8 +83,8 @@ requirements:
                 })
                 write.table(df, file=args[2], row.names = F, quote = F, col.names = F, sep = "\t")
                 ' > fisherTestInput.R
-                bcftools annotate -a $pon_total -h pileup.header -c CHROM,POS,REF,ALT,PON_RefDepth,PON_AltCounts,PON_VAF $name.sample.vcf -Ov -o $name.sample.pileup.vcf;
-                bcftools query -f '%CHROM\t%POS\t%REF\t%ALT\t%INFO/PON_RefDepth\t%INFO/PON_AltCounts\t[%RD]\t[%AD]\n' $name.sample.pileup.vcf > $name.fisher.input;
+                bcftools annotate -a $pon_total -h pileup.header -c CHROM,POS,REF,ALT,PON_RefDepth,PON_AltDepth,PON_VAF $name.sample.vcf -Ov -o $name.sample.pileup.vcf;
+                bcftools query -f '%CHROM\t%POS\t%REF\t%ALT\t%INFO/PON_RefDepth\t%INFO/PON_AltDepth\t[%RD]\t[%AD]\n' $name.sample.pileup.vcf > $name.fisher.input;
             elif [[ $caller =~ $patt ]]
             then
                 echo '
@@ -105,7 +105,7 @@ requirements:
                 df <- cbind(df, data.frame(do.call("rbind", strsplit(as.character(df$V7), ",", fixed = TRUE))))[,-7]
 
                 if (length(colnames(df)) < 8) {
-                stop("Must supply file with 7 columns to split to 8: %CHROM\t%POS\t%REF\t%ALT\t%INFO/PON_RefDepth\t%INFO/PON_AltCounts\t%INFO/DP4", call.=FALSE)
+                stop("Must supply file with 7 columns to split to 8: %CHROM\t%POS\t%REF\t%ALT\t%INFO/PON_RefDepth\t%INFO/PON_AltDepth\t%INFO/DP4", call.=FALSE)
                 }
 
                 df$fisher.exact.pval <- apply(df, 1, function(x) {
@@ -127,8 +127,8 @@ requirements:
                 })
                 write.table(df[, -c(9:10)], file=args[2], row.names = F, quote = F, col.names = F, sep = "\t")
                 ' > fisherTestInput.R
-                bcftools annotate -a $pon_total -h pileup.header -c CHROM,POS,REF,ALT,PON_RefDepth,PON_AltCounts,PON_VAF $name.sample.vcf -Ov -o $name.sample.pileup.vcf;
-                bcftools query -f '%CHROM\t%POS\t%REF\t%ALT\t%INFO/PON_RefDepth\t%INFO/PON_AltCounts\t%INFO/DP4\n' $name.sample.pileup.vcf > $name.fisher.input;
+                bcftools annotate -a $pon_total -h pileup.header -c CHROM,POS,REF,ALT,PON_RefDepth,PON_AltDepth,PON_VAF $name.sample.vcf -Ov -o $name.sample.pileup.vcf;
+                bcftools query -f '%CHROM\t%POS\t%REF\t%ALT\t%INFO/PON_RefDepth\t%INFO/PON_AltDepth\t%INFO/DP4\n' $name.sample.pileup.vcf > $name.fisher.input;
             else
                 echo '
                 #!/usr/bin/env Rscript
@@ -147,7 +147,7 @@ requirements:
                 #https://statisticsglobe.com/split-data-frame-variable-into-multiple-columns-in-r
                 df <- cbind(df, data.frame(do.call("rbind", strsplit(as.character(df$V7), ",", fixed = TRUE))))[,-7]
                 if (length(colnames(df)) != 8) {
-                stop("Must supply file with 7 columns to split to 8: %CHROM\t%POS\t%REF\t%ALT\t%INFO/PON_RefDepth\t%INFO/PON_AltCounts\t[%AD]", call.=FALSE)
+                stop("Must supply file with 7 columns to split to 8: %CHROM\t%POS\t%REF\t%ALT\t%INFO/PON_RefDepth\t%INFO/PON_AltDepth\t[%AD]", call.=FALSE)
                 }
 
                 df$fisher.exact.pval <- apply(df, 1, function(x) {
@@ -166,8 +166,8 @@ requirements:
                 })
                 write.table(df, file=args[2], row.names = F, quote = F, col.names = F, sep = "\t")
                 ' > fisherTestInput.R
-                bcftools annotate -a $pon_total -h pileup.header -c CHROM,POS,REF,ALT,PON_RefDepth,PON_AltCounts,PON_VAF $name.sample.vcf -Ov -o $name.sample.pileup.vcf;
-                bcftools query -f '%CHROM\t%POS\t%REF\t%ALT\t%INFO/PON_RefDepth\t%INFO/PON_AltCounts\t[%AD]\n' $name.sample.pileup.vcf > $name.fisher.input;
+                bcftools annotate -a $pon_total -h pileup.header -c CHROM,POS,REF,ALT,PON_RefDepth,PON_AltDepth,PON_VAF $name.sample.vcf -Ov -o $name.sample.pileup.vcf;
+                bcftools query -f '%CHROM\t%POS\t%REF\t%ALT\t%INFO/PON_RefDepth\t%INFO/PON_AltDepth\t[%AD]\n' $name.sample.pileup.vcf > $name.fisher.input;
 
             fi
             chmod u+x fisherTestInput.R
