@@ -19,26 +19,39 @@ requirements:
             set -o errexit
             set -o nounset
 
-            if [ $# -lt 3 ]
+            if [ $# -lt 4 ]
             then
-                echo "Usage: $0 [TUMOR_BAM] REFERENCE] [roi_bed?]"
+                echo "Usage: $0 [TUMOR_BAM] REFERENCE] [OUTPUT_NAME] [MIN_VAF] [roi_bed?]"
                 exit 1
             fi
 
             TUMOR_BAM="$1"
             REFERENCE="$2"
             OUTPUT="$3"
+            MIN_VAF="$4"
 
-            if [ -z ${3+x} ]; then
+            if [ -z ${4+x} ]; then
                 #run without ROI
                 /opt/lofreq/bin/lofreq indelqual --dindel -f $REFERENCE -o output.indel.bam $TUMOR_BAM
-                /opt/lofreq/bin/lofreq call -A -B -f $REFERENCE --call-indels -o $OUTPUT output.indel.bam --force-overwrite 
+                /opt/lofreq/bin/lofreq call -A -B -f $REFERENCE --call-indels -o lofreq_pass.vcf output.indel.bam --force-overwrite
+
+                /opt/lofreq/bin/lofreq call --no-default-filter -B -a 1 -b 1 -f $REFERENCE --call-indels -o lofreq_call.vcf output.indel.bam --force-overwrite
+                /opt/lofreq/bin/lofreq filter -i lofreq_call.vcf -o lofreq_call.filtered.vcf -v 5 -a ${MIN_VAF} -A 0.9 --sb-incl-indels --print-all
             else
-                ROI_BED="$4"
+                ROI_BED="$5"
                 /opt/lofreq/bin/lofreq indelqual --dindel -f $REFERENCE -o output.indel.bam $TUMOR_BAM
-                /opt/lofreq/bin/lofreq call -A -B -f $REFERENCE --call-indels --bed $ROI_BED -o $OUTPUT output.indel.bam --force-overwrite
+                /opt/lofreq/bin/lofreq call -A -B -f $REFERENCE --call-indels --bed $ROI_BED -o lofreq_pass.vcf output.indel.bam --force-overwrite
+
+                /opt/lofreq/bin/lofreq call --no-default-filter -B -a 1 -b 1 -l $ROI_BED -f $REFERENCE --call-indels -o lofreq_call.vcf output.indel.bam --force-overwrite
+                /opt/lofreq/bin/lofreq filter -i lofreq_call.vcf -o lofreq_call.filtered.vcf -v 5 -a ${MIN_VAF} -A 0.9 --sb-incl-indels --print-all
             fi
-            bgzip $OUTPUT && tabix $OUTPUT.gz
+
+            printf "##FILTER=<ID=CALL,Description=\"A variant that was called by Lofreq's Caller without any filters\">" > lofreq.header;
+            cat lofreq_call.filtered.vcf | sed 's/PASS/CALL/g' > call_to_pass.vcf
+            bgzip call_to_pass.vcf && tabix call_to_pass.vcf.gz
+            bcftools annotate --threads 32 -a lofreq_pass.vcf -h lofreq.header -c FILTER call_to_pass.vcf.gz -Oz -o $OUTPUT.gz
+
+            tabix $OUTPUT.gz
 inputs:
     tumor_bam:
         type: File
@@ -55,7 +68,12 @@ inputs:
     interval_list:
         type: File?
         inputBinding:
+            position: 5
+    min_var_freq:
+        type: float?
+        inputBinding:
             position: 4
+        default: 0.005
     output_name:
         type: string?
         inputBinding:

@@ -2,6 +2,9 @@
 
 cwlVersion: v1.0
 class: Workflow
+requirements:
+    - class: SubworkflowFeatureRequirement
+    - class: ScatterFeatureRequirement
 label: "lofreq tumor-only workflow"
 inputs:
     reference:
@@ -46,6 +49,7 @@ steps:
             reference: reference
             tumor_bam: tumor_bam
             interval_list: split_interval_list_to_bed/split_beds
+            min_var_freq: min_var_freq
         out:
             [vcf]
     merge:
