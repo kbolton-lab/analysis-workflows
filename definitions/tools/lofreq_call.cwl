@@ -49,7 +49,8 @@ requirements:
             printf "##FILTER=<ID=CALL,Description=\"A variant that was called by Lofreq's Caller without any filters\">" > lofreq.header;
             cat lofreq_call.filtered.vcf | sed 's/PASS/CALL/g' > call_to_pass.vcf
             bgzip call_to_pass.vcf && tabix call_to_pass.vcf.gz
-            bcftools annotate --threads 32 -a lofreq_pass.vcf -h lofreq.header -c FILTER call_to_pass.vcf.gz -Oz -o $OUTPUT.gz
+            bgzip lofreq_pass.vcf && tabix lofreq_pass.vcf.gz
+            bcftools annotate --threads 32 -a lofreq_pass.vcf.gz -h lofreq.header -c FILTER call_to_pass.vcf.gz -Oz -o $OUTPUT.gz
 
             tabix $OUTPUT.gz
 inputs:
