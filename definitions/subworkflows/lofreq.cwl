@@ -44,12 +44,11 @@ steps:
         out: [split_beds]
     lofreq:
         scatter: interval_list
-        run: ../tools/lofreq_call.cwl
+        run: ../tools/lofreq_pass.cwl
         in:
             reference: reference
             tumor_bam: tumor_bam
             interval_list: split_interval_list_to_bed/split_beds
-            min_var_freq: min_var_freq
         out:
             [vcf]
     merge:
