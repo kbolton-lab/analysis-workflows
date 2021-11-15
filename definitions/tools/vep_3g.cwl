@@ -26,7 +26,7 @@ arguments:
     "--symbol",
     "--merged",
     "--sift p",
-
+    "--polyphen p",
     "--plugin CADD,/storage1/fs1/bolton/Active/data/hg38/CADD/prescored/whole_genome_SNVs.tsv.gz,/storage1/fs1/bolton/Active/data/hg38/CADD/prescored/gnomad.genomes.r3.0.indel.tsv.gz",
     "--plugin LoFtool,/opt/vep/.vep/Plugins/LoFtool_scores.txt",
     "-o", { valueFrom: $(runtime.outdir)/$(inputs.vcf.nameroot)_annotated.vcf }]

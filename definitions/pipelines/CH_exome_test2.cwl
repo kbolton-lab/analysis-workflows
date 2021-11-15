@@ -454,6 +454,7 @@ steps:
         run: ../subworkflows/get_gnomAD_filter.cwl
         in:
             gnomad_AF_only: gatk_gnomad_af_only
+            reference: reference
             # filter_string: 
             #     source: ["#info_af_filter_string", "#filter_gnomADe_maximum_population_allele_frequency"]
             #     valueFrom: ${ return self[0] + self[1].toString(); }

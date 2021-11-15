@@ -581,23 +581,6 @@ steps:
             bcbio_filter_string: bcbio_filter_string
         out:
             [unfiltered_vcf, filtered_vcf, bcbio_filtered_vcf]
-    # vardict_extract_tumor:
-    #     run: ../tools/bcftools_extract_tumor.cwl
-    #     in:
-    #         vcf: vardict/bcbio_filtered_vcf
-    #         output_type:
-    #             default: "z"
-    #         tumor_sample_name: tumor_sample_name
-    #         output_vcf_name: 
-    #             valueFrom: $(inputs.tumor_sample_name).vcf.gz
-    #     out:
-    #         [tumor_only_vcf]
-    # vardict_extract_tumor_index:
-    #     run: ../tools/index_vcf.cwl
-    #     in:
-    #         vcf: vardict_extract_tumor/tumor_only_vcf
-    #     out:
-    #         [indexed_vcf]
     vardict_gnomad_pon_filters:
         run: ../subworkflows/gnomad_and_PoN_filter.cwl
         in:

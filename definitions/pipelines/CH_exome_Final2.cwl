@@ -480,6 +480,7 @@ steps:
         run: ../subworkflows/get_gnomAD_filter.cwl
         in:
             gnomad_AF_only: gatk_gnomad_af_only
+            reference: reference
             filter_flag: filter_flag
             output_type:
                 default: "z"
