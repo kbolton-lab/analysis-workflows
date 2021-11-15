@@ -13,12 +13,16 @@ requirements:
     - class: SubworkflowFeatureRequirement
     - class: StepInputExpressionRequirement
     - class: InlineJavascriptRequirement
+    - class: ScatterFeatureRequirement
 inputs:
     reference:
         type:
             - string
             - File
         secondaryFiles: [.fai, ^.dict, .amb, .ann, .bwt, .pac, .sa]
+    tumor_name:
+        type: string?
+        default: 'tumor'
     tumor_sample_name:
         type: string
     tumor_bam:
@@ -35,7 +39,7 @@ inputs:
         type: File
         default:
             class: File
-            path: "/storage1/fs1/bolton/Active/data/hg19/vcf/af-only-gnomad.raw.sites.vcf.gz"
+            path: "/storage1/fs1/bolton/Active/data/hg38/vcf/gnomad.AF.exclude.0.005.norm.vcf.gz"
         secondaryFiles: [.tbi]
     filter_flag:
         type:
@@ -159,24 +163,39 @@ inputs:
     qc_minimum_base_quality:
         type: int?
         default: 0
-outputs:
-    # mutect_full:
+    # mutect_pon2_file:
     #     type: File
-    #     outputSource: mutect/unfiltered_vcf
-    #     doc: "full soft-filtered from fp_filter"
-    # mutect_pon_annotated_unfiltered_vcf:
-    #     type: File
-    #     outputSource: mutect_gnomad_pon_filters/processed_gnomAD_filtered_vcf
-    #     doc: "gnomad filter only with fisher PoN p-value"
-    # mutect_pon_annotated_filtered_vcf:
-    #     type: File
-    #     outputSource: mutect_annotate_variants/annotated_vcf
-    #     doc: "final annotated VCF with PoN fisher test hard filter"
-    # mutect_pon_total_counts:
-    #     type: File
-    #     outputSource: mutect_gnomad_pon_filters/pon_total_counts
     #     secondaryFiles: [.tbi]
-    #     doc: "results from MSK pileup"
+    # lofreq_pon2_file:
+    #     type: File
+    #     secondaryFiles: [.tbi]
+    # vardict_pon2_file:
+    #     type: File
+    #     secondaryFiles: [.tbi]
+    # pindel_pon2_file:
+    #     type: File
+    #     secondaryFiles: [.tbi]
+    pon_pvalue:
+        type: string?
+        default: "4.098606e-08"
+outputs:
+    mutect_full:
+        type: File
+        outputSource: mutect/unfiltered_vcf
+        doc: "full soft-filtered from fp_filter"
+    mutect_pon_annotated_unfiltered_vcf:
+        type: File
+        outputSource: mutect_gnomad_pon_filters/processed_gnomAD_filtered_vcf
+        doc: "gnomad filter only with fisher PoN p-value"
+    mutect_pon_annotated_filtered_vcf:
+        type: File
+        outputSource: mutect_annotate_variants/annotated_vcf
+        doc: "final annotated VCF with PoN fisher test hard filter"
+    mutect_pon_total_counts:
+        type: File
+        outputSource: mutect_gnomad_pon_filters/pon_total_counts
+        secondaryFiles: [.tbi]
+        doc: "results from MSK pileup"
 
     # vardict_full:
     #     type: File
@@ -193,7 +212,7 @@ outputs:
     #     doc: "gnomad filter only with fisher PoN p-value"
     # vardict_pon_annotated_filtered_vcf:
     #     type: File
-    #     outputSource: vardict_annotate_variants/annotated_vcf
+    #     outputSource: vardict_pon2/annotated_vcf
     #     doc: "final annotated VCF with PoN fisher test hard filter"
     # vardict_pon_total_counts:
     #     type: File
@@ -201,28 +220,46 @@ outputs:
     #     secondaryFiles: [.tbi]
     #     doc: "results from MSK pileup"
     #
-    pindel_full:
-        type: File
-        outputSource: pindel/unfiltered_vcf
-        doc: "full soft-filtered from fp_filter"
-    pindel_pon_annotated_unfiltered_vcf:
-        type: File
-        outputSource: pindel_gnomad_pon_filters/processed_gnomAD_filtered_vcf
-        doc: "gnomad filter only with fisher PoN p-value"
-    pindel_pon_annotated_filtered_vcf:
-        type: File
-        outputSource: pindel_annotate_variants/annotated_vcf
-        doc: "final annotated VCF with PoN fisher test hard filter"
-    pindel_pon_total_counts:
-        type: File
-        outputSource: pindel_gnomad_pon_filters/pon_total_counts
-        secondaryFiles: [.tbi]
-        doc: "results from MSK pileup"
+    # pindel_full:
+    #     type: File
+    #     outputSource: pindel/unfiltered_vcf
+    #     doc: "full soft-filtered from fp_filter"
+    # pindel_pon_annotated_unfiltered_vcf:
+    #     type: File
+    #     outputSource: pindel_gnomad_pon_filters/processed_gnomAD_filtered_vcf
+    #     doc: "gnomad filter only with fisher PoN p-value"
+    # pindel_pon_annotated_filtered_vcf:
+    #     type: File
+    #     outputSource: pindel_pon2/annotated_vcf
+    #     doc: "final annotated VCF with PoN fisher test hard filter"
+    # pindel_pon_total_counts:
+    #     type: File
+    #     outputSource: pindel_gnomad_pon_filters/pon_total_counts
+    #     secondaryFiles: [.tbi]
+    #     doc: "results from MSK pileup"
 
-    gnomad_exclude:
-        type: File
-        outputSource: get_gnomad_exclude/normalized_gnomad_exclude
-        secondaryFiles: [.tbi]
+    # lofreq_full:
+    #     type: File
+    #     outputSource: lofreq/unfiltered_vcf
+    #     doc: "full soft-filtered from fp_filter"
+    # lofreq_pon_annotated_unfiltered_vcf:
+    #     type: File
+    #     outputSource: lofreq_gnomad_pon_filters/processed_gnomAD_filtered_vcf
+    #     doc: "gnomad filter only with fisher PoN p-value"
+    # lofreq_pon_annotated_filtered_vcf:
+    #     type: File
+    #     outputSource: lofreq_pon2/annotated_vcf
+    #     doc: "final annotated VCF with PoN fisher test hard filter"
+    # lofreq_pon_total_counts:
+    #     type: File
+    #     outputSource: lofreq_gnomad_pon_filters/pon_total_counts
+    #     secondaryFiles: [.tbi]
+    #     doc: "results from MSK pileup"
+    #
+    # gnomad_exclude:
+    #     type: File
+    #     outputSource: get_gnomad_exclude/normalized_gnomad_exclude
+    #     secondaryFiles: [.tbi]
 steps:
     # bqsr:
     #     run: ../tools/bqsr.cwl
@@ -272,64 +309,73 @@ steps:
     #     out:
     #         [expanded_interval_list]
 
-    get_gnomad_exclude:
-        run: ../subworkflows/get_gnomAD_filter.cwl
-        in:
-            reference: reference
-            gnomad_AF_only: gatk_gnomad_af_only
-            filter_flag: filter_flag
-            output_type:
-                default: "z"
-            output_vcf_name:
-                valueFrom: "gnomad.AF.exclude.vcf.gz"
-        out: [gnomad_exclude, normalized_gnomad_exclude]
-        doc: "this filter's the gnomAD_af_only file based on gnomAD POPAF threshold, it is what should be excluded if our calls have it since above threshold"
+    # get_gnomad_exclude:
+    #     run: ../subworkflows/get_gnomAD_filter.cwl
+    #     in:
+    #         reference: reference
+    #         gnomad_AF_only: gatk_gnomad_af_only
+    #         filter_flag: filter_flag
+    #         output_type:
+    #             default: "z"
+    #         output_vcf_name:
+    #             valueFrom: "gnomad.AF.exclude.vcf.gz"
+    #     out: [gnomad_exclude, normalized_gnomad_exclude]
+    #     doc: "this filter's the gnomAD_af_only file based on gnomAD POPAF threshold, it is what should be excluded if our calls have it since above threshold"
 
-    pindel:
-        run: ../subworkflows/pindel_tumor_only.cwl
-        in:
-            reference: reference
-            tumor_bam: tumor_bam
-            interval_list: target_intervals
-            scatter_count: scatter_count
-            insert_size: pindel_insert_size
-            tumor_sample_name: tumor_sample_name
-            ref_name: ref_name
-            ref_date: ref_date
-            pindel_min_supporting_reads: pindel_min_supporting_reads
-        out:
-            [unfiltered_vcf, filtered_vcf]
-    pindel_gnomad_pon_filters:
-        run: ../subworkflows/gnomad_and_PoN_filter.cwl
-        in:
-            reference: reference
-            caller_vcf: pindel/unfiltered_vcf
-            gnomAD_exclude_vcf: get_gnomad_exclude/normalized_gnomad_exclude
-            caller_prefix:
-                source: tumor_sample_name
-                valueFrom: "pindel.$(self)"
-            normal_bams: pon_normal_bams
-            pon_final_name:
-                source: tumor_sample_name
-                valueFrom: "pindel.$(self).pon.total.counts"
-        out:
-            [processed_gnomAD_filtered_vcf, processed_filtered_vcf, pon_total_counts]
-    pindel_annotate_variants:
-        run: ../tools/vep.cwl
-        in:
-            vcf: pindel_gnomad_pon_filters/processed_filtered_vcf
-            cache_dir: vep_cache_dir
-            ensembl_assembly: vep_ensembl_assembly
-            ensembl_version: vep_ensembl_version
-            ensembl_species: vep_ensembl_species
-            synonyms_file: synonyms_file
-            coding_only: annotate_coding_only
-            reference: reference
-            pick: vep_pick
-            custom_annotations: vep_custom_annotations
-            plugins: vep_plugins
-        out:
-            [annotated_vcf, vep_summary]
+    # lofreq:
+    #     run: ../subworkflows/lofreq.cwl
+    #     in:
+    #         reference: reference
+    #         tumor_bam: tumor_bam
+    #         interval_list: target_intervals
+    #         scatter_count: scatter_count
+    #         tumor_sample_name: tumor_sample_name
+    #         min_var_freq: af_threshold
+    #     out:
+    #         [unfiltered_vcf, filtered_vcf]
+    # lofreq_gnomad_pon_filters:
+    #     run: ../subworkflows/gnomad_and_PoN_filter.cwl
+    #     in:
+    #         reference: reference
+    #         caller_vcf: lofreq/unfiltered_vcf
+    #         gnomAD_exclude_vcf: get_gnomad_exclude/normalized_gnomad_exclude
+    #         caller_prefix:
+    #             source: tumor_sample_name
+    #             valueFrom: "lofreq.$(self)"
+    #         normal_bams: pon_normal_bams
+    #         pon_final_name:
+    #             source: tumor_sample_name
+    #             valueFrom: "lofreq.$(self).pon.total.counts"
+    #         pon_pvalue: pon_pvalue
+    #     out:
+    #         [processed_gnomAD_filtered_vcf, processed_filtered_vcf, pon_total_counts]
+    # lofreq_annotate_variants:
+    #     run: ../tools/vep.cwl
+    #     in:
+    #         vcf: lofreq_gnomad_pon_filters/processed_filtered_vcf
+    #         cache_dir: vep_cache_dir
+    #         ensembl_assembly: vep_ensembl_assembly
+    #         ensembl_version: vep_ensembl_version
+    #         ensembl_species: vep_ensembl_species
+    #         synonyms_file: synonyms_file
+    #         coding_only: annotate_coding_only
+    #         reference: reference
+    #         pick: vep_pick
+    #         custom_annotations: vep_custom_annotations
+    #         plugins: vep_plugins
+    #     out:
+    #         [annotated_vcf, vep_summary]
+    # lofreq_pon2:
+    #     run: ../tools/pon2percent.cwl
+    #     in:
+    #         vcf: lofreq_annotate_variants/annotated_vcf
+    #         vcf2PON: lofreq_pon2_file
+    #         caller:
+    #             valueFrom: "lofreq"
+    #         sample_name: tumor_sample_name
+    #     out:
+    #         [annotated_vcf]
+
     # vardict:
     #     run: ../subworkflows/vardict_tumor_only.cwl
     #     in:
@@ -355,6 +401,7 @@ steps:
     #         pon_final_name:
     #             source: tumor_sample_name
     #             valueFrom: "vardict.$(self).pon.total.counts"
+    #         pon_pvalue: pon_pvalue
     #     out:
     #         [processed_gnomAD_filtered_vcf, processed_filtered_vcf, pon_total_counts]
     # vardict_annotate_variants:
@@ -373,38 +420,52 @@ steps:
     #         plugins: vep_plugins
     #     out:
     #         [annotated_vcf, vep_summary]
+    # vardict_pon2:
+    #     run: ../tools/pon2percent.cwl
+    #     in:
+    #         vcf: vardict_annotate_variants/annotated_vcf
+    #         vcf2PON: vardict_pon2_file
+    #         caller:
+    #             valueFrom: "vardict"
+    #         sample_name: tumor_sample_name
+    #     out:
+    #         [annotated_vcf]
     #
-    # mutect:
-    #     run: ../subworkflows/mutect.cwl
+    # pindel:
+    #     run: ../subworkflows/pindel_tumor_only.cwl
     #     in:
     #         reference: reference
-    #         tumor_bam: index_bam/indexed_bam
-    #         # interval_list: pad_target_intervals/expanded_interval_list
+    #         tumor_bam: tumor_bam
     #         interval_list: target_intervals
     #         scatter_count: scatter_count
+    #         insert_size: pindel_insert_size
     #         tumor_sample_name: tumor_sample_name
+    #         ref_name: ref_name
+    #         ref_date: ref_date
+    #         pindel_min_supporting_reads: pindel_min_supporting_reads
+    #         min_var_freq: af_threshold
     #     out:
     #         [unfiltered_vcf, filtered_vcf]
-    # mutect_gnomad_pon_filters:
+    # pindel_gnomad_pon_filters:
     #     run: ../subworkflows/gnomad_and_PoN_filter.cwl
     #     in:
     #         reference: reference
-    #         caller_vcf: mutect/unfiltered_vcf
+    #         caller_vcf: pindel/unfiltered_vcf
     #         gnomAD_exclude_vcf: get_gnomad_exclude/normalized_gnomad_exclude
     #         caller_prefix:
     #             source: tumor_sample_name
-    #             valueFrom: "mutect.$(self)"
+    #             valueFrom: "pindel.$(self)"
     #         normal_bams: pon_normal_bams
     #         pon_final_name:
     #             source: tumor_sample_name
-    #             valueFrom: "mutect.$(self).pon.total.counts"
+    #             valueFrom: "pindel.$(self).pon.total.counts"
+    #         pon_pvalue: pon_pvalue
     #     out:
     #         [processed_gnomAD_filtered_vcf, processed_filtered_vcf, pon_total_counts]
-    #     doc: "processed_filtered_vcf is gnomAD and PoN filtered"
-    # mutect_annotate_variants:
+    # pindel_annotate_variants:
     #     run: ../tools/vep.cwl
     #     in:
-    #         vcf: mutect_gnomad_pon_filters/processed_filtered_vcf
+    #         vcf: pindel_gnomad_pon_filters/processed_filtered_vcf
     #         cache_dir: vep_cache_dir
     #         ensembl_assembly: vep_ensembl_assembly
     #         ensembl_version: vep_ensembl_version
@@ -417,3 +478,57 @@ steps:
     #         plugins: vep_plugins
     #     out:
     #         [annotated_vcf, vep_summary]
+    # pindel_pon2:
+    #     run: ../tools/pon2percent.cwl
+    #     in:
+    #         vcf: pindel_annotate_variants/annotated_vcf
+    #         vcf2PON: pindel_pon2_file
+    #         caller:
+    #             valueFrom: "pindel"
+    #         sample_name: tumor_sample_name
+    #     out:
+    #         [annotated_vcf]
+    #
+    mutect:
+        run: ../subworkflows/mutect_no_scatter.cwl
+        in:
+            reference: reference
+            tumor_bam: tumor_bam
+            # interval_list: pad_target_intervals/expanded_interval_list
+            interval_list: target_intervals
+            scatter_count: scatter_count
+            tumor_sample_name: tumor_sample_name
+        out:
+            [unfiltered_vcf, filtered_vcf]
+    mutect_gnomad_pon_filters:
+        run: ../subworkflows/gnomad_and_PoN_filter.cwl
+        in:
+            reference: reference
+            caller_vcf: mutect/unfiltered_vcf
+            gnomAD_exclude_vcf: gatk_gnomad_af_only
+            caller_prefix:
+                source: tumor_sample_name
+                valueFrom: "mutect.$(self)"
+            normal_bams: pon_normal_bams
+            pon_final_name:
+                source: tumor_sample_name
+                valueFrom: "mutect.$(self).pon.total.counts"
+        out:
+            [processed_gnomAD_filtered_vcf, processed_filtered_vcf, pon_total_counts]
+        doc: "processed_filtered_vcf is gnomAD and PoN filtered"
+    mutect_annotate_variants:
+        run: ../tools/vep.cwl
+        in:
+            vcf: mutect_gnomad_pon_filters/processed_filtered_vcf
+            cache_dir: vep_cache_dir
+            ensembl_assembly: vep_ensembl_assembly
+            ensembl_version: vep_ensembl_version
+            ensembl_species: vep_ensembl_species
+            synonyms_file: synonyms_file
+            coding_only: annotate_coding_only
+            reference: reference
+            pick: vep_pick
+            custom_annotations: vep_custom_annotations
+            plugins: vep_plugins
+        out:
+            [annotated_vcf, vep_summary]

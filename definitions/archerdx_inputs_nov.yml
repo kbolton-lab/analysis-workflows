@@ -4,7 +4,7 @@ rules:
   is_capture: 0
 models:
   'Genome::Model::CwlPipeline':
-    processing_profile_id: '<INSERT_HERE>'
+    processing_profile_id: 'c5e28027111740438bd753694059ec3d'
     input_data:
         read_structure_R1: 8M13S+T
         read_structure_R2: +T
@@ -16,17 +16,17 @@ models:
         min_base_quality: 1
         max_no_call_fraction: 0.5
         af_threshold: 0.0001
-        reference: /storage1/fs1/bga/Active/gmsroot/gc2560/core/model_data/2887491634/build21f22873ebe0486c8e6f69c15435aa96/all_sequences.fa
-        pon_normal_bams_bulk: /storage1/fs1/bolton/Active/projects/ArcherPilot/GMS_N/pon.bam.paths.txt
-        #mutect_pon2_file: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/mutect2.merged.SB.2N.vcf.gz
-        #vardict_pon2_file: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/vardict/filtered/vardict.2N.vcf.gz
-        #varscan_pon2_file: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/varscan/varscan.2N.vcf.gz
-        #pindel_pon2_file: /storage1/fs1/bolton/Active/projects/mocha/UKBB/exome/young/pindel200/pindel.merged.2N.AD1.vcf.gz
+        pon_pvalue: 4.098606e-08
+        reference: /gscmnt/gc2560/core/model_data/2887491634/build21f22873ebe0486c8e6f69c15435aa96/all_sequences.fa
+        pon_normal_bams_bulk: /storage1/fs1/bolton/Active/projects/Archer/Normals/pon.bam.paths.txt
+        mutect_pon2_file: /storage1/fs1/bolton/Active/projects/Archer/Normals/mutect2.merged.SB.2N.vcf.gz
+        vardict_pon2_file: /storage1/fs1/bolton/Active/projects/Archer/Normals/vardict.merged.BQSR.2N.vcf.gz
+        lofreq_pon2_file: /storage1/fs1/bolton/Active/projects/Archer/Normals/lofreq.merged.2percent.2N.vcf.gz
+        pindel_pon2_file: /storage1/fs1/bolton/Active/projects/Archer/Normals/pindel.merged.2percent.2N.vcf.gz
         target_intervals: /storage1/fs1/bolton/Active/data/hg38/bed/archer_panel.hg38.interval_list
         bait_intervals: /storage1/fs1/bolton/Active/data/hg38/bed/archer_panel.hg38.interval_list
-        #bqsr_known_sites: /storage1/fs1/bolton/Active/projects/annotation_files/bqsr_known_sites.txt
         cosmic_vcf: /gscmnt/gc2560/core/build_merged_alignments/detect-variants--linus2112.gsc.wustl.edu-jwalker-774-52fa2dadc4ba4b6490abe0701907d394/snvs.hq.vcf.gz
-        custom_clinvar_vcf: /gscmnt/gc2560/core/custom_clinvar_vcf/v20210629/clinvar.vcf.gz
+        custom_clinvar_vcf: /gscmnt/gc2560/core/custom_clinvar_vcf/v20181028/custom.vcf.gz
         custom_gnomad_vcf: /gscmnt/gc2560/core/model_data/genome-db-ensembl-gnomad/2dd4b53431674786b760adad60a29273/fixed_b38_exome.vcf.gz
         custom_gnomadV3_vcf: /storage1/fs1/bolton/Active/data/hg38/vcf/gnomad.genomes.r3.0.sites.full_trimmed_info.af_only.vcf.gz
         dbsnp_vcf: /gscmnt/gc2560/core/build_merged_alignments/detect-variants--linus2112.gsc.wustl.edu-jwalker-19443-e48c595a620a432c93e8dd29e4af64f2/snvs.hq.vcf.gz
@@ -38,10 +38,11 @@ models:
         picard_metric_accumulation_level: LIBRARY
         synonyms_file: /gscmnt/gc2560/core/model_data/2887491634/build50f99e75d14340ffb5b7d21b03887637/chromAlias.ensembl.txt
         somalier_vcf: /gscmnt/gc2560/core/annotation_data/concordance_snps/GRC-human-build38_gnomad_exome_common_snps.vcf
-        vep_cache_dir: /gscmnt/gc2560/core/cwl/inputs/VEP_cache
+        vep_cache_dir: /storage1/fs1/bolton/Active/projects/mocha/UKBB/ukbb_calls/pvcf/vep
         vep_ensembl_assembly: GRCh38
-        vep_ensembl_version: 101
-        vep_ensembl_species: homo_sapiens
+        vep_ensembl_version: 104
+        vep_ensembl_species: homo_sapiens_merged
+        vep_pick: pick
         impact_annotation: /storage1/fs1/bolton/Active/projects/annotation_files/hg38_mut_full_long_filtered_KB_deid_2.xlsx
         topmed_annotation: /storage1/fs1/bolton/Active/projects/annotation_files/bick_topmed_variants.txt
         cosmic_annotation: /storage1/fs1/bolton/Active/projects/annotation_files/hg38_cosmic78_parsed.sorted.txt

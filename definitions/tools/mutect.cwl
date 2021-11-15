@@ -26,12 +26,14 @@ requirements:
             echo -n $TUMOR > sampleName.txt
             # echo "{'tumor_sample_name': $TUMOR}"
             if [ -z "${normal_bam}" ]; then
-                /gatk/gatk Mutect2 --java-options "-Xmx20g" --native-pair-hmm-threads 28 -R $2 -L $4 -I $3 --max-reads-per-alignment-start 0 -O $1
-                /gatk/gatk FilterMutectCalls -V mutect.vcf.gz --reference $2 -O mutect.filtered.vcf.gz
+                /gatk/gatk Mutect2 --java-options "-Xmx20g" --native-pair-hmm-threads 28 -R $2 -L $4 -I $3 --f1r2-tar-gz mutect.f1r2.tar.gz --max-reads-per-alignment-start 0 -O $1
+                /gatk/gatk LearnReadOrientationModel -I mutect.f1r2.tar.gz -O mutect.read-orientation-model.tar.gz
+                /gatk/gatk FilterMutectCalls -V mutect.vcf.gz --reference $2 --ob-priors mutect.read-orientation-model.tar.gz -O mutect.filtered.vcf.gz
             else
                 NORMAL=`samtools view -H $normal_bam | perl -nE 'say $1 if /^\@RG.+\tSM:([ -~]+)/' | head -n 1`
-                /gatk/gatk Mutect2 --java-options "-Xmx20g" --native-pair-hmm-threads 28 -O $1 -R $2 -I $3 -tumor "$TUMOR" -I $5 -normal "$NORMAL" -L $4 --max-reads-per-alignment-start 0 #Running Mutect2.
-                /gatk/gatk FilterMutectCalls -R $2 -V mutect.vcf.gz -O mutect.filtered.vcf.gz #Running FilterMutectCalls on the output vcf.
+                /gatk/gatk Mutect2 --java-options "-Xmx20g" --native-pair-hmm-threads 28 -O $1 -R $2 -I $3 -tumor "$TUMOR" -I $5 -normal "$NORMAL" -L $4 --f1r2-tar-gz mutect.f1r2.tar.gz --max-reads-per-alignment-start 0 #Running Mutect2.
+                /gatk/gatk LearnReadOrientationModel -I mutect.f1r2.tar.gz -O mutect.read-orientation-model.tar.gz
+                /gatk/gatk FilterMutectCalls -R $2 -V mutect.vcf.gz --ob-priors mutect.read-orientation-model.tar.gz -O mutect.filtered.vcf.gz #Running FilterMutectCalls on the output vcf.
             fi
 
 arguments:
